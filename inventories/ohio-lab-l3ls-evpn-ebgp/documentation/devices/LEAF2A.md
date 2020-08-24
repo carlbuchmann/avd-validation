@@ -54,6 +54,10 @@ daemon TerminAttr
    no shutdown
 ```
 
+## IP DHCP Relay
+
+IP DHCP Relay not defined
+
 ## Internal VLAN allocation Policy
 
 ### Internal VLAN Allocation Policy Summary
@@ -730,6 +734,10 @@ mlag configuration
    reload-delay non-mlag 1020
 ```
 
+## Community Lists
+
+Community Lists not defined
+
 ## Route Maps
 
 ### Route Maps Summary
@@ -937,3 +945,7 @@ Management Security not defined
 ## Platform
 
 No Platform parameters defined
+
+## Router ISIS
+
+Router ISIS not defined

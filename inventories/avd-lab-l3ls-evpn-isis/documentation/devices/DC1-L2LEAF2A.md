@@ -19,11 +19,11 @@ IPv6
 ### Management Interfaces Device Configuration
 
 ```eos
+!
 interface Management1
    description oob_management
    vrf MGMT
    ip address 192.168.200.113/24
-!
 ```
 
 ## Hardware Counters
@@ -44,10 +44,10 @@ Aliases not defined
 ### TerminAttr Daemon Device Configuration
 
 ```eos
+!
 daemon TerminAttr
    exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=MGMT -taillogs
    no shutdown
-!
 ```
 
 ## IP DHCP Relay
@@ -65,8 +65,8 @@ IP DHCP Relay not defined
 ### Internal VLAN Allocation Policy Configuration
 
 ```eos
-vlan internal order ascending range 1006 1199
 !
+vlan internal order ascending range 1006 1199
 ```
 
 ## IP IGMP Snooping
@@ -94,7 +94,6 @@ DNS domain lookup not defined
 ```eos
 ip name-server vrf MGMT 192.168.200.5
 ip name-server vrf MGMT 8.8.8.8
-!
 ```
 
 ## DNS Domain
@@ -126,10 +125,10 @@ VRF: MGMT
 ### NTP Device Configuration
 
 ```eos
+!
 ntp local-interface vrf MGMT Management1
 ntp server vrf MGMT 0.north-america.pool.ntp.org prefer
 ntp server vrf MGMT 1.north-america.pool.ntp.org
-!
 ```
 
 ## Router L2 VPN
@@ -155,10 +154,10 @@ Mode: mstp
 ### Spanning Tree Device Configuration
 
 ```eos
+!
 spanning-tree mode mstp
 no spanning-tree vlan-id 4094
 spanning-tree mst 0 priority 16384
-!
 ```
 
 
@@ -194,9 +193,9 @@ AAA accounting not defined
 ### Local Users Device Configuration
 
 ```eos
+!
 username admin privilege 15 role network-admin secret sha512 $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
 username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-!
 ```
 
 ## VLANs
@@ -224,6 +223,7 @@ username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAW
 ### VLANs Device Configuration
 
 ```eos
+!
 vlan 110
    name Tenant_A_OP_Zone_1
 !
@@ -269,7 +269,6 @@ vlan 311
 vlan 4094
    name MLAG_PEER
    trunk group MLAG
-!
 ```
 
 ## VRF Instances
@@ -283,8 +282,8 @@ vlan 4094
 ### VRF Instances Device Configuration
 
 ```eos
-vrf instance MGMT
 !
+vrf instance MGMT
 ```
 
 ## Port-Channel Interfaces
@@ -299,6 +298,7 @@ vrf instance MGMT
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
+!
 interface Port-Channel1
    description DC1-SVC3A_Po7
    switchport trunk allowed vlan 110-111,120-121,130-131,140-141,160-161,210-211,310-311
@@ -310,7 +310,6 @@ interface Port-Channel3
    switchport trunk allowed vlan 2-4094
    switchport mode trunk
    switchport trunk group MLAG
-!
 ```
 
 ## Ethernet Interfaces
@@ -329,6 +328,7 @@ interface Port-Channel3
 ### Ethernet Interfaces Device Configuration
 
 ```eos
+!
 interface Ethernet1
    description DC1-SVC3A_Ethernet7
    channel-group 1 mode active
@@ -344,7 +344,6 @@ interface Ethernet3
 interface Ethernet4
    description MLAG_PEER_DC1-L2LEAF2B_Ethernet4
    channel-group 3 mode active
-!
 ```
 
 ## Loopback Interfaces
@@ -362,11 +361,11 @@ No Loopback interfaces defined
 ### VLAN Interfaces Device Configuration
 
 ```eos
+!
 interface Vlan4094
    description MLAG_PEER
    no autostate
    ip address 10.255.252.16/31
-!
 ```
 
 ## VXLAN Interface
@@ -403,8 +402,8 @@ Standard Access-lists not defined
 ### Static Routes Device Configuration
 
 ```eos
-ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 !
+ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ```
 
 ## Event Handler
@@ -422,9 +421,9 @@ No Event Handler Defined
 ### IP Routing Device Configuration
 
 ```eos
+!
 ip routing
 no ip routing vrf MGMT
-!
 ```
 
 ## Prefix Lists
@@ -461,6 +460,7 @@ Dual primary detection is enabled. The detection delay is 5 seconds.
 ### MLAG Device Configuration
 
 ```eos
+!
 mlag configuration
    domain-id DC1_L2LEAF2
    local-interface Vlan4094
@@ -470,7 +470,6 @@ mlag configuration
    dual-primary detection delay 5 action errdisable all-interfaces
    reload-delay mlag 300
    reload-delay non-mlag 330
-!
 ```
 
 ## Community Lists
@@ -496,9 +495,9 @@ No Peer Filters defined
 ### Router BFD Multihop Device Configuration
 
 ```eos
+!
 router bfd
    multihop interval 1200 min-rx 1200 multiplier 3
-!
 ```
 
 ## Router BGP

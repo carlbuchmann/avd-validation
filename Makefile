@@ -28,12 +28,28 @@ facts: ## Get facts from CVP and save locally
 	ansible-playbook playbooks/extract-facts.yml --extra-vars "output_file=${FACTS_LOG}" -i $(INVENTORY)/$(INVENTORY_FILE)
 
 ################################################################################
+# Summarized Tests
+###############################################################################
+
+.PHONY: test-avd-build
+test-avd-build:
+	make avd-lab-l3ls-evpn-ebgp-build
+	make avd-lab-l3ls-evpn-ospf-build
+	make avd-lab-l3ls-evpn-isis-build
+	make ohio-lab-l3ls-evpn-ebgp-build
+
+
+.PHONY: avd-lab-all-eapi-provision
+avd-lab-all-eapi-provision: avd-lab-l3ls-evpn-ebgp-eapi-provision avd-lab-l3ls-evpn-ospf-eapi-provision avd-lab-l3ls-evpn-isis-eapi-provision ## run build test on all inventories
+
+
+################################################################################
 # avd-lab-l3ls-evpn-ebgp
 ################################################################################
 
 .PHONY: avd-lab-l3ls-evpn-ebgp-build
 avd-lab-l3ls-evpn-ebgp-build: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags build -i inventories/avd-lab-l3ls-evpn-ebgp
+	ansible-playbook playbooks/dc1-fabric-deploy-eapi.yml --tags build -i inventories/avd-lab-l3ls-evpn-ebgp/inventory.yml --diff
 
 .PHONY: avd-lab-l3ls-evpn-ebgp-eapi-provision
 avd-lab-l3ls-evpn-ebgp-eapi-provision: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV
@@ -41,11 +57,11 @@ avd-lab-l3ls-evpn-ebgp-eapi-provision: ## Run ansible playbook to build EVPN Fab
 
 .PHONY: avd-lab-l3ls-evpn-ebgp-cvp-provision
 avd-lab-l3ls-evpn-ebgp-cvp-provision: ## Run ansible playbook to deploy EVPN Fabric.
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags provision -i inventories/avd-lab-l3ls-evpn-ebgp/inventory.yml
+	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags provision -i inventories/avd-lab-l3ls-evpn-ebgp/inventory.yml --diff
 
 .PHONY: avd-lab-l3ls-evpn-ebgp-deploy
 avd-lab-l3ls-evpn-ebgp-deploy: ## Run ansible playbook to deploy EVPN Fabric.
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --extra-vars "execute_tasks=true" --tags "build,provision,apply" -i inventories/avd-lab-l3ls-evpn-ebgp
+	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --extra-vars "execute_tasks=true" --tags "build,provision,apply" -i inventories/avd-lab-l3ls-evpn-ebgp/inventory.yml --diff
 
 
 ################################################################################
@@ -54,7 +70,7 @@ avd-lab-l3ls-evpn-ebgp-deploy: ## Run ansible playbook to deploy EVPN Fabric.
 
 .PHONY: avd-lab-l3ls-evpn-ospf-build
 avd-lab-l3ls-evpn-ospf-build: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags build -i inventories/avd-lab-l3ls-evpn-ospf
+	ansible-playbook playbooks/dc1-fabric-deploy-eapi.yml --tags build -i inventories/avd-lab-l3ls-evpn-ospf/inventory.yml --diff
 
 .PHONY: avd-lab-l3ls-evpn-ospf-eapi-provision
 avd-lab-l3ls-evpn-ospf-eapi-provision: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV
@@ -62,11 +78,11 @@ avd-lab-l3ls-evpn-ospf-eapi-provision: ## Run ansible playbook to build EVPN Fab
 
 .PHONY: avd-lab-l3ls-evpn-ospf-cvp-provision
 avd-lab-l3ls-evpn-ospf-cvp-provision: ## Run ansible playbook to deploy EVPN Fabric.
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags provision -i inventories/avd-lab-l3ls-evpn-ospf/inventory.yml
+	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags provision -i inventories/avd-lab-l3ls-evpn-ospf/inventory.yml --diff
 
 .PHONY: avd-lab-l3ls-evpn-ospf-deploy
 avd-lab-l3ls-evpn-ospf-deploy: ## Run ansible playbook to deploy EVPN Fabric.
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --extra-vars "execute_tasks=true" --tags "build,provision,apply" -i inventories/avd-lab-l3ls-evpn-ospf
+	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --extra-vars "execute_tasks=true" --tags "build,provision,apply" -i inventories/avd-lab-l3ls-evpn-ospf/inventory.yml --diff
 
 
 ################################################################################
@@ -75,7 +91,7 @@ avd-lab-l3ls-evpn-ospf-deploy: ## Run ansible playbook to deploy EVPN Fabric.
 
 .PHONY: avd-lab-l3ls-evpn-isis-build
 avd-lab-l3ls-evpn-isis-build: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags build -i inventories/avd-lab-l3ls-evpn-isis
+	ansible-playbook playbooks/dc1-fabric-deploy-eapi.yml --tags build -i inventories/avd-lab-l3ls-evpn-isis/inventory.yml --diff
 
 .PHONY: avd-lab-l3ls-evpn-isis-eapi-provision
 avd-lab-l3ls-evpn-isis-eapi-provision: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV
@@ -83,11 +99,11 @@ avd-lab-l3ls-evpn-isis-eapi-provision: ## Run ansible playbook to build EVPN Fab
 
 .PHONY: avd-lab-l3ls-evpn-isis-cvp-provision
 avd-lab-l3ls-evpn-isis-cvp-provision: ## Run ansible playbook to deploy EVPN Fabric.
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags provision -i inventories/avd-lab-l3ls-evpn-isis/inventory.yml
+	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags provision -i inventories/avd-lab-l3ls-evpn-isis/inventory.yml --diff
 
 .PHONY: avd-lab-l3ls-evpn-isis-deploy
 avd-lab-l3ls-evpn-isis-deploy: ## Run ansible playbook to deploy EVPN Fabric.
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --extra-vars "execute_tasks=true" --tags "build,provision,apply" -i inventories/avd-lab-l3ls-evpn-isis
+	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --extra-vars "execute_tasks=true" --tags "build,provision,apply" -i inventories/avd-lab-l3ls-evpn-isis/inventory.yml --diff
 
 
 ################################################################################
@@ -96,7 +112,7 @@ avd-lab-l3ls-evpn-isis-deploy: ## Run ansible playbook to deploy EVPN Fabric.
 
 .PHONY: ohio-lab-l3ls-evpn-ebgp-build
 ohio-lab-l3ls-evpn-ebgp-build: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV
-	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --tags build -i inventories/ohio-lab-l3ls-evpn-ebgp/inventory.yml --diff
+	ansible-playbook playbooks/dc1-fabric-deploy-eapi.yml --tags build -i inventories/ohio-lab-l3ls-evpn-ebgp/inventory.yml --diff
 
 .PHONY: ohio-lab-l3ls-evpn-ebgp-eapi-provision
 ohio-lab-l3ls-evpn-ebgp-eapi-provision: ## Run ansible playbook to build EVPN Fabric configuration with DC1 and CV

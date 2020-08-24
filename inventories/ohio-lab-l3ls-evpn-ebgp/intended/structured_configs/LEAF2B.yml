@@ -244,6 +244,7 @@ ethernet_interfaces:
     channel_group:
       id: 10
       mode: "active"
+    profile: VLAN_30
   Ethernet12:
     peer: HostD
     peer_interface: eth0
@@ -252,6 +253,7 @@ ethernet_interfaces:
     mode: access
     vlans: 10
     spanning_tree_portfast: edge
+    profile: VLAN_10
   Ethernet11:
     peer: HostE
     peer_interface: eth1
@@ -263,6 +265,7 @@ ethernet_interfaces:
     channel_group:
       id: 11
       mode: "active"
+    profile: VLAN_20
 
 
 ### Loopback Interfaces ###
@@ -451,7 +454,8 @@ route_maps:
     sequence_numbers:
       10:
         type: permit
-        match: "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
+        match:
+          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
 ### Routing - BGP ###
 router_bgp:
   as: 65003
@@ -572,6 +576,9 @@ router_bgp:
 
 ### Routing - OSPF ###
 router_ospf:
+
+### Routing - ISIS ###
+router_isis:
 
 ### Queue Monitor Streaming ###
 queue_monitor_streaming:

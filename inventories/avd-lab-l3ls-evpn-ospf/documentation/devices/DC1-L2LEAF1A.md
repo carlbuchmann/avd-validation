@@ -19,11 +19,11 @@ IPv6
 ### Management Interfaces Device Configuration
 
 ```eos
+!
 interface Management1
    description oob_management
    vrf MGMT
    ip address 192.168.200.112/24
-!
 ```
 
 ## Hardware Counters
@@ -44,10 +44,10 @@ Aliases not defined
 ### TerminAttr Daemon Device Configuration
 
 ```eos
+!
 daemon TerminAttr
    exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=MGMT -taillogs
    no shutdown
-!
 ```
 
 ## IP DHCP Relay
@@ -65,8 +65,8 @@ IP DHCP Relay not defined
 ### Internal VLAN Allocation Policy Configuration
 
 ```eos
-vlan internal order ascending range 1006 1199
 !
+vlan internal order ascending range 1006 1199
 ```
 
 ## IP IGMP Snooping
@@ -94,7 +94,6 @@ DNS domain lookup not defined
 ```eos
 ip name-server vrf MGMT 192.168.200.5
 ip name-server vrf MGMT 8.8.8.8
-!
 ```
 
 ## DNS Domain
@@ -126,10 +125,10 @@ VRF: MGMT
 ### NTP Device Configuration
 
 ```eos
+!
 ntp local-interface vrf MGMT Management1
 ntp server vrf MGMT 0.north-america.pool.ntp.org prefer
 ntp server vrf MGMT 1.north-america.pool.ntp.org
-!
 ```
 
 ## Router L2 VPN
@@ -155,9 +154,9 @@ Mode: mstp
 ### Spanning Tree Device Configuration
 
 ```eos
+!
 spanning-tree mode mstp
 spanning-tree mst 0 priority 16384
-!
 ```
 
 
@@ -193,9 +192,9 @@ AAA accounting not defined
 ### Local Users Device Configuration
 
 ```eos
+!
 username admin privilege 15 role network-admin secret sha512 $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
 username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-!
 ```
 
 ## VLANs
@@ -214,6 +213,7 @@ username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAW
 ### VLANs Device Configuration
 
 ```eos
+!
 vlan 110
    name Tenant_A_OP_Zone_1
 !
@@ -231,7 +231,6 @@ vlan 130
 !
 vlan 131
    name Tenant_A_APP_Zone_2
-!
 ```
 
 ## VRF Instances
@@ -245,8 +244,8 @@ vlan 131
 ### VRF Instances Device Configuration
 
 ```eos
-vrf instance MGMT
 !
+vrf instance MGMT
 ```
 
 ## Port-Channel Interfaces
@@ -260,12 +259,12 @@ vrf instance MGMT
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
+!
 interface Port-Channel1
    description DC1-LEAF2A_Po7
    switchport trunk allowed vlan 110-111,120-121,130-131
    switchport mode trunk
    mlag 1
-!
 ```
 
 ## Ethernet Interfaces
@@ -282,6 +281,7 @@ interface Port-Channel1
 ### Ethernet Interfaces Device Configuration
 
 ```eos
+!
 interface Ethernet1
    description DC1-LEAF2A_Ethernet7
    channel-group 1 mode active
@@ -289,7 +289,6 @@ interface Ethernet1
 interface Ethernet2
    description DC1-LEAF2B_Ethernet7
    channel-group 1 mode active
-!
 ```
 
 ## Loopback Interfaces
@@ -334,8 +333,8 @@ Standard Access-lists not defined
 ### Static Routes Device Configuration
 
 ```eos
-ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 !
+ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ```
 
 ## Event Handler
@@ -353,9 +352,9 @@ No Event Handler Defined
 ### IP Routing Device Configuration
 
 ```eos
+!
 ip routing
 no ip routing vrf MGMT
-!
 ```
 
 ## Prefix Lists
@@ -406,9 +405,9 @@ No Peer Filters defined
 ### Router BFD Multihop Device Configuration
 
 ```eos
+!
 router bfd
    multihop interval 1200 min-rx 1200 multiplier 3
-!
 ```
 
 ## Router BGP

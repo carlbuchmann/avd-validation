@@ -19,11 +19,11 @@ IPv6
 ### Management Interfaces Device Configuration
 
 ```eos
+!
 interface Management1
    description oob_management
    vrf MGMT
    ip address 192.168.200.105/24
-!
 ```
 
 ## Hardware Counters
@@ -44,10 +44,10 @@ Aliases not defined
 ### TerminAttr Daemon Device Configuration
 
 ```eos
+!
 daemon TerminAttr
    exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=MGMT -taillogs
    no shutdown
-!
 ```
 
 ## IP DHCP Relay
@@ -65,8 +65,8 @@ IP DHCP Relay not defined
 ### Internal VLAN Allocation Policy Configuration
 
 ```eos
-vlan internal order ascending range 1006 1199
 !
+vlan internal order ascending range 1006 1199
 ```
 
 ## IP IGMP Snooping
@@ -94,7 +94,6 @@ DNS domain lookup not defined
 ```eos
 ip name-server vrf MGMT 192.168.200.5
 ip name-server vrf MGMT 8.8.8.8
-!
 ```
 
 ## DNS Domain
@@ -126,10 +125,10 @@ VRF: MGMT
 ### NTP Device Configuration
 
 ```eos
+!
 ntp local-interface vrf MGMT Management1
 ntp server vrf MGMT 0.north-america.pool.ntp.org prefer
 ntp server vrf MGMT 1.north-america.pool.ntp.org
-!
 ```
 
 ## Router L2 VPN
@@ -155,9 +154,9 @@ Mode: mstp
 ### Spanning Tree Device Configuration
 
 ```eos
+!
 spanning-tree mode mstp
 spanning-tree mst 0 priority 4096
-!
 ```
 
 
@@ -193,9 +192,9 @@ AAA accounting not defined
 ### Local Users Device Configuration
 
 ```eos
+!
 username admin privilege 15 role network-admin secret sha512 $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
 username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-!
 ```
 
 ## VLANs
@@ -214,6 +213,7 @@ username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAW
 ### VLANs Device Configuration
 
 ```eos
+!
 vlan 120
    name Tenant_A_WEB_Zone_1
 !
@@ -231,7 +231,6 @@ vlan 410
 !
 vlan 411
    name tf_demo_app_2
-!
 ```
 
 ## VRF Instances
@@ -248,6 +247,7 @@ vlan 411
 ### VRF Instances Device Configuration
 
 ```eos
+!
 vrf instance MGMT
 !
 vrf instance Tenant_A_APP_Zone
@@ -255,7 +255,6 @@ vrf instance Tenant_A_APP_Zone
 vrf instance Tenant_A_WEB_Zone
 !
 vrf instance tf_web_zone
-!
 ```
 
 ## Port-Channel Interfaces
@@ -269,11 +268,11 @@ vrf instance tf_web_zone
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
+!
 interface Port-Channel7
    description server01_PortChanne1
    switchport trunk allowed vlan 110
    switchport mode trunk
-!
 ```
 
 ## Ethernet Interfaces
@@ -296,6 +295,7 @@ interface Port-Channel7
 ### Ethernet Interfaces Device Configuration
 
 ```eos
+!
 interface Ethernet1
    description P2P_LINK_TO_DC1-SPINE1_Ethernet1
    no switchport
@@ -333,7 +333,6 @@ interface Ethernet7
 interface Ethernet8
    description server01_Eth5
    channel-group 7 mode active
-!
 ```
 
 ## Loopback Interfaces
@@ -357,6 +356,7 @@ IPv6
 ### Loopback Interfaces Device Configuration
 
 ```eos
+!
 interface Loopback0
    description EVPN_Overlay_Peering
    ip address 192.168.255.5/32
@@ -364,7 +364,6 @@ interface Loopback0
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
    ip address 192.168.254.5/32
-!
 ```
 
 ## VLAN Interfaces
@@ -383,6 +382,7 @@ interface Loopback1
 ### VLAN Interfaces Device Configuration
 
 ```eos
+!
 interface Vlan120
    description Tenant_A_WEB_Zone_1
    vrf Tenant_A_WEB_Zone
@@ -412,7 +412,6 @@ interface Vlan411
    description tf_demo_app_2
    vrf tf_web_zone
    ip address virtual 10.4.11.1/24
-!
 ```
 
 ## VXLAN Interface
@@ -444,6 +443,7 @@ interface Vlan411
 ### VXLAN Interface Device Configuration
 
 ```eos
+!
 interface Vxlan1
    vxlan source-interface Loopback1
    vxlan udp-port 4789
@@ -456,7 +456,6 @@ interface Vxlan1
    vxlan vrf Tenant_A_APP_Zone vni 12
    vxlan vrf Tenant_A_WEB_Zone vni 11
    vxlan vrf tf_web_zone vni 40
-!
 ```
 
 ## Virtual Router MAC Address & Virtual Source NAT
@@ -468,8 +467,8 @@ interface Vxlan1
 ### Virtual Router MAC Address Device and Virtual Source NAT Configuration
 
 ```eos
-ip virtual-router mac-address 00:dc:00:00:00:0a
 !
+ip virtual-router mac-address 00:dc:00:00:00:0a
 ```
 
 ## IPv6 Extended Access-lists
@@ -499,8 +498,8 @@ Standard Access-lists not defined
 ### Static Routes Device Configuration
 
 ```eos
-ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 !
+ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ```
 
 ## Event Handler
@@ -521,12 +520,12 @@ No Event Handler Defined
 ### IP Routing Device Configuration
 
 ```eos
+!
 ip routing
 no ip routing vrf MGMT
 ip routing vrf Tenant_A_APP_Zone
 ip routing vrf Tenant_A_WEB_Zone
 ip routing vrf tf_web_zone
-!
 ```
 
 ## Prefix Lists
@@ -549,13 +548,13 @@ ip routing vrf tf_web_zone
 ### Prefix Lists Device Configuration
 
 ```eos
+!
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.255.0/24 eq 32
    seq 20 permit 192.168.254.0/24 eq 32
 !
 ip prefix-list PL-P2P-UNDERLAY
    seq 10 permit 172.31.255.0/24 le 31
-!
 ```
 
 ## IPv6 Prefix Lists
@@ -599,9 +598,9 @@ Community Lists not defined
 ### Route Maps Device Configuration
 
 ```eos
+!
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-!
 ```
 
 ## Peer Filters
@@ -619,9 +618,9 @@ No Peer Filters defined
 ### Router BFD Multihop Device Configuration
 
 ```eos
+!
 router bfd
    multihop interval 1200 min-rx 1200 multiplier 3
-!
 ```
 
 ## Router BGP
@@ -651,6 +650,7 @@ router bfd
 | ebgp multihop | 3 |
 | send community | true |
 | maximum routes | 0 (no limit) |
+
 **IPv4-UNDERLAY-PEERS**:
 
 | Settings | Value |
@@ -697,6 +697,7 @@ router bfd
 ### Router BGP Device Configuration
 
 ```eos
+!
 router bgp 65101
    router-id 192.168.255.5
    no bgp default ipv4-unicast
@@ -771,7 +772,6 @@ router bgp 65101
       route-target export evpn 40:40
       router-id 192.168.255.5
       redistribute connected
-!
 ```
 
 ## Router Multicast

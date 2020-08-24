@@ -169,7 +169,8 @@ route_maps:
     sequence_numbers:
       10:
         type: permit
-        match: "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
+        match:
+          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
 
 ### peer-filters ###
 peer_filters:
@@ -243,6 +244,9 @@ router_bgp:
 
 ### Routing - OSPF ###
 router_ospf:
+
+### Routing - ISIS ###
+router_isis:
 
 ### Queue Monitor Streaming ###
 queue_monitor_streaming:

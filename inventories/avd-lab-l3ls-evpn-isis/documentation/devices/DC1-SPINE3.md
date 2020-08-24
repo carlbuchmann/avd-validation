@@ -19,11 +19,11 @@ IPv6
 ### Management Interfaces Device Configuration
 
 ```eos
+!
 interface Management1
    description oob_management
    vrf MGMT
    ip address 192.168.200.103/24
-!
 ```
 
 ## Hardware Counters
@@ -44,10 +44,10 @@ Aliases not defined
 ### TerminAttr Daemon Device Configuration
 
 ```eos
+!
 daemon TerminAttr
    exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=MGMT -taillogs
    no shutdown
-!
 ```
 
 ## IP DHCP Relay
@@ -65,8 +65,8 @@ IP DHCP Relay not defined
 ### Internal VLAN Allocation Policy Configuration
 
 ```eos
-vlan internal order ascending range 1006 1199
 !
+vlan internal order ascending range 1006 1199
 ```
 
 ## IP IGMP Snooping
@@ -94,7 +94,6 @@ DNS domain lookup not defined
 ```eos
 ip name-server vrf MGMT 192.168.200.5
 ip name-server vrf MGMT 8.8.8.8
-!
 ```
 
 ## DNS Domain
@@ -126,10 +125,10 @@ VRF: MGMT
 ### NTP Device Configuration
 
 ```eos
+!
 ntp local-interface vrf MGMT Management1
 ntp server vrf MGMT 0.north-america.pool.ntp.org prefer
 ntp server vrf MGMT 1.north-america.pool.ntp.org
-!
 ```
 
 ## Router L2 VPN
@@ -150,8 +149,8 @@ Mode: none
 ### Spanning Tree Device Configuration
 
 ```eos
-spanning-tree mode none
 !
+spanning-tree mode none
 ```
 
 
@@ -187,9 +186,9 @@ AAA accounting not defined
 ### Local Users Device Configuration
 
 ```eos
+!
 username admin privilege 15 role network-admin secret sha512 $6$Df86J4/SFMDE3/1K$Hef4KstdoxNDaami37cBquTWOTplC.miMPjXVgQxMe92.e5wxlnXOLlebgPj8Fz1KO0za/RCO7ZIs4Q6Eiq1g1
 username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-!
 ```
 
 ## VLANs
@@ -207,8 +206,8 @@ No VLANs defined
 ### VRF Instances Device Configuration
 
 ```eos
-vrf instance MGMT
 !
+vrf instance MGMT
 ```
 
 ## Port-Channel Interfaces
@@ -234,6 +233,7 @@ No Port-Channels defined
 ### Ethernet Interfaces Device Configuration
 
 ```eos
+!
 interface Ethernet1
    description P2P_LINK_TO_DC1-LEAF1A_Ethernet3
    no switchport
@@ -289,7 +289,6 @@ interface Ethernet7
    isis enable EVPN_UNDERLAY
    isis metric 50
    isis network point-to-point
-!
 ```
 
 ## Loopback Interfaces
@@ -311,12 +310,12 @@ IPv6
 ### Loopback Interfaces Device Configuration
 
 ```eos
+!
 interface Loopback0
    description EVPN_Overlay_Peering
    ip address 192.168.255.3/32
    isis enable EVPN_UNDERLAY
    isis passive
-!
 ```
 
 ## VLAN Interfaces
@@ -357,8 +356,8 @@ Standard Access-lists not defined
 ### Static Routes Device Configuration
 
 ```eos
-ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 !
+ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ```
 
 ## Event Handler
@@ -376,9 +375,9 @@ No Event Handler Defined
 ### IP Routing Device Configuration
 
 ```eos
+!
 ip routing
 no ip routing vrf MGMT
-!
 ```
 
 ## Prefix Lists
@@ -394,9 +393,9 @@ no ip routing vrf MGMT
 ### Prefix Lists Device Configuration
 
 ```eos
+!
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.255.0/24 le 32
-!
 ```
 
 ## IPv6 Prefix Lists
@@ -437,9 +436,9 @@ Community Lists not defined
 ### Route Maps Device Configuration
 
 ```eos
+!
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-!
 ```
 
 ## Peer Filters
@@ -455,9 +454,9 @@ route-map RM-CONN-2-BGP permit 10
 ### Peer Filters Device Configuration
 
 ```eos
+!
 peer-filter LEAF-AS-RANGE
    10 match as-range 65101-65132 result accept
-!
 ```
 
 ## Router BFD
@@ -471,9 +470,9 @@ peer-filter LEAF-AS-RANGE
 ### Router BFD Multihop Device Configuration
 
 ```eos
+!
 router bfd
    multihop interval 1200 min-rx 1200 multiplier 3
-!
 ```
 
 ## Router BGP
@@ -528,6 +527,7 @@ router bfd
 ### Router BGP Device Configuration
 
 ```eos
+!
 router bgp 65001
    router-id 192.168.255.3
    no bgp default ipv4-unicast
@@ -561,7 +561,6 @@ router bgp 65001
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-!
 ```
 
 ## Router Multicast
