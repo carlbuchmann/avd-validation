@@ -252,9 +252,9 @@ vrf instance MGMT
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | --- | ---------- | ------------ |
-| Port-Channel1 | DC1-LEAF2A_Po7 | 1500 | switched | trunk | 110-111,120-121,130-131 | - | 1 | - | - | - |
+| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
+| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | -------- | --- | ---------- | ------------ |
+| Port-Channel1 | DC1-LEAF2A_Po7 | 1500 | switched | trunk | 110-111,120-121,130-131 | - | 1 | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 

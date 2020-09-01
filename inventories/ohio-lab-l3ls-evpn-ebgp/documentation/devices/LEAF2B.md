@@ -337,11 +337,11 @@ vrf instance MGMT
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | --- | ---------- | ------------ |
-| Port-Channel10 | HostC_bond0 | 1500 | switched | access | 30 | - | 10 | - | - | - |
-| Port-Channel11 | HostE_bond0 | 1500 | switched | access | 20 | - | 11 | - | - | - |
-| Port-Channel47 | MLAG_PEER_LEAF2A_Po47 | 1500 | switched | trunk | 2-4094 | LEAF_PEER_L3<br> MLAG | - | - | - | - |
+| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
+| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | -------- | --- | ---------- | ------------ |
+| Port-Channel10 | HostC_bond0 | 1500 | switched | access | 30 | - | 10 | - | - | - | - |
+| Port-Channel11 | HostE_bond0 | 1500 | switched | access | 20 | - | 11 | - | - | - | - |
+| Port-Channel47 | MLAG_PEER_LEAF2A_Po47 | 1500 | switched | trunk | 2-4094 | LEAF_PEER_L3<br> MLAG | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
