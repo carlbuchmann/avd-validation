@@ -261,9 +261,9 @@ vrf instance tf_web_zone
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | --- | ---------- | ------------ |
-| Port-Channel7 | server01_PortChanne1 | 1500 | switched | trunk | 110 | - | - | - | - | - |
+| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
+| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | -------- | --- | ---------- | ------------ |
+| Port-Channel7 | server01_PortChanne1 | 1500 | switched | trunk | 110 | - | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 

@@ -343,12 +343,12 @@ vrf instance Tenant_C_OP_Zone
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | --- | ---------- | ------------ |
-| Port-Channel5 | MLAG_PEER_DC1-SVC3B_Po5 | 1500 | switched | trunk | 2-4094 | LEAF_PEER_L3<br> MLAG | - | - | - | - |
-| Port-Channel7 | DC1_L2LEAF2_Po1 | 1500 | switched | trunk | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | 7 | - | - | - |
-| Port-Channel10 | server03_PortChanne1 | 1500 | switched | trunk | 110-111,210-211 | - | 10 | - | - | - |
-| Port-Channel11 | server04_PortChanne1 | 1500 | switched | trunk | 110-111,210-211 | - | 11 | - | - | - |
+| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
+| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | ------- | -------- | --- | ---------- | ------------ |
+| Port-Channel5 | MLAG_PEER_DC1-SVC3B_Po5 | 1500 | switched | trunk | 2-4094 | LEAF_PEER_L3<br> MLAG | - | - | - | - | - |
+| Port-Channel7 | DC1_L2LEAF2_Po1 | 1500 | switched | trunk | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | 7 | - | - | - | - |
+| Port-Channel10 | server03_PortChanne1 | 1500 | switched | trunk | 110-111,210-211 | - | 10 | - | - | - | - |
+| Port-Channel11 | server04_PortChanne1 | 1500 | switched | trunk | 110-111,210-211 | - | 11 | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
