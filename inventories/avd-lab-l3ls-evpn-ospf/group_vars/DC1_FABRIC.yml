@@ -6,6 +6,7 @@ fabric_name: DC1_FABRIC
 
 # Configure underlay routing protocol to be OSPF
 underlay_routing_protocol: OSPF
+underlay_ospf_bfd_enable: true
 
 
 # Point to Point Network Summary range, assigned as /31 for each uplink interfaces
