@@ -29,7 +29,7 @@ daemon_terminattr:
       - 192.168.200.11
     port: 9910
   ingestauth_key: telarista
-  ingestvrf: MGMT
+  ingestvrf: default
   smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
   ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
 
@@ -57,15 +57,14 @@ logging:
 ### Name Servers ###
 name_server:
   source:
-    vrf: MGMT
+    vrf: default
   nodes:
     - 192.168.200.5
-    - 8.8.8.8
 
 ### NTP Servers ###
 ntp_server:
   local_interface:
-    vrf: MGMT
+    vrf: default
     interface: Management1
   nodes:
     - 0.north-america.pool.ntp.org
@@ -125,7 +124,7 @@ vlans:
 
 ### VRFs ###
 vrfs:
-  MGMT:
+  default:
     ip_routing: False
 ## tech_friday_demo ##
   tf_web_zone:
@@ -240,7 +239,7 @@ loopback_interfaces:
 management_interfaces:
   Management1:
     description: oob_management
-    vrf: MGMT
+    vrf: default
     ip_address: 192.168.200.105/24
     gateway: 192.168.200.1
 
@@ -335,7 +334,7 @@ virtual_source_nat_vrfs:
 
 ### static routes ###
 static_routes:
-  - vrf: MGMT
+  - vrf: default
     destination_address_prefix: 0.0.0.0/0
     gateway: 192.168.200.1
 
@@ -502,4 +501,4 @@ queue_monitor_streaming:
 management_api_http:
   enable_https: True
   enable_vrfs:
-    MGMT:
+    default:

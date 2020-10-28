@@ -8,13 +8,13 @@ IPv4
 
 | Management Interface | description | VRF | IP Address | Gateway |
 | -------------------- | ----------- | --- | ---------- | ------- |
-| Management1 | oob_management | MGMT | 192.168.200.111/24 | 192.168.200.1 |
+| Management1 | oob_management | default | 192.168.200.111/24 | 192.168.200.1 |
 
 IPv6
 
 | Management Interface | description | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | --- | ------------ | ------------ |
-| Management1 | oob_management | MGMT | ||
+| Management1 | oob_management | default | ||
 
 ### Management Interfaces Device Configuration
 
@@ -22,9 +22,12 @@ IPv6
 !
 interface Management1
    description oob_management
-   vrf MGMT
    ip address 192.168.200.111/24
 ```
+
+## Management SSH 
+
+Management SSH is not defined
 
 ## Hardware Counters
 
@@ -39,14 +42,14 @@ Aliases not defined
 
 | CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
 | -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | default | default |
 
 ### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=MGMT -taillogs
+   exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -86,14 +89,12 @@ DNS domain lookup not defined
 
 | Name Server | Source VRF |
 | ----------- | ---------- |
-| 192.168.200.5 | MGMT |
-| 8.8.8.8 | MGMT |
+| 192.168.200.5 | default |
 
 ### Name Servers Device Configuration
 
 ```eos
-ip name-server vrf MGMT 192.168.200.5
-ip name-server vrf MGMT 8.8.8.8
+ip name-server vrf default 192.168.200.5
 ```
 
 ## DNS Domain
@@ -114,7 +115,7 @@ dns domain avd-lab.local
 
 Local Interface: Management1
 
-VRF: MGMT
+VRF: default
 
 
 | Node | Primary |
@@ -126,9 +127,9 @@ VRF: MGMT
 
 ```eos
 !
-ntp local-interface vrf MGMT Management1
-ntp server vrf MGMT 0.north-america.pool.ntp.org prefer
-ntp server vrf MGMT 1.north-america.pool.ntp.org
+ntp local-interface Management1
+ntp server 0.north-america.pool.ntp.org prefer
+ntp server 1.north-america.pool.ntp.org
 ```
 
 ## Router L2 VPN
@@ -262,7 +263,7 @@ vlan 4094
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
-| MGMT |  disabled |
+| default |  disabled |
 | Tenant_A_OP_Zone |  enabled |
 | Tenant_A_WAN_Zone |  enabled |
 | Tenant_B_WAN_Zone |  enabled |
@@ -271,8 +272,6 @@ vlan 4094
 ### VRF Instances Device Configuration
 
 ```eos
-!
-vrf instance MGMT
 !
 vrf instance Tenant_A_OP_Zone
 !
@@ -544,13 +543,13 @@ Standard Access-lists not defined
 
 | VRF | Destination Prefix | Fowarding Address / Interface |
 | --- | ------------------ | ----------------------------- |
-| MGMT | 0.0.0.0/0 | 192.168.200.1 |
+| default | 0.0.0.0/0 | 192.168.200.1 |
 
 ### Static Routes Device Configuration
 
 ```eos
 !
-ip route vrf MGMT 0.0.0.0/0 192.168.200.1
+ip route 0.0.0.0/0 192.168.200.1
 ```
 
 ## Event Handler
@@ -563,7 +562,7 @@ No Event Handler Defined
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| MGMT | False |
+| default | False |
 | Tenant_A_OP_Zone | True |
 | Tenant_A_WAN_Zone | True |
 | Tenant_B_WAN_Zone | True |
@@ -574,7 +573,6 @@ No Event Handler Defined
 ```eos
 !
 ip routing
-no ip routing vrf MGMT
 ip routing vrf Tenant_A_OP_Zone
 ip routing vrf Tenant_A_WAN_Zone
 ip routing vrf Tenant_B_WAN_Zone
@@ -622,7 +620,7 @@ IPv6 Prefix lists not defined
 
 | VRF | IPv6 Routing Enabled |
 | --- | -------------------- |
-| MGMT | False |
+| default | False |
 | Tenant_A_OP_Zone | False |
 | Tenant_A_WAN_Zone | False |
 | Tenant_B_WAN_Zone | False |
@@ -651,7 +649,7 @@ mlag configuration
    domain-id DC1_BL1
    local-interface Vlan4094
    peer-address 10.255.252.10
-   peer-address heartbeat 192.168.200.110 vrf MGMT
+   peer-address heartbeat 192.168.200.110
    peer-link Port-Channel5
    dual-primary detection delay 5 action errdisable all-interfaces
    reload-delay mlag 300
