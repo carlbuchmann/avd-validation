@@ -35,7 +35,7 @@ daemon_terminattr:
       - 192.168.200.11
     port: 9910
   ingestauth_key: telarista
-  ingestvrf: default
+  ingestvrf: MGMT
   smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
   ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
 
@@ -63,14 +63,15 @@ logging:
 ### Name Servers ###
 name_server:
   source:
-    vrf: default
+    vrf: MGMT
   nodes:
     - 192.168.200.5
+    - 8.8.8.8
 
 ### NTP Servers ###
 ntp_server:
   local_interface:
-    vrf: default
+    vrf: MGMT
     interface: Management1
   nodes:
     - 0.north-america.pool.ntp.org
@@ -195,7 +196,7 @@ vlans:
 
 ### VRFs ###
 vrfs:
-  default:
+  MGMT:
     ip_routing: False
 ## Tenant_A ##
   Tenant_A_APP_Zone:
@@ -363,7 +364,7 @@ loopback_interfaces:
 management_interfaces:
   Management1:
     description: oob_management
-    vrf: default
+    vrf: MGMT
     ip_address: 192.168.200.109/24
     gateway: 192.168.200.1
 
@@ -561,7 +562,7 @@ virtual_source_nat_vrfs:
 
 ### static routes ###
 static_routes:
-  - vrf: default
+  - vrf: MGMT
     destination_address_prefix: 0.0.0.0/0
     gateway: 192.168.200.1
 
@@ -587,7 +588,7 @@ mlag_configuration:
   peer_address: 10.255.252.6
   peer_address_heartbeat:
     peer_ip: 192.168.200.108
-    vrf: default
+    vrf: MGMT
   dual_primary_detection_delay: 5
   peer_link: Port-Channel5
   reload_delay_mlag: 300
@@ -849,4 +850,4 @@ queue_monitor_streaming:
 management_api_http:
   enable_https: True
   enable_vrfs:
-    default:
+    MGMT:
