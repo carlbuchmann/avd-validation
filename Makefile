@@ -63,6 +63,10 @@ avd-lab-l3ls-evpn-ebgp-cvp-provision: ## Run ansible playbook to deploy EVPN Fab
 avd-lab-l3ls-evpn-ebgp-deploy: ## Run ansible playbook to deploy EVPN Fabric.
 	ansible-playbook playbooks/dc1-fabric-deploy-cvp.yml --extra-vars "execute_tasks=true" --tags "build,provision,apply" -i inventories/avd-lab-l3ls-evpn-ebgp/inventory.yml --diff
 
+.PHONY: avd-lab-l3ls-evpn-ebgp-validate
+avd-lab-l3ls-evpn-ebgp-validate: ## Run ansible playbook to validate EVPN Fabric configuration with DC1 and eAPI
+	ansible-playbook playbooks/dc1-fabric-validate-state.yml -i inventories/avd-lab-l3ls-evpn-ebgp/inventory.yml --diff
+
 
 ################################################################################
 # avd-lab-l3ls-evpn-ospf
