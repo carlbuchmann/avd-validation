@@ -70,7 +70,6 @@
 
 ## Management Interfaces
 
-
 ### Management Interfaces Summary
 
 IPv4
@@ -83,7 +82,7 @@ IPv6
 
 | Management Interface | description | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | --- | ------------ | ------------ |
-| Management1 | oob_management | MGMT | ||
+| Management1 | oob_management | MGMT | not configured  | not configured |
 
 ### Management Interfaces Device Configuration
 
@@ -814,8 +813,9 @@ ip routing vrf Tenant_C_OP_Zone
 
 ### IPv6 Routing Summary
 
-| VRF | IPv6 Routing Enabled |
-| --- | -------------------- |
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default |  False | 
 | MGMT | False |
 | Tenant_A_APP_Zone | False |
 | Tenant_A_DB_Zone | False |
@@ -823,11 +823,8 @@ ip routing vrf Tenant_C_OP_Zone
 | Tenant_A_WEB_Zone | False |
 | Tenant_B_OP_Zone | False |
 | Tenant_C_OP_Zone | False |
+ 
 
-### IPv6 Routing Device Configuration
-
-```eos
-```
 
 ## Static Routes
 
@@ -913,19 +910,25 @@ Router ISIS not defined
 
 #### Router BGP EVPN MAC-VRFs
 
-**VLAN aware bundles:**
 
-| VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
-| ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| Tenant_A_APP_Zone | 192.168.255.9:12 |  12:12  |  |  | learned | 130-131 |
-| Tenant_A_DB_Zone | 192.168.255.9:13 |  13:13  |  |  | learned | 140-141 |
-| Tenant_A_NFS | 192.168.255.9:10161 |  10161:10161  |  |  | learned | 161 |
-| Tenant_A_OP_Zone | 192.168.255.9:10 |  10:10  |  |  | learned | 110-111 |
-| Tenant_A_VMOTION | 192.168.255.9:50160 |  50160:50160  |  |  | learned | 160 |
-| Tenant_A_WEB_Zone | 192.168.255.9:11 |  11:11  |  |  | learned | 120-121 |
-| Tenant_B_OP_Zone | 192.168.255.9:20 |  20:20  |  |  | learned | 210-211 |
-| Tenant_C_OP_Zone | 192.168.255.9:30 |  30:30  |  |  | learned | 310-311 |
+**VLAN Based:**
 
+| VLAN | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute |
+| ---- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ |
+| 110 | 192.168.255.9:10110 |  10110:10110 |  -  | -  | learned |
+| 111 | 192.168.255.9:50111 |  50111:50111 |  -  | -  | learned |
+| 120 | 192.168.255.9:10120 |  10120:10120 |  -  | -  | learned |
+| 121 | 192.168.255.9:10121 |  10121:10121 |  -  | -  | learned |
+| 130 | 192.168.255.9:10130 |  10130:10130 |  -  | -  | learned |
+| 131 | 192.168.255.9:10131 |  10131:10131 |  -  | -  | learned |
+| 140 | 192.168.255.9:10140 |  10140:10140 |  -  | -  | learned |
+| 141 | 192.168.255.9:10141 |  10141:10141 |  -  | -  | learned |
+| 160 | 192.168.255.9:50160 |  50160:50160 |  -  | -  | learned |
+| 161 | 192.168.255.9:10161 |  10161:10161 |  -  | -  | learned |
+| 210 | 192.168.255.9:20210 |  20210:20210 |  -  | -  | learned |
+| 211 | 192.168.255.9:20211 |  20211:20211 |  -  | -  | learned |
+| 310 | 192.168.255.9:30310 |  30310:30310 |  -  | -  | learned |
+| 311 | 192.168.255.9:30311 |  30311:30311 |  -  | -  | learned |
 
 #### Router BGP EVPN VRFs
 
@@ -977,53 +980,75 @@ router bgp 65103
    neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
    redistribute connected route-map RM-CONN-2-BGP
    !
-   vlan-aware-bundle Tenant_A_APP_Zone
-      rd 192.168.255.9:12
-      route-target both 12:12
+   vlan 110
+      rd 192.168.255.9:10110
+      route-target both 10110:10110
       redistribute learned
-      vlan 130-131
    !
-   vlan-aware-bundle Tenant_A_DB_Zone
-      rd 192.168.255.9:13
-      route-target both 13:13
+   vlan 111
+      rd 192.168.255.9:50111
+      route-target both 50111:50111
       redistribute learned
-      vlan 140-141
    !
-   vlan-aware-bundle Tenant_A_NFS
-      rd 192.168.255.9:10161
-      route-target both 10161:10161
+   vlan 120
+      rd 192.168.255.9:10120
+      route-target both 10120:10120
       redistribute learned
-      vlan 161
    !
-   vlan-aware-bundle Tenant_A_OP_Zone
-      rd 192.168.255.9:10
-      route-target both 10:10
+   vlan 121
+      rd 192.168.255.9:10121
+      route-target both 10121:10121
       redistribute learned
-      vlan 110-111
    !
-   vlan-aware-bundle Tenant_A_VMOTION
+   vlan 130
+      rd 192.168.255.9:10130
+      route-target both 10130:10130
+      redistribute learned
+   !
+   vlan 131
+      rd 192.168.255.9:10131
+      route-target both 10131:10131
+      redistribute learned
+   !
+   vlan 140
+      rd 192.168.255.9:10140
+      route-target both 10140:10140
+      redistribute learned
+   !
+   vlan 141
+      rd 192.168.255.9:10141
+      route-target both 10141:10141
+      redistribute learned
+   !
+   vlan 160
       rd 192.168.255.9:50160
       route-target both 50160:50160
       redistribute learned
-      vlan 160
    !
-   vlan-aware-bundle Tenant_A_WEB_Zone
-      rd 192.168.255.9:11
-      route-target both 11:11
+   vlan 161
+      rd 192.168.255.9:10161
+      route-target both 10161:10161
       redistribute learned
-      vlan 120-121
    !
-   vlan-aware-bundle Tenant_B_OP_Zone
-      rd 192.168.255.9:20
-      route-target both 20:20
+   vlan 210
+      rd 192.168.255.9:20210
+      route-target both 20210:20210
       redistribute learned
-      vlan 210-211
    !
-   vlan-aware-bundle Tenant_C_OP_Zone
-      rd 192.168.255.9:30
-      route-target both 30:30
+   vlan 211
+      rd 192.168.255.9:20211
+      route-target both 20211:20211
       redistribute learned
-      vlan 310-311
+   !
+   vlan 310
+      rd 192.168.255.9:30310
+      route-target both 30310:30310
+      redistribute learned
+   !
+   vlan 311
+      rd 192.168.255.9:30311
+      route-target both 30311:30311
+      redistribute learned
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
@@ -1254,3 +1279,7 @@ Router L2 VPN not defined
 # IP DHCP Relay
 
 IP DHCP Relay not defined
+
+## Custom Templates
+
+No Custom Templates Defined

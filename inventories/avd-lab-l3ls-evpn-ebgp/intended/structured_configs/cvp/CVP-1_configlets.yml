@@ -5,7 +5,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-BL1A\nip name-server vrf MGMT 192.168.200.5\n\
-    ip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\nntp local-interface\
+    ip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\nntp local-interface\
     \ vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org prefer\n\
     ntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode mstp\n\
     no spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 4096\n!\nno aaa root\n\
@@ -56,7 +56,7 @@ CVP_CONFIGLETS:
     \ vlan 150 vni 10150\n   vxlan vlan 250 vni 20250\n   vxlan vlan 350 vni 30350\n\
     \   vxlan vrf Tenant_A_OP_Zone vni 10\n   vxlan vrf Tenant_A_WAN_Zone vni 14\n\
     \   vxlan vrf Tenant_B_WAN_Zone vni 21\n   vxlan vrf Tenant_C_WAN_Zone vni 31\n\
-    !\nip virtual-router mac-address 00:dc:00:00:00:0a\nip address virtual source-nat\
+    !\nip virtual-router mac-address 00:dc:00:00:00:0a\n!\nip address virtual source-nat\
     \ vrf Tenant_A_OP_Zone address 10.255.1.10\n!\nip routing\nno ip routing vrf MGMT\n\
     ip routing vrf Tenant_A_OP_Zone\nip routing vrf Tenant_A_WAN_Zone\nip routing\
     \ vrf Tenant_B_WAN_Zone\nip routing vrf Tenant_C_WAN_Zone\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
@@ -89,18 +89,16 @@ CVP_CONFIGLETS:
     \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS\n\
     \   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.4\
     \ peer group EVPN-OVERLAY-PEERS\n   redistribute connected route-map RM-CONN-2-BGP\n\
-    \   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd 192.168.255.10:10\n   \
-    \   route-target both 10:10\n      redistribute learned\n      vlan 113\n   !\n\
-    \   vlan-aware-bundle Tenant_A_WAN_Zone\n      rd 192.168.255.10:14\n      route-target\
-    \ both 14:14\n      redistribute learned\n      vlan 150\n   !\n   vlan-aware-bundle\
-    \ Tenant_B_WAN_Zone\n      rd 192.168.255.10:21\n      route-target both 21:21\n\
-    \      redistribute learned\n      vlan 250\n   !\n   vlan-aware-bundle Tenant_C_WAN_Zone\n\
-    \      rd 192.168.255.10:31\n      route-target both 31:31\n      redistribute\
-    \ learned\n      vlan 350\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor\
-    \ MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family ipv4\n      no neighbor\
-    \ EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n \
-    \     neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n\
+    \   !\n   vlan 113\n      rd 192.168.255.10:10113\n      route-target both 10113:10113\n\
+    \      redistribute learned\n   !\n   vlan 150\n      rd 192.168.255.10:10150\n\
+    \      route-target both 10150:10150\n      redistribute learned\n   !\n   vlan\
+    \ 250\n      rd 192.168.255.10:20250\n      route-target both 20250:20250\n  \
+    \    redistribute learned\n   !\n   vlan 350\n      rd 192.168.255.10:30350\n\
+    \      route-target both 30350:30350\n      redistribute learned\n   !\n   address-family\
+    \ evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n      no neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family\
+    \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n\
     \      rd 192.168.255.10:10\n      route-target import evpn 10:10\n      route-target\
     \ export evpn 10:10\n      router-id 192.168.255.10\n      neighbor 10.255.251.11\
     \ peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n   !\n   vrf\
@@ -114,14 +112,26 @@ CVP_CONFIGLETS:
     \      route-target import evpn 31:31\n      route-target export evpn 31:31\n\
     \      router-id 192.168.255.10\n      neighbor 10.255.251.11 peer group MLAG-IPv4-UNDERLAY-PEER\n\
     \      redistribute connected\n!\nmanagement api http-commands\n   no shutdown\n\
-    \   !\n   vrf MGMT\n      no shutdown\n!\nend"
+    \   !\n   vrf MGMT\n      no shutdown\ninterface Ethernet10\n   description P2P_LINK_TO_DC2-BL1A_Ethernet10\n\
+    \   no switchport\n   ip address 172.31.0.0/31\n!\nrouter bgp 65104\n   neighbor\
+    \ DCI-EVPN-OVERLAY-PEERS peer group\n   neighbor DCI-EVPN-OVERLAY-PEERS remote-as\
+    \ 65202\n   neighbor DCI-EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor\
+    \ DCI-EVPN-OVERLAY-PEERS bfd\n   neighbor DCI-EVPN-OVERLAY-PEERS ebgp-multihop\
+    \ 3\n   neighbor DCI-EVPN-OVERLAY-PEERS send-community\n   neighbor DCI-EVPN-OVERLAY-PEERS\
+    \ maximum-routes 0\n   neighbor DCI-IPv4-UNDERLAY-PEERS peer group\n   neighbor\
+    \ DCI-IPv4-UNDERLAY-PEERS remote-as 65202\n   neighbor DCI-IPv4-UNDERLAY-PEERS\
+    \ send-community\n   neighbor DCI-IPv4-UNDERLAY-PEERS maximum-routes 12000\n \
+    \  neighbor 172.31.0.1 peer group DCI-IPv4-UNDERLAY-PEERS\n   neighbor 192.168.253.5\
+    \ peer group DCI-EVPN-OVERLAY-PEERS\n   !\n   address-family evpn\n      neighbor\
+    \ DCI-EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      neighbor\
+    \ DCI-IPv4-UNDERLAY-PEERS activate\n   !\n!\nend"
   DC1-AVD_DC1-BL1B: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec /usr/bin/TerminAttr\
     \ -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista\
     \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-BL1B\nip name-server vrf MGMT 192.168.200.5\n\
-    ip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\nntp local-interface\
+    ip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\nntp local-interface\
     \ vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org prefer\n\
     ntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode mstp\n\
     no spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 4096\n!\nno aaa root\n\
@@ -172,7 +182,7 @@ CVP_CONFIGLETS:
     \ vlan 150 vni 10150\n   vxlan vlan 250 vni 20250\n   vxlan vlan 350 vni 30350\n\
     \   vxlan vrf Tenant_A_OP_Zone vni 10\n   vxlan vrf Tenant_A_WAN_Zone vni 14\n\
     \   vxlan vrf Tenant_B_WAN_Zone vni 21\n   vxlan vrf Tenant_C_WAN_Zone vni 31\n\
-    !\nip virtual-router mac-address 00:dc:00:00:00:0a\nip address virtual source-nat\
+    !\nip virtual-router mac-address 00:dc:00:00:00:0a\n!\nip address virtual source-nat\
     \ vrf Tenant_A_OP_Zone address 10.255.1.11\n!\nip routing\nno ip routing vrf MGMT\n\
     ip routing vrf Tenant_A_OP_Zone\nip routing vrf Tenant_A_WAN_Zone\nip routing\
     \ vrf Tenant_B_WAN_Zone\nip routing vrf Tenant_C_WAN_Zone\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n\
@@ -205,18 +215,16 @@ CVP_CONFIGLETS:
     \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS\n\
     \   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.4\
     \ peer group EVPN-OVERLAY-PEERS\n   redistribute connected route-map RM-CONN-2-BGP\n\
-    \   !\n   vlan-aware-bundle Tenant_A_OP_Zone\n      rd 192.168.255.11:10\n   \
-    \   route-target both 10:10\n      redistribute learned\n      vlan 113\n   !\n\
-    \   vlan-aware-bundle Tenant_A_WAN_Zone\n      rd 192.168.255.11:14\n      route-target\
-    \ both 14:14\n      redistribute learned\n      vlan 150\n   !\n   vlan-aware-bundle\
-    \ Tenant_B_WAN_Zone\n      rd 192.168.255.11:21\n      route-target both 21:21\n\
-    \      redistribute learned\n      vlan 250\n   !\n   vlan-aware-bundle Tenant_C_WAN_Zone\n\
-    \      rd 192.168.255.11:31\n      route-target both 31:31\n      redistribute\
-    \ learned\n      vlan 350\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor\
-    \ MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family ipv4\n      no neighbor\
-    \ EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n \
-    \     neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n\
+    \   !\n   vlan 113\n      rd 192.168.255.11:10113\n      route-target both 10113:10113\n\
+    \      redistribute learned\n   !\n   vlan 150\n      rd 192.168.255.11:10150\n\
+    \      route-target both 10150:10150\n      redistribute learned\n   !\n   vlan\
+    \ 250\n      rd 192.168.255.11:20250\n      route-target both 20250:20250\n  \
+    \    redistribute learned\n   !\n   vlan 350\n      rd 192.168.255.11:30350\n\
+    \      route-target both 30350:30350\n      redistribute learned\n   !\n   address-family\
+    \ evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n      no neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family\
+    \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_OP_Zone\n\
     \      rd 192.168.255.11:10\n      route-target import evpn 10:10\n      route-target\
     \ export evpn 10:10\n      router-id 192.168.255.11\n      neighbor 10.255.251.10\
     \ peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n   !\n   vrf\
@@ -230,14 +238,26 @@ CVP_CONFIGLETS:
     \      route-target import evpn 31:31\n      route-target export evpn 31:31\n\
     \      router-id 192.168.255.11\n      neighbor 10.255.251.10 peer group MLAG-IPv4-UNDERLAY-PEER\n\
     \      redistribute connected\n!\nmanagement api http-commands\n   no shutdown\n\
-    \   !\n   vrf MGMT\n      no shutdown\n!\nend"
+    \   !\n   vrf MGMT\n      no shutdown\ninterface Ethernet10\n   description P2P_LINK_TO_DC2-BL1B_Ethernet10\n\
+    \   no switchport\n   ip address 172.31.0.2/31\n!\nrouter bgp 65104\n   neighbor\
+    \ DCI-EVPN-OVERLAY-PEERS peer group\n   neighbor DCI-EVPN-OVERLAY-PEERS remote-as\
+    \ 65202\n   neighbor DCI-EVPN-OVERLAY-PEERS update-source Loopback0\n   neighbor\
+    \ DCI-EVPN-OVERLAY-PEERS bfd\n   neighbor DCI-EVPN-OVERLAY-PEERS ebgp-multihop\
+    \ 3\n   neighbor DCI-EVPN-OVERLAY-PEERS send-community\n   neighbor DCI-EVPN-OVERLAY-PEERS\
+    \ maximum-routes 0\n   neighbor DCI-IPv4-UNDERLAY-PEERS peer group\n   neighbor\
+    \ DCI-IPv4-UNDERLAY-PEERS remote-as 65202\n   neighbor DCI-IPv4-UNDERLAY-PEERS\
+    \ send-community\n   neighbor DCI-IPv4-UNDERLAY-PEERS maximum-routes 12000\n \
+    \  neighbor 172.31.0.3 peer group DCI-IPv4-UNDERLAY-PEERS\n   neighbor 192.168.253.6\
+    \ peer group DCI-EVPN-OVERLAY-PEERS\n   !\n   address-family evpn\n      neighbor\
+    \ DCI-EVPN-OVERLAY-PEERS activate\n   !\n   address-family ipv4\n      neighbor\
+    \ DCI-IPv4-UNDERLAY-PEERS activate\n   !\n!\nend"
   DC1-AVD_DC1-L2LEAF1A: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec\
     \ /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista\
     \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-L2LEAF1A\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nspanning-tree mst 0 priority 16384\n!\nno aaa root\n!\nusername admin\
@@ -261,7 +281,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-L2LEAF2A\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nno spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 16384\n!\n\
@@ -299,7 +319,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-L2LEAF2B\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nno spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 16384\n!\n\
@@ -337,7 +357,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-LEAF1A\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nspanning-tree mst 0 priority 4096\n!\nno aaa root\n!\nusername admin privilege\
@@ -398,30 +418,34 @@ CVP_CONFIGLETS:
     \   neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.2\
     \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS\n\
     \   neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS\n   redistribute connected\
-    \ route-map RM-CONN-2-BGP\n   !\n   vlan-aware-bundle Tenant_A_APP_Zone\n    \
-    \  rd 192.168.255.5:12\n      route-target both 12:12\n      redistribute learned\n\
-    \      vlan 130-131\n   !\n   vlan-aware-bundle Tenant_A_WEB_Zone\n      rd 192.168.255.5:11\n\
-    \      route-target both 11:11\n      redistribute learned\n      vlan 120-121\n\
-    \   !\n   vlan-aware-bundle tf_web_zone\n      rd 192.168.255.5:40\n      route-target\
-    \ both 40:40\n      redistribute learned\n      vlan 410-411\n   !\n   address-family\
-    \ evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n      no neighbor IPv4-UNDERLAY-PEERS\
-    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n   !\n   vrf Tenant_A_APP_Zone\n\
-    \      rd 192.168.255.5:12\n      route-target import evpn 12:12\n      route-target\
-    \ export evpn 12:12\n      router-id 192.168.255.5\n      redistribute connected\n\
-    \   !\n   vrf Tenant_A_WEB_Zone\n      rd 192.168.255.5:11\n      route-target\
-    \ import evpn 11:11\n      route-target export evpn 11:11\n      router-id 192.168.255.5\n\
-    \      redistribute connected\n   !\n   vrf tf_web_zone\n      rd 192.168.255.5:40\n\
-    \      route-target import evpn 40:40\n      route-target export evpn 40:40\n\
-    \      router-id 192.168.255.5\n      redistribute connected\n!\nmanagement api\
-    \ http-commands\n   no shutdown\n   !\n   vrf MGMT\n      no shutdown\n!\nend"
+    \ route-map RM-CONN-2-BGP\n   !\n   vlan 120\n      rd 192.168.255.5:10120\n \
+    \     route-target both 10120:10120\n      redistribute learned\n   !\n   vlan\
+    \ 121\n      rd 192.168.255.5:10121\n      route-target both 10121:10121\n   \
+    \   redistribute learned\n   !\n   vlan 130\n      rd 192.168.255.5:10130\n  \
+    \    route-target both 10130:10130\n      redistribute learned\n   !\n   vlan\
+    \ 131\n      rd 192.168.255.5:10131\n      route-target both 10131:10131\n   \
+    \   redistribute learned\n   !\n   vlan 410\n      rd 192.168.255.5:40410\n  \
+    \    route-target both 40410:40410\n      redistribute learned\n   !\n   vlan\
+    \ 411\n      rd 192.168.255.5:40411\n      route-target both 40411:40411\n   \
+    \   redistribute learned\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
+    \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n   !\n   address-family\
+    \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n   !\n   vrf Tenant_A_APP_Zone\n      rd 192.168.255.5:12\n      route-target\
+    \ import evpn 12:12\n      route-target export evpn 12:12\n      router-id 192.168.255.5\n\
+    \      redistribute connected\n   !\n   vrf Tenant_A_WEB_Zone\n      rd 192.168.255.5:11\n\
+    \      route-target import evpn 11:11\n      route-target export evpn 11:11\n\
+    \      router-id 192.168.255.5\n      redistribute connected\n   !\n   vrf tf_web_zone\n\
+    \      rd 192.168.255.5:40\n      route-target import evpn 40:40\n      route-target\
+    \ export evpn 40:40\n      router-id 192.168.255.5\n      redistribute connected\n\
+    !\nmanagement api http-commands\n   no shutdown\n   !\n   vrf MGMT\n      no shutdown\n\
+    !\nend"
   DC1-AVD_DC1-LEAF2A: "!RANCID-CONTENT-TYPE: arista\n!\ndaemon TerminAttr\n   exec\
     \ /usr/bin/TerminAttr -ingestgrpcurl=192.168.200.11:9910 -cvcompression=gzip -ingestauth=key,telarista\
     \ -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent\
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-LEAF2A\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nno spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 4096\n!\n\
@@ -511,7 +535,7 @@ CVP_CONFIGLETS:
     \ vni 12\n   vxlan vrf Tenant_A_DB_Zone vni 13\n   vxlan vrf Tenant_A_OP_Zone\
     \ vni 10\n   vxlan vrf Tenant_A_WEB_Zone vni 11\n   vxlan vrf Tenant_B_OP_Zone\
     \ vni 20\n   vxlan vrf Tenant_C_OP_Zone vni 30\n!\nip virtual-router mac-address\
-    \ 00:dc:00:00:00:0a\nip address virtual source-nat vrf Tenant_A_OP_Zone address\
+    \ 00:dc:00:00:00:0a\n!\nip address virtual source-nat vrf Tenant_A_OP_Zone address\
     \ 10.255.1.6\n!\nip routing\nno ip routing vrf MGMT\nip routing vrf Tenant_A_APP_Zone\n\
     ip routing vrf Tenant_A_DB_Zone\nip routing vrf Tenant_A_OP_Zone\nip routing vrf\
     \ Tenant_A_WEB_Zone\nip routing vrf Tenant_B_OP_Zone\nip routing vrf Tenant_C_OP_Zone\n\
@@ -545,30 +569,38 @@ CVP_CONFIGLETS:
     \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS\n\
     \   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.4\
     \ peer group EVPN-OVERLAY-PEERS\n   redistribute connected route-map RM-CONN-2-BGP\n\
-    \   !\n   vlan-aware-bundle Tenant_A_APP_Zone\n      rd 192.168.255.6:12\n   \
-    \   route-target both 12:12\n      redistribute learned\n      vlan 130-131\n\
-    \   !\n   vlan-aware-bundle Tenant_A_DB_Zone\n      rd 192.168.255.6:13\n    \
-    \  route-target both 13:13\n      redistribute learned\n      vlan 140-141\n \
-    \  !\n   vlan-aware-bundle Tenant_A_NFS\n      rd 192.168.255.6:10161\n      route-target\
-    \ both 10161:10161\n      redistribute learned\n      vlan 161\n   !\n   vlan-aware-bundle\
-    \ Tenant_A_OP_Zone\n      rd 192.168.255.6:10\n      route-target both 10:10\n\
-    \      redistribute learned\n      vlan 110-112\n   !\n   vlan-aware-bundle Tenant_A_VMOTION\n\
-    \      rd 192.168.255.6:50160\n      route-target both 50160:50160\n      redistribute\
-    \ learned\n      vlan 160\n   !\n   vlan-aware-bundle Tenant_A_WEB_Zone\n    \
-    \  rd 192.168.255.6:11\n      route-target both 11:11\n      redistribute learned\n\
-    \      vlan 120-121\n   !\n   vlan-aware-bundle Tenant_B_OP_Zone\n      rd 192.168.255.6:20\n\
-    \      route-target both 20:20\n      redistribute learned\n      vlan 210-211\n\
-    \   !\n   vlan-aware-bundle Tenant_C_OP_Zone\n      rd 192.168.255.6:30\n    \
-    \  route-target both 30:30\n      redistribute learned\n      vlan 310-311\n \
-    \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   \
-    \   no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   vrf Tenant_A_APP_Zone\n      rd 192.168.255.6:12\n      route-target\
-    \ import evpn 12:12\n      route-target export evpn 12:12\n      router-id 192.168.255.6\n\
-    \      neighbor 10.255.251.3 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
-    \ connected\n   !\n   vrf Tenant_A_DB_Zone\n      rd 192.168.255.6:13\n      route-target\
-    \ import evpn 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.6\n\
+    \   !\n   vlan 110\n      rd 192.168.255.6:10110\n      route-target both 10110:10110\n\
+    \      redistribute learned\n   !\n   vlan 111\n      rd 192.168.255.6:50111\n\
+    \      route-target both 50111:50111\n      redistribute learned\n   !\n   vlan\
+    \ 112\n      rd 192.168.255.6:10112\n      route-target both 10112:10112\n   \
+    \   redistribute learned\n   !\n   vlan 120\n      rd 192.168.255.6:10120\n  \
+    \    route-target both 10120:10120\n      redistribute learned\n   !\n   vlan\
+    \ 121\n      rd 192.168.255.6:10121\n      route-target both 10121:10121\n   \
+    \   redistribute learned\n   !\n   vlan 130\n      rd 192.168.255.6:10130\n  \
+    \    route-target both 10130:10130\n      redistribute learned\n   !\n   vlan\
+    \ 131\n      rd 192.168.255.6:10131\n      route-target both 10131:10131\n   \
+    \   redistribute learned\n   !\n   vlan 140\n      rd 192.168.255.6:10140\n  \
+    \    route-target both 10140:10140\n      redistribute learned\n   !\n   vlan\
+    \ 141\n      rd 192.168.255.6:10141\n      route-target both 10141:10141\n   \
+    \   redistribute learned\n   !\n   vlan 160\n      rd 192.168.255.6:50160\n  \
+    \    route-target both 50160:50160\n      redistribute learned\n   !\n   vlan\
+    \ 161\n      rd 192.168.255.6:10161\n      route-target both 10161:10161\n   \
+    \   redistribute learned\n   !\n   vlan 210\n      rd 192.168.255.6:20210\n  \
+    \    route-target both 20210:20210\n      redistribute learned\n   !\n   vlan\
+    \ 211\n      rd 192.168.255.6:20211\n      route-target both 20211:20211\n   \
+    \   redistribute learned\n   !\n   vlan 310\n      rd 192.168.255.6:30310\n  \
+    \    route-target both 30310:30310\n      redistribute learned\n   !\n   vlan\
+    \ 311\n      rd 192.168.255.6:30311\n      route-target both 30311:30311\n   \
+    \   redistribute learned\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
+    \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor\
+    \ MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family ipv4\n      no neighbor\
+    \ EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n \
+    \     neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_APP_Zone\n\
+    \      rd 192.168.255.6:12\n      route-target import evpn 12:12\n      route-target\
+    \ export evpn 12:12\n      router-id 192.168.255.6\n      neighbor 10.255.251.3\
+    \ peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n   !\n   vrf\
+    \ Tenant_A_DB_Zone\n      rd 192.168.255.6:13\n      route-target import evpn\
+    \ 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.6\n\
     \      neighbor 10.255.251.3 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
     \ connected\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.168.255.6:10\n      route-target\
     \ import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.168.255.6\n\
@@ -590,7 +622,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-LEAF2B\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nno spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 4096\n!\n\
@@ -680,7 +712,7 @@ CVP_CONFIGLETS:
     \ vni 12\n   vxlan vrf Tenant_A_DB_Zone vni 13\n   vxlan vrf Tenant_A_OP_Zone\
     \ vni 10\n   vxlan vrf Tenant_A_WEB_Zone vni 11\n   vxlan vrf Tenant_B_OP_Zone\
     \ vni 20\n   vxlan vrf Tenant_C_OP_Zone vni 30\n!\nip virtual-router mac-address\
-    \ 00:dc:00:00:00:0a\nip address virtual source-nat vrf Tenant_A_OP_Zone address\
+    \ 00:dc:00:00:00:0a\n!\nip address virtual source-nat vrf Tenant_A_OP_Zone address\
     \ 10.255.1.7\n!\nip routing\nno ip routing vrf MGMT\nip routing vrf Tenant_A_APP_Zone\n\
     ip routing vrf Tenant_A_DB_Zone\nip routing vrf Tenant_A_OP_Zone\nip routing vrf\
     \ Tenant_A_WEB_Zone\nip routing vrf Tenant_B_OP_Zone\nip routing vrf Tenant_C_OP_Zone\n\
@@ -714,30 +746,38 @@ CVP_CONFIGLETS:
     \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS\n\
     \   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.4\
     \ peer group EVPN-OVERLAY-PEERS\n   redistribute connected route-map RM-CONN-2-BGP\n\
-    \   !\n   vlan-aware-bundle Tenant_A_APP_Zone\n      rd 192.168.255.7:12\n   \
-    \   route-target both 12:12\n      redistribute learned\n      vlan 130-131\n\
-    \   !\n   vlan-aware-bundle Tenant_A_DB_Zone\n      rd 192.168.255.7:13\n    \
-    \  route-target both 13:13\n      redistribute learned\n      vlan 140-141\n \
-    \  !\n   vlan-aware-bundle Tenant_A_NFS\n      rd 192.168.255.7:10161\n      route-target\
-    \ both 10161:10161\n      redistribute learned\n      vlan 161\n   !\n   vlan-aware-bundle\
-    \ Tenant_A_OP_Zone\n      rd 192.168.255.7:10\n      route-target both 10:10\n\
-    \      redistribute learned\n      vlan 110-112\n   !\n   vlan-aware-bundle Tenant_A_VMOTION\n\
-    \      rd 192.168.255.7:50160\n      route-target both 50160:50160\n      redistribute\
-    \ learned\n      vlan 160\n   !\n   vlan-aware-bundle Tenant_A_WEB_Zone\n    \
-    \  rd 192.168.255.7:11\n      route-target both 11:11\n      redistribute learned\n\
-    \      vlan 120-121\n   !\n   vlan-aware-bundle Tenant_B_OP_Zone\n      rd 192.168.255.7:20\n\
-    \      route-target both 20:20\n      redistribute learned\n      vlan 210-211\n\
-    \   !\n   vlan-aware-bundle Tenant_C_OP_Zone\n      rd 192.168.255.7:30\n    \
-    \  route-target both 30:30\n      redistribute learned\n      vlan 310-311\n \
-    \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   \
-    \   no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   vrf Tenant_A_APP_Zone\n      rd 192.168.255.7:12\n      route-target\
-    \ import evpn 12:12\n      route-target export evpn 12:12\n      router-id 192.168.255.7\n\
-    \      neighbor 10.255.251.2 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
-    \ connected\n   !\n   vrf Tenant_A_DB_Zone\n      rd 192.168.255.7:13\n      route-target\
-    \ import evpn 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.7\n\
+    \   !\n   vlan 110\n      rd 192.168.255.7:10110\n      route-target both 10110:10110\n\
+    \      redistribute learned\n   !\n   vlan 111\n      rd 192.168.255.7:50111\n\
+    \      route-target both 50111:50111\n      redistribute learned\n   !\n   vlan\
+    \ 112\n      rd 192.168.255.7:10112\n      route-target both 10112:10112\n   \
+    \   redistribute learned\n   !\n   vlan 120\n      rd 192.168.255.7:10120\n  \
+    \    route-target both 10120:10120\n      redistribute learned\n   !\n   vlan\
+    \ 121\n      rd 192.168.255.7:10121\n      route-target both 10121:10121\n   \
+    \   redistribute learned\n   !\n   vlan 130\n      rd 192.168.255.7:10130\n  \
+    \    route-target both 10130:10130\n      redistribute learned\n   !\n   vlan\
+    \ 131\n      rd 192.168.255.7:10131\n      route-target both 10131:10131\n   \
+    \   redistribute learned\n   !\n   vlan 140\n      rd 192.168.255.7:10140\n  \
+    \    route-target both 10140:10140\n      redistribute learned\n   !\n   vlan\
+    \ 141\n      rd 192.168.255.7:10141\n      route-target both 10141:10141\n   \
+    \   redistribute learned\n   !\n   vlan 160\n      rd 192.168.255.7:50160\n  \
+    \    route-target both 50160:50160\n      redistribute learned\n   !\n   vlan\
+    \ 161\n      rd 192.168.255.7:10161\n      route-target both 10161:10161\n   \
+    \   redistribute learned\n   !\n   vlan 210\n      rd 192.168.255.7:20210\n  \
+    \    route-target both 20210:20210\n      redistribute learned\n   !\n   vlan\
+    \ 211\n      rd 192.168.255.7:20211\n      route-target both 20211:20211\n   \
+    \   redistribute learned\n   !\n   vlan 310\n      rd 192.168.255.7:30310\n  \
+    \    route-target both 30310:30310\n      redistribute learned\n   !\n   vlan\
+    \ 311\n      rd 192.168.255.7:30311\n      route-target both 30311:30311\n   \
+    \   redistribute learned\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
+    \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor\
+    \ MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family ipv4\n      no neighbor\
+    \ EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n \
+    \     neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_APP_Zone\n\
+    \      rd 192.168.255.7:12\n      route-target import evpn 12:12\n      route-target\
+    \ export evpn 12:12\n      router-id 192.168.255.7\n      neighbor 10.255.251.2\
+    \ peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n   !\n   vrf\
+    \ Tenant_A_DB_Zone\n      rd 192.168.255.7:13\n      route-target import evpn\
+    \ 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.7\n\
     \      neighbor 10.255.251.2 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
     \ connected\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.168.255.7:10\n      route-target\
     \ import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.168.255.7\n\
@@ -759,7 +799,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-SPINE1\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ none\n!\nno aaa root\n!\nusername admin privilege 15 role network-admin secret\
@@ -820,7 +860,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-SPINE2\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ none\n!\nno aaa root\n!\nusername admin privilege 15 role network-admin secret\
@@ -881,7 +921,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-SPINE3\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ none\n!\nno aaa root\n!\nusername admin privilege 15 role network-admin secret\
@@ -942,7 +982,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-SPINE4\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ none\n!\nno aaa root\n!\nusername admin privilege 15 role network-admin secret\
@@ -1003,7 +1043,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-SVC3A\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nno spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 4096\n!\n\
@@ -1091,7 +1131,7 @@ CVP_CONFIGLETS:
     \ 30311\n   vxlan vrf Tenant_A_APP_Zone vni 12\n   vxlan vrf Tenant_A_DB_Zone\
     \ vni 13\n   vxlan vrf Tenant_A_OP_Zone vni 10\n   vxlan vrf Tenant_A_WEB_Zone\
     \ vni 11\n   vxlan vrf Tenant_B_OP_Zone vni 20\n   vxlan vrf Tenant_C_OP_Zone\
-    \ vni 30\n!\nip virtual-router mac-address 00:dc:00:00:00:0a\nip address virtual\
+    \ vni 30\n!\nip virtual-router mac-address 00:dc:00:00:00:0a\n!\nip address virtual\
     \ source-nat vrf Tenant_A_OP_Zone address 10.255.1.8\n!\nip routing\nno ip routing\
     \ vrf MGMT\nip routing vrf Tenant_A_APP_Zone\nip routing vrf Tenant_A_DB_Zone\n\
     ip routing vrf Tenant_A_OP_Zone\nip routing vrf Tenant_A_WEB_Zone\nip routing\
@@ -1125,30 +1165,36 @@ CVP_CONFIGLETS:
     \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS\n\
     \   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.4\
     \ peer group EVPN-OVERLAY-PEERS\n   redistribute connected route-map RM-CONN-2-BGP\n\
-    \   !\n   vlan-aware-bundle Tenant_A_APP_Zone\n      rd 192.168.255.8:12\n   \
-    \   route-target both 12:12\n      redistribute learned\n      vlan 130-131\n\
-    \   !\n   vlan-aware-bundle Tenant_A_DB_Zone\n      rd 192.168.255.8:13\n    \
-    \  route-target both 13:13\n      redistribute learned\n      vlan 140-141\n \
-    \  !\n   vlan-aware-bundle Tenant_A_NFS\n      rd 192.168.255.8:10161\n      route-target\
-    \ both 10161:10161\n      redistribute learned\n      vlan 161\n   !\n   vlan-aware-bundle\
-    \ Tenant_A_OP_Zone\n      rd 192.168.255.8:10\n      route-target both 10:10\n\
-    \      redistribute learned\n      vlan 110-111\n   !\n   vlan-aware-bundle Tenant_A_VMOTION\n\
-    \      rd 192.168.255.8:50160\n      route-target both 50160:50160\n      redistribute\
-    \ learned\n      vlan 160\n   !\n   vlan-aware-bundle Tenant_A_WEB_Zone\n    \
-    \  rd 192.168.255.8:11\n      route-target both 11:11\n      redistribute learned\n\
-    \      vlan 120-121\n   !\n   vlan-aware-bundle Tenant_B_OP_Zone\n      rd 192.168.255.8:20\n\
-    \      route-target both 20:20\n      redistribute learned\n      vlan 210-211\n\
-    \   !\n   vlan-aware-bundle Tenant_C_OP_Zone\n      rd 192.168.255.8:30\n    \
-    \  route-target both 30:30\n      redistribute learned\n      vlan 310-311\n \
-    \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   \
-    \   no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   vrf Tenant_A_APP_Zone\n      rd 192.168.255.8:12\n      route-target\
-    \ import evpn 12:12\n      route-target export evpn 12:12\n      router-id 192.168.255.8\n\
-    \      neighbor 10.255.251.7 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
-    \ connected\n   !\n   vrf Tenant_A_DB_Zone\n      rd 192.168.255.8:13\n      route-target\
-    \ import evpn 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.8\n\
+    \   !\n   vlan 110\n      rd 192.168.255.8:10110\n      route-target both 10110:10110\n\
+    \      redistribute learned\n   !\n   vlan 111\n      rd 192.168.255.8:50111\n\
+    \      route-target both 50111:50111\n      redistribute learned\n   !\n   vlan\
+    \ 120\n      rd 192.168.255.8:10120\n      route-target both 10120:10120\n   \
+    \   redistribute learned\n   !\n   vlan 121\n      rd 192.168.255.8:10121\n  \
+    \    route-target both 10121:10121\n      redistribute learned\n   !\n   vlan\
+    \ 130\n      rd 192.168.255.8:10130\n      route-target both 10130:10130\n   \
+    \   redistribute learned\n   !\n   vlan 131\n      rd 192.168.255.8:10131\n  \
+    \    route-target both 10131:10131\n      redistribute learned\n   !\n   vlan\
+    \ 140\n      rd 192.168.255.8:10140\n      route-target both 10140:10140\n   \
+    \   redistribute learned\n   !\n   vlan 141\n      rd 192.168.255.8:10141\n  \
+    \    route-target both 10141:10141\n      redistribute learned\n   !\n   vlan\
+    \ 160\n      rd 192.168.255.8:50160\n      route-target both 50160:50160\n   \
+    \   redistribute learned\n   !\n   vlan 161\n      rd 192.168.255.8:10161\n  \
+    \    route-target both 10161:10161\n      redistribute learned\n   !\n   vlan\
+    \ 210\n      rd 192.168.255.8:20210\n      route-target both 20210:20210\n   \
+    \   redistribute learned\n   !\n   vlan 211\n      rd 192.168.255.8:20211\n  \
+    \    route-target both 20211:20211\n      redistribute learned\n   !\n   vlan\
+    \ 310\n      rd 192.168.255.8:30310\n      route-target both 30310:30310\n   \
+    \   redistribute learned\n   !\n   vlan 311\n      rd 192.168.255.8:30311\n  \
+    \    route-target both 30311:30311\n      redistribute learned\n   !\n   address-family\
+    \ evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n      no neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family\
+    \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_APP_Zone\n\
+    \      rd 192.168.255.8:12\n      route-target import evpn 12:12\n      route-target\
+    \ export evpn 12:12\n      router-id 192.168.255.8\n      neighbor 10.255.251.7\
+    \ peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n   !\n   vrf\
+    \ Tenant_A_DB_Zone\n      rd 192.168.255.8:13\n      route-target import evpn\
+    \ 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.8\n\
     \      neighbor 10.255.251.7 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
     \ connected\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.168.255.8:10\n      route-target\
     \ import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.168.255.8\n\
@@ -1170,7 +1216,7 @@ CVP_CONFIGLETS:
     \ -ingestvrf=MGMT -taillogs\n   no shutdown\n!\nvlan internal order ascending\
     \ range 1006 1199\n!\ntransceiver qsfp default-mode 4x10G\n!\nservice routing\
     \ protocols model multi-agent\n!\nhostname DC1-SVC3B\nip name-server vrf MGMT\
-    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\n!\ndns domain avd-lab.local\n\
+    \ 192.168.200.5\nip name-server vrf MGMT 8.8.8.8\ndns domain avd-lab.local\n!\n\
     ntp local-interface vrf MGMT Management1\nntp server vrf MGMT 0.north-america.pool.ntp.org\
     \ prefer\nntp server vrf MGMT 1.north-america.pool.ntp.org\n!\nspanning-tree mode\
     \ mstp\nno spanning-tree vlan-id 4094\nspanning-tree mst 0 priority 4096\n!\n\
@@ -1258,7 +1304,7 @@ CVP_CONFIGLETS:
     \ 30311\n   vxlan vrf Tenant_A_APP_Zone vni 12\n   vxlan vrf Tenant_A_DB_Zone\
     \ vni 13\n   vxlan vrf Tenant_A_OP_Zone vni 10\n   vxlan vrf Tenant_A_WEB_Zone\
     \ vni 11\n   vxlan vrf Tenant_B_OP_Zone vni 20\n   vxlan vrf Tenant_C_OP_Zone\
-    \ vni 30\n!\nip virtual-router mac-address 00:dc:00:00:00:0a\nip address virtual\
+    \ vni 30\n!\nip virtual-router mac-address 00:dc:00:00:00:0a\n!\nip address virtual\
     \ source-nat vrf Tenant_A_OP_Zone address 10.255.1.9\n!\nip routing\nno ip routing\
     \ vrf MGMT\nip routing vrf Tenant_A_APP_Zone\nip routing vrf Tenant_A_DB_Zone\n\
     ip routing vrf Tenant_A_OP_Zone\nip routing vrf Tenant_A_WEB_Zone\nip routing\
@@ -1292,30 +1338,36 @@ CVP_CONFIGLETS:
     \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS\n\
     \   neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.4\
     \ peer group EVPN-OVERLAY-PEERS\n   redistribute connected route-map RM-CONN-2-BGP\n\
-    \   !\n   vlan-aware-bundle Tenant_A_APP_Zone\n      rd 192.168.255.9:12\n   \
-    \   route-target both 12:12\n      redistribute learned\n      vlan 130-131\n\
-    \   !\n   vlan-aware-bundle Tenant_A_DB_Zone\n      rd 192.168.255.9:13\n    \
-    \  route-target both 13:13\n      redistribute learned\n      vlan 140-141\n \
-    \  !\n   vlan-aware-bundle Tenant_A_NFS\n      rd 192.168.255.9:10161\n      route-target\
-    \ both 10161:10161\n      redistribute learned\n      vlan 161\n   !\n   vlan-aware-bundle\
-    \ Tenant_A_OP_Zone\n      rd 192.168.255.9:10\n      route-target both 10:10\n\
-    \      redistribute learned\n      vlan 110-111\n   !\n   vlan-aware-bundle Tenant_A_VMOTION\n\
-    \      rd 192.168.255.9:50160\n      route-target both 50160:50160\n      redistribute\
-    \ learned\n      vlan 160\n   !\n   vlan-aware-bundle Tenant_A_WEB_Zone\n    \
-    \  rd 192.168.255.9:11\n      route-target both 11:11\n      redistribute learned\n\
-    \      vlan 120-121\n   !\n   vlan-aware-bundle Tenant_B_OP_Zone\n      rd 192.168.255.9:20\n\
-    \      route-target both 20:20\n      redistribute learned\n      vlan 210-211\n\
-    \   !\n   vlan-aware-bundle Tenant_C_OP_Zone\n      rd 192.168.255.9:30\n    \
-    \  route-target both 30:30\n      redistribute learned\n      vlan 310-311\n \
-    \  !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n   \
-    \   no neighbor IPv4-UNDERLAY-PEERS activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   address-family ipv4\n      no neighbor EVPN-OVERLAY-PEERS\
-    \ activate\n      neighbor IPv4-UNDERLAY-PEERS activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER\
-    \ activate\n   !\n   vrf Tenant_A_APP_Zone\n      rd 192.168.255.9:12\n      route-target\
-    \ import evpn 12:12\n      route-target export evpn 12:12\n      router-id 192.168.255.9\n\
-    \      neighbor 10.255.251.6 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
-    \ connected\n   !\n   vrf Tenant_A_DB_Zone\n      rd 192.168.255.9:13\n      route-target\
-    \ import evpn 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.9\n\
+    \   !\n   vlan 110\n      rd 192.168.255.9:10110\n      route-target both 10110:10110\n\
+    \      redistribute learned\n   !\n   vlan 111\n      rd 192.168.255.9:50111\n\
+    \      route-target both 50111:50111\n      redistribute learned\n   !\n   vlan\
+    \ 120\n      rd 192.168.255.9:10120\n      route-target both 10120:10120\n   \
+    \   redistribute learned\n   !\n   vlan 121\n      rd 192.168.255.9:10121\n  \
+    \    route-target both 10121:10121\n      redistribute learned\n   !\n   vlan\
+    \ 130\n      rd 192.168.255.9:10130\n      route-target both 10130:10130\n   \
+    \   redistribute learned\n   !\n   vlan 131\n      rd 192.168.255.9:10131\n  \
+    \    route-target both 10131:10131\n      redistribute learned\n   !\n   vlan\
+    \ 140\n      rd 192.168.255.9:10140\n      route-target both 10140:10140\n   \
+    \   redistribute learned\n   !\n   vlan 141\n      rd 192.168.255.9:10141\n  \
+    \    route-target both 10141:10141\n      redistribute learned\n   !\n   vlan\
+    \ 160\n      rd 192.168.255.9:50160\n      route-target both 50160:50160\n   \
+    \   redistribute learned\n   !\n   vlan 161\n      rd 192.168.255.9:10161\n  \
+    \    route-target both 10161:10161\n      redistribute learned\n   !\n   vlan\
+    \ 210\n      rd 192.168.255.9:20210\n      route-target both 20210:20210\n   \
+    \   redistribute learned\n   !\n   vlan 211\n      rd 192.168.255.9:20211\n  \
+    \    route-target both 20211:20211\n      redistribute learned\n   !\n   vlan\
+    \ 310\n      rd 192.168.255.9:30310\n      route-target both 30310:30310\n   \
+    \   redistribute learned\n   !\n   vlan 311\n      rd 192.168.255.9:30311\n  \
+    \    route-target both 30311:30311\n      redistribute learned\n   !\n   address-family\
+    \ evpn\n      neighbor EVPN-OVERLAY-PEERS activate\n      no neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      no neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   address-family\
+    \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
+    \ activate\n      neighbor MLAG-IPv4-UNDERLAY-PEER activate\n   !\n   vrf Tenant_A_APP_Zone\n\
+    \      rd 192.168.255.9:12\n      route-target import evpn 12:12\n      route-target\
+    \ export evpn 12:12\n      router-id 192.168.255.9\n      neighbor 10.255.251.6\
+    \ peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute connected\n   !\n   vrf\
+    \ Tenant_A_DB_Zone\n      rd 192.168.255.9:13\n      route-target import evpn\
+    \ 13:13\n      route-target export evpn 13:13\n      router-id 192.168.255.9\n\
     \      neighbor 10.255.251.6 peer group MLAG-IPv4-UNDERLAY-PEER\n      redistribute\
     \ connected\n   !\n   vrf Tenant_A_OP_Zone\n      rd 192.168.255.9:10\n      route-target\
     \ import evpn 10:10\n      route-target export evpn 10:10\n      router-id 192.168.255.9\n\

@@ -17,4 +17,4 @@
     - name: validate states on EOS devices
       import_role:
          name: arista.avd.eos_validate_state
-      tags: [always, provision, validate]
+      tags: [provision, validate]

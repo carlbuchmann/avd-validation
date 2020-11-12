@@ -70,7 +70,6 @@
 
 ## Management Interfaces
 
-
 ### Management Interfaces Summary
 
 IPv4
@@ -83,7 +82,7 @@ IPv6
 
 | Management Interface | description | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | --- | ------------ | ------------ |
-| Management1 | oob_management | MGMT | ||
+| Management1 | oob_management | MGMT | not configured  | not configured |
 
 ### Management Interfaces Device Configuration
 
@@ -498,14 +497,12 @@ no ip routing vrf MGMT
 
 ### IPv6 Routing Summary
 
-| VRF | IPv6 Routing Enabled |
-| --- | -------------------- |
+| VRF | Routing Enabled |
+| --- | --------------- |
+| default |  False | 
 | MGMT | False |
+ 
 
-### IPv6 Routing Device Configuration
-
-```eos
-```
 
 ## Static Routes
 
@@ -629,3 +626,7 @@ Router L2 VPN not defined
 # IP DHCP Relay
 
 IP DHCP Relay not defined
+
+## Custom Templates
+
+No Custom Templates Defined

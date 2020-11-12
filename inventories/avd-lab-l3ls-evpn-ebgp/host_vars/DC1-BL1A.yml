@@ -1,0 +1,4 @@
+---
+
+custom_templates:
+  - inventories/avd-lab-l3ls-evpn-ebgp/custom_templates/DCI_DC1-BL1A.j2

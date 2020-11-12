@@ -672,40 +672,73 @@ router_bgp:
       MLAG-IPv4-UNDERLAY-PEER:
         activate: true
   vlan_aware_bundles:
+  vlans:
 ## Tenant_A ##
-    Tenant_A_APP_Zone:
-      rd: "192.168.255.8:12"
+    130:
+      tenant: Tenant_A
+      rd: "192.168.255.8:10130"
       route_targets:
         both:
-          - "12:12"
+          - "10130:10130"
       redistribute_routes:
         - learned
-      vlan: 130-131
-    Tenant_A_DB_Zone:
-      rd: "192.168.255.8:13"
+    131:
+      tenant: Tenant_A
+      rd: "192.168.255.8:10131"
       route_targets:
         both:
-          - "13:13"
+          - "10131:10131"
       redistribute_routes:
         - learned
-      vlan: 140-141
-    Tenant_A_OP_Zone:
-      rd: "192.168.255.8:10"
+    140:
+      tenant: Tenant_A
+      rd: "192.168.255.8:10140"
       route_targets:
         both:
-          - "10:10"
+          - "10140:10140"
       redistribute_routes:
         - learned
-      vlan: 110-111
-    Tenant_A_WEB_Zone:
-      rd: "192.168.255.8:11"
+    141:
+      tenant: Tenant_A
+      rd: "192.168.255.8:10141"
       route_targets:
         both:
-          - "11:11"
+          - "10141:10141"
       redistribute_routes:
         - learned
-      vlan: 120-121
-    Tenant_A_VMOTION:
+    110:
+      tenant: Tenant_A
+      rd: "192.168.255.8:10110"
+      route_targets:
+        both:
+          - "10110:10110"
+      redistribute_routes:
+        - learned
+    111:
+      tenant: Tenant_A
+      rd: "192.168.255.8:50111"
+      route_targets:
+        both:
+          - "50111:50111"
+      redistribute_routes:
+        - learned
+    120:
+      tenant: Tenant_A
+      rd: "192.168.255.8:10120"
+      route_targets:
+        both:
+          - "10120:10120"
+      redistribute_routes:
+        - learned
+    121:
+      tenant: Tenant_A
+      rd: "192.168.255.8:10121"
+      route_targets:
+        both:
+          - "10121:10121"
+      redistribute_routes:
+        - learned
+    160:
       tenant: Tenant_A
       rd: "192.168.255.8:50160"
       route_targets:
@@ -713,8 +746,7 @@ router_bgp:
           - "50160:50160"
       redistribute_routes:
         - learned
-      vlan: 160
-    Tenant_A_NFS:
+    161:
       tenant: Tenant_A
       rd: "192.168.255.8:10161"
       route_targets:
@@ -722,26 +754,40 @@ router_bgp:
           - "10161:10161"
       redistribute_routes:
         - learned
-      vlan: 161
 ## Tenant_B ##
-    Tenant_B_OP_Zone:
-      rd: "192.168.255.8:20"
+    210:
+      tenant: Tenant_B
+      rd: "192.168.255.8:20210"
       route_targets:
         both:
-          - "20:20"
+          - "20210:20210"
       redistribute_routes:
         - learned
-      vlan: 210-211
+    211:
+      tenant: Tenant_B
+      rd: "192.168.255.8:20211"
+      route_targets:
+        both:
+          - "20211:20211"
+      redistribute_routes:
+        - learned
 ## Tenant_C ##
-    Tenant_C_OP_Zone:
-      rd: "192.168.255.8:30"
+    310:
+      tenant: Tenant_C
+      rd: "192.168.255.8:30310"
       route_targets:
         both:
-          - "30:30"
+          - "30310:30310"
       redistribute_routes:
         - learned
-      vlan: 310-311
-  vlans:
+    311:
+      tenant: Tenant_C
+      rd: "192.168.255.8:30311"
+      route_targets:
+        both:
+          - "30311:30311"
+      redistribute_routes:
+        - learned
   vrfs:
 ## Tenant_A ##
     Tenant_A_APP_Zone:

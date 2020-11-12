@@ -492,43 +492,43 @@ router_bgp:
       MLAG-IPv4-UNDERLAY-PEER:
         activate: true
   vlan_aware_bundles:
+  vlans:
 ## tech_friday_demo ##
 ## Tenant_A ##
-    Tenant_A_OP_Zone:
-      rd: "192.168.255.11:10"
+    113:
+      tenant: Tenant_A
+      rd: "192.168.255.11:10113"
       route_targets:
         both:
-          - "10:10"
+          - "10113:10113"
       redistribute_routes:
         - learned
-      vlan: 113
-    Tenant_A_WAN_Zone:
-      rd: "192.168.255.11:14"
+    150:
+      tenant: Tenant_A
+      rd: "192.168.255.11:10150"
       route_targets:
         both:
-          - "14:14"
+          - "10150:10150"
       redistribute_routes:
         - learned
-      vlan: 150
 ## Tenant_B ##
-    Tenant_B_WAN_Zone:
-      rd: "192.168.255.11:21"
+    250:
+      tenant: Tenant_B
+      rd: "192.168.255.11:20250"
       route_targets:
         both:
-          - "21:21"
+          - "20250:20250"
       redistribute_routes:
         - learned
-      vlan: 250
 ## Tenant_C ##
-    Tenant_C_WAN_Zone:
-      rd: "192.168.255.11:31"
+    350:
+      tenant: Tenant_C
+      rd: "192.168.255.11:30350"
       route_targets:
         both:
-          - "31:31"
+          - "30350:30350"
       redistribute_routes:
         - learned
-      vlan: 350
-  vlans:
   vrfs:
 ## tech_friday_demo ##
 ## Tenant_A ##
