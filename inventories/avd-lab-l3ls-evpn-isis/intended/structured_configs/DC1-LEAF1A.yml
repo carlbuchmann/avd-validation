@@ -2,7 +2,6 @@
 
 ### DC1-LEAF1A ###
 
-
 ### Leaf Info ###
 l3leaf_node_group: DC1_LEAF1
 switch_platform: vEOS-LAB
@@ -357,26 +356,11 @@ static_routes:
 
 ### prefix-lists ###
 prefix_lists:
-  PL-LOOPBACKS-EVPN-OVERLAY:
-    sequence_numbers:
-      10:
-        action: "permit 192.168.255.0/24 eq 32"
-      20:
-        action: "permit 192.168.254.0/24 eq 32"
-  PL-P2P-UNDERLAY:
-    sequence_numbers:
-      10:
-        action: "permit 172.31.255.0/24 le 31"
 
 
 ### route-maps ###
 route_maps:
-  RM-CONN-2-BGP:
-    sequence_numbers:
-      10:
-        type: permit
-        match:
-          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
+
 ### Routing - BGP ###
 router_bgp:
   as: 65101
@@ -396,14 +380,6 @@ router_bgp:
       send_community: true
       maximum_routes: 0
   neighbors:
-    192.168.255.1:
-      peer_group: EVPN-OVERLAY-PEERS
-    192.168.255.2:
-      peer_group: EVPN-OVERLAY-PEERS
-    192.168.255.3:
-      peer_group: EVPN-OVERLAY-PEERS
-    192.168.255.4:
-      peer_group: EVPN-OVERLAY-PEERS
   redistribute_routes:
   address_family_evpn:
     peer_groups:
@@ -484,6 +460,9 @@ router_bgp:
         - connected
 ## Tenant_B ##
 ## Tenant_C ##
+
+### Extended Community Lists ###
+ip_extcommunity_lists:
 
 ### Routing - OSPF ###
 router_ospf:
