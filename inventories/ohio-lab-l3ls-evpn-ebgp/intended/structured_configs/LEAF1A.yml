@@ -52,9 +52,6 @@ load_interval:
 queue_monitor_length:
   enabled: true
 
-### Logging ###
-logging:
-
 ### Name Servers ###
 name_server:
   source:
