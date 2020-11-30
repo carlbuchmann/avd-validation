@@ -1,74 +1,5 @@
 # LEAF1A
 
-# Table of Contents
-
-- [Management](#management)
-  - [Management Interfaces](#management-interfaces)
-  - [DNS Domain](#dns-domain)
-  - [Name Servers](#name-servers)
-  - [Domain Lookup](#domain-lookup)
-  - [NTP](#ntp)
-  - [Management SSH](#management-ssh)
-- [Authentication](#authentication)
-  - [Local Users](#local-users)
-  - [TACACS Servers](#tacacs-servers)
-  - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
-  - [RADIUS Servers](#radius-servers)
-  - [AAA Server Groups](#aaa-server-groups)
-  - [AAA Authentication](#aaa-authentication)
-  - [AAA Authorization](#aaa-authorization)
-  - [AAA Accounting](#aaa-accounting)
-- [Management Security](#management-security)
-- [Aliases](#aliases)
-- [Monitoring](#monitoring)
-  - [TerminAttr Daemon](#terminattr-daemon)
-  - [Logging](#logging)
-  - [SFlow](#sflow)
-  - [Hardware Counters](#hardware-counters)
-  - [VM Tracer Sessions](#vm-tracer-sessions)
-  - [Event Handler](#event-handler)
-- [MLAG](#mlag)
-- [Spanning Tree](#spanning-tree)
-- [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
-- [VLANs](#vlans)
-- [Interfaces](#interfaces)
-  - [Ethernet Interfaces](#ethernet-interfaces)
-  - [Port-Channel Interfaces](#port-channel-interfaces)
-  - [Loopback Interfaces](#loopback-interfaces)
-  - [VLAN Interfaces](#vlan-interfaces)
-  - [VXLAN Interface](#vxlan-interface)
-- [Routing](#routing)
-  - [Virtual Router MAC Address](#virtual-router-mac-address)
-  - [IP Routing](#ip-routing)
-  - [IPv6 Routing](#ipv6-routing)
-  - [Static Routes](#static-routes)
-  - [Router ISIS](#router-isis)
-  - [Router BGP](#router-bgp)
-  - [Router BFD](#router-bfd)
-- [Multicast](#multicast)
-  - [IP IGMP Snooping](#ip-igmp-snooping)
-  - [Router Multicast](#router-multicast)
-  - [Router PIM Sparse Mode](#router-pim-sparse-mode)
-- [Filters](#filters)
-  - [Community Lists](#community-lists)
-  - [Peer Filters](#peer-filters)
-  - [Prefix Lists](#prefix-lists)
-  - [IPv6 Prefix Lists](#ipv6-prefix-lists)
-  - [Route Maps](#route-maps)
-  - [IP Extended Communities](#ip-extended-communities)
-- [ACL](#acl)
-  - [Standard Access-lists](#standard-access-lists)
-  - [Extended Access-lists](#extended-access-lists)
-  - [IPv6 Standard Access-lists](#ipv6-standard-access-lists)
-  - [IPv6 Extended Access-lists](#ipv6-extended-access-lists)
-- [VRF Instances](#vrf-instances)
-- [Virtual Source NAT](#virtual-source-nat)
-- [Platform](#platform)
-- [Router L2 VPN](#router-l2-vpn)
-- [IP DHCP Relay](#ip-dhcp-relay)
-
-# Management
-
 ## Management Interfaces
 
 ### Management Interfaces Summary
@@ -83,7 +14,7 @@ IPv6
 
 | Management Interface | description | VRF | IPv6 Address | IPv6 Gateway |
 | -------------------- | ----------- | --- | ------------ | ------------ |
-| Management1 | oob_management | MGMT | not configured  | not configured |
+| Management1 | oob_management | MGMT | ||
 
 ### Management Interfaces Device Configuration
 
@@ -95,21 +26,74 @@ interface Management1
    ip address 192.168.100.32/24
 ```
 
-## DNS Domain
+## Hardware Counters
 
+No Hardware Counters defined
 
-### DNS domain: ohvlab.local
+## Aliases
 
-### DNS Domain Device Configuration
+alias shimet show bgp evpn route-type imet detail | awk '/for imet/ { print "VNI: " $7 ", VTEP: " $8, "RD: " $11 }'
+alias shmacip show bgp evpn route-type mac-ip detail | awk '/for mac-ip/ { if (NF == 11) { print "RD: " $11, "VNI: " $7, "MAC: " $8 } else { print "RD: " $12, "VNI: " $7, "MAC: " $8, "IP: " $9 } }' | sed -e s/,//g
+alias shprefix show bgp evpn route-type ip-prefix ipv4 detail | awk '/for ip-prefix/ { print "ip-prefix: " $7, "RD: " $10 }'
+
+!
+## TerminAttr Daemon
+
+### TerminAttr Daemon Summary
+
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
+| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+
+### TerminAttr Daemon Device Configuration
 
 ```eos
-dns domain ohvlab.local
 !
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.100.240:9910 -cvcompression=gzip -ingestauth=key,magickey04292020 -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=MGMT -taillogs
+   no shutdown
 ```
 
-## Domain-List
+## IP DHCP Relay
 
-Domain-list not defined
+IP DHCP Relay not defined
+
+## Internal VLAN allocation Policy
+
+### Internal VLAN Allocation Policy Summary
+
+| Policy Allocation | Range Beginning | Range Ending |
+| ------------------| --------------- | ------------ |
+| ascending | 1006 | 1199 |
+
+### Internal VLAN Allocation Policy Configuration
+
+```eos
+!
+vlan internal order ascending range 1006 1199
+```
+
+## IP IGMP Snooping
+
+
+## Logging
+
+No logging settings defined
+
+## Domain Lookup
+
+
+### DNS Domain Lookup Summary
+
+| Source interface | vrf |
+| ---------------- | --- |
+| Management1 | MGMT  |
+
+### DNS Domain Lookup Device Configuration
+
+```eos
+ip domain lookup vrf MGMT source-interface Management1
+```
 
 ## Name Servers
 
@@ -125,19 +109,16 @@ Domain-list not defined
 ip name-server vrf MGMT 192.168.70.1
 ```
 
-## Domain Lookup
+## DNS Domain
 
 
-### DNS Domain Lookup Summary
+### DNS domain: ohvlab.local
 
-| Source interface | vrf |
-| ---------------- | --- |
-| Management1 | MGMT  |
-
-### DNS Domain Lookup Device Configuration
+### DNS Domain Device Configuration
 
 ```eos
-ip domain lookup vrf MGMT source-interface Management1
+dns domain ohvlab.local
+!
 ```
 
 ## NTP
@@ -163,61 +144,54 @@ ntp server vrf MGMT 192.232.20.87 prefer
 ntp server vrf MGMT 216.239.35.4
 ```
 
-## Management SSH
+## Router L2 VPN
+
+### Router L2 VPN
 
 
-```eos
-!
-management ssh
-   vrf MGMT
-      no shutdown
-```
 
-# Authentication
+   Selective ARP is enabled.
 
-## Local Users
 
-### Local Users Summary
 
-| User | Privilege | role |
-| ---- | --------- | ---- |
-| admin | 15 | network-admin |
-| arista | 15 | N/A |
-| cvpadmin | 15 | N/A |
-
-### Local Users Device Configuration
+### Router L2 VPN Device Configuration
 
 ```eos
 !
-username admin privilege 15 role network-admin secret sha512 $6$xTFjLEjlpX/ZvgNp$3ARB.DYuWuJDHzph652u7BAkyQ6jni/NZqKRUQBDJxUL83QuL6/HBY4tL/UXuKr1n00yjwNHtUBn.UbixdLai0
-username arista privilege 15 secret sha512 $6$RO7KPjCB0BtlFgcd$/7Lv7Pjj3/OUOIUmqk0NmB8218tnq3Qcjb20pF4Xb3VaoMEuXShWVpFGU.YTYBuQ5.e3SXOLrIEfXpFegrQDX.
-username cvpadmin privilege 15 secret sha512 $6$u5wM2GSl324m5EF0$AM98W2MI4ISBciPXm6be8Q3RTykF3dCd2W3btVvhcBBKvKHjfbkeJfesbEWMcrYlbzzZbWdBcxF6U/Pe3xBYF1
+router l2-vpn
+   arp selective-install
 ```
 
-## TACACS Servers
+## SFlow
 
-TACACS servers not configured
+No sFlow defined
 
-## IP TACACS Source Interfaces
+## Spanning Tree
+
+### Spanning Tree Summary
+
+Mode: mstp
+
+**MSTP Instance and Priority**:
+
+| Instance | Priority |
+| -------- | -------- |
+| 0 | 4096 |
+
+### Spanning Tree Device Configuration
+
+```eos
+!
+spanning-tree mode mstp
+spanning-tree mst 0 priority 4096
+```
+
+
+TACACS Servers Not Configured
+
 
 IP TACACS source interfaces not defined
 
-## RADIUS Servers
-
-### RADIUS Servers
-
-| VRF | RADIUS Servers |
-| --- | ---------------|
-|  MGMT | 192.168.100.254 |
-
-### RADUIUS Servers Device Configuration
-
-```eos
-!
-radius-server host 192.168.100.254 vrf MGMT key 7 02090C4D07070D731C1C5958
-```
-
-## AAA Server Groups
 
 ### AAA Server Groups
 
@@ -258,100 +232,26 @@ AAA authorization not defined
 
 AAA accounting not defined
 
-# Management Security
+## Local Users
 
-Management Security not defined
+### Local Users Summary
 
-# Aliases
+| User | Privilege | role |
+| ---- | --------- | ---- |
+| admin | 15 | network-admin |
+| arista | 15 | N/A |
+| cvpadmin | 15 | N/A |
 
-
-```
-alias shimet show bgp evpn route-type imet detail | awk '/for imet/ { print "VNI: " $7 ", VTEP: " $8, "RD: " $11 }'
-alias shmacip show bgp evpn route-type mac-ip detail | awk '/for mac-ip/ { if (NF == 11) { print "RD: " $11, "VNI: " $7, "MAC: " $8 } else { print "RD: " $12, "VNI: " $7, "MAC: " $8, "IP: " $9 } }' | sed -e s/,//g
-alias shprefix show bgp evpn route-type ip-prefix ipv4 detail | awk '/for ip-prefix/ { print "ip-prefix: " $7, "RD: " $10 }'
-
-!
-```
-# Monitoring
-
-## TerminAttr Daemon
-
-### TerminAttr Daemon Summary
-
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
-
-### TerminAttr Daemon Device Configuration
+### Local Users Device Configuration
 
 ```eos
 !
-daemon TerminAttr
-   exec /usr/bin/TerminAttr -ingestgrpcurl=192.168.100.240:9910 -cvcompression=gzip -ingestauth=key,magickey04292020 -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -ingestvrf=MGMT -taillogs
-   no shutdown
+username admin privilege 15 role network-admin secret sha512 $6$xTFjLEjlpX/ZvgNp$3ARB.DYuWuJDHzph652u7BAkyQ6jni/NZqKRUQBDJxUL83QuL6/HBY4tL/UXuKr1n00yjwNHtUBn.UbixdLai0
+username arista privilege 15 secret sha512 $6$RO7KPjCB0BtlFgcd$/7Lv7Pjj3/OUOIUmqk0NmB8218tnq3Qcjb20pF4Xb3VaoMEuXShWVpFGU.YTYBuQ5.e3SXOLrIEfXpFegrQDX.
+username cvpadmin privilege 15 secret sha512 $6$u5wM2GSl324m5EF0$AM98W2MI4ISBciPXm6be8Q3RTykF3dCd2W3btVvhcBBKvKHjfbkeJfesbEWMcrYlbzzZbWdBcxF6U/Pe3xBYF1
 ```
 
-## Logging
-
-No logging settings defined
-
-## SFlow
-
-No sFlow defined
-
-## Hardware Counters
-
-
-No Hardware Counters defined
-
-## VM Tracer Sessions
-
-No VM tracer session defined
-
-## Event Handler
-
-No Event Handler Defined
-
-# MLAG
-
-MLAG not defined
-
-# Spanning Tree
-
-### Spanning Tree Summary
-
-Mode: mstp
-
-**MSTP Instance and Priority**:
-
-| Instance | Priority |
-| -------- | -------- |
-| 0 | 4096 |
-
-### Spanning Tree Device Configuration
-
-```eos
-!
-spanning-tree mode mstp
-spanning-tree mst 0 priority 4096
-```
-
-# Internal VLAN Allocation Policy
-
-### Internal VLAN Allocation Policy Summary
-
-| Policy Allocation | Range Beginning | Range Ending |
-| ------------------| --------------- | ------------ |
-| ascending | 1006 | 1199 |
-
-### Internal VLAN Allocation Policy Configuration
-
-```eos
-!
-vlan internal order ascending range 1006 1199
-```
-
-# VLANs
+## VLANs
 
 ### VLANs Summary
 
@@ -375,7 +275,27 @@ vlan 40
    name Forty-db
 ```
 
-# Interfaces
+## VRF Instances
+
+### VRF Instances Summary
+
+| VRF Name | IP Routing |
+| -------- | ---------- |
+| A |  enabled |
+| MGMT |  disabled |
+
+### VRF Instances Device Configuration
+
+```eos
+!
+vrf instance A
+!
+vrf instance MGMT
+```
+
+## Port-Channel Interfaces
+
+No Port-Channels defined
 
 ## Ethernet Interfaces
 
@@ -422,10 +342,6 @@ interface Ethernet12
    switchport access vlan 40
    spanning-tree portfast
 ```
-
-## Port-Channel Interfaces
-
-No Port-Channels defined
 
 ## Loopback Interfaces
 
@@ -529,51 +445,40 @@ interface Vxlan1
    vxlan vrf A vni 51
 ```
 
-# Routing
+## Virtual Router MAC Address & Virtual Source NAT
 
-## Virtual Router MAC Address
-
-
-### Virtual Router MAC Address Summary
+### Virtual Router MAC Address and Virtual Source NAT Summary
 
 **Virtual Router MAC Address:** aa:aa:bb:bb:cc:cc
+### Virtual Source NAT Summary
 
-### Virtual Router MAC Address Configuration
+| Source NAT VRF | Source NAT IP Address |
+| -------------- | --------------------- |
+| A | 10.255.1.7 |
+
+### Virtual Router MAC Address Device and Virtual Source NAT Configuration
 
 ```eos
 !
 ip virtual-router mac-address aa:aa:bb:bb:cc:cc
+ip address virtual source-nat vrf A address 10.255.1.7
 ```
 
-## IP Routing
+## IPv6 Extended Access-lists
 
-### IP Routing Summary
+IPv6 Extended Access-lists not defined
 
-| VRF | Routing Enabled |
-| --- | --------------- |
-| default |  True | 
-| A | True |
-| MGMT | False |
+## IPv6 Standard Access-lists
 
-### IP Routing Device Configuration
+IPv6 Standard Access-lists not defined
 
-```eos
-!
-ip routing
-ip routing vrf A
-no ip routing vrf MGMT
-```
-## IPv6 Routing
+## Extended Access-lists
 
-### IPv6 Routing Summary
+Extended Access-lists not defined
 
-| VRF | Routing Enabled |
-| --- | --------------- |
-| default |  False | 
-| A | False |
-| MGMT | False |
- 
+## Standard Access-lists
 
+Standard Access-lists not defined
 
 ## Static Routes
 
@@ -590,18 +495,122 @@ no ip routing vrf MGMT
 ip route vrf MGMT 0.0.0.0/0 192.168.100.1
 ```
 
-## Router ISIS
+## Event Handler
 
-Router ISIS not defined
+No Event Handler Defined
 
-# Router BGP
+## IP Routing
+
+### IP Routing Summary
+
+| VRF | Routing Enabled |
+| --- | --------------- |
+| A | True |
+| MGMT | False |
+
+### IP Routing Device Configuration
+
+```eos
+!
+ip routing
+ip routing vrf A
+no ip routing vrf MGMT
+```
+
+## Prefix Lists
+
+### Prefix Lists Summary
+
+**PL-LOOPBACKS-EVPN-OVERLAY:**
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 1.1.1.0/24 eq 32 |
+| 20 | permit 2.2.2.0/24 eq 32 |
+
+**PL-P2P-UNDERLAY:**
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 10.2.1.0/24 le 31 |
+
+### Prefix Lists Device Configuration
+
+```eos
+!
+ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+   seq 10 permit 1.1.1.0/24 eq 32
+   seq 20 permit 2.2.2.0/24 eq 32
+!
+ip prefix-list PL-P2P-UNDERLAY
+   seq 10 permit 10.2.1.0/24 le 31
+```
+
+## IPv6 Prefix Lists
+
+IPv6 Prefix lists not defined
+
+## IPv6 Routing
+
+### IPv6 Routing Summary
+
+| VRF | IPv6 Routing Enabled |
+| --- | -------------------- |
+| A | False |
+| MGMT | False |
+
+### IPv6 Routing Device Configuration
+
+```eos
+```
+
+## MLAG
+
+MLAG not defined
+
+## Community Lists
+
+Community Lists not defined
+
+## Route Maps
+
+### Route Maps Summary
+
+**RM-CONN-2-BGP:**
+
+| Sequence | Type | Match and/or Set |
+| -------- | ---- | ---------------- |
+| 10 | permit | match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY |
+
+### Route Maps Device Configuration
+
+```eos
+!
+route-map RM-CONN-2-BGP permit 10
+   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+```
+
+## Peer Filters
+
+No Peer Filters defined
+
+## Router BFD
+
+### Router BFD Multihop Summary
+
+| Interval | Minimum RX | Multiplier |
+| -------- | ---------- | ---------- |
+| 300 | 300 | 3 |
+
+*No device configuration required - default values
+
+## Router BGP
 
 ### Router BGP Summary
 
 | BGP AS | Router ID |
 | ------ | --------- |
 | 65002|  1.1.1.7 |
-
 
 | BGP Tuning |
 | ---------- |
@@ -714,21 +723,6 @@ router bgp 65002
       redistribute connected
 ```
 
-## Router BFD
-
-### Router BFD Multihop Summary
-
-| Interval | Minimum RX | Multiplier |
-| -------- | ---------- | ---------- |
-| 300 | 300 | 3 |
-
-*No device configuration required - default values
-
-# Multicast
-
-## IP IGMP Snooping
-
-
 ## Router Multicast
 
 Routing multicast not defined
@@ -737,149 +731,18 @@ Routing multicast not defined
 
 Router PIM sparse mode not defined
 
-# Filters
+## VM Tracer Sessions
 
-## Community Lists
+No VM tracer session defined
 
-Community Lists not defined
+## Management Security
 
-## Peer Filters
+Management Security not defined
 
-No Peer Filters defined
-
-## Prefix Lists
-
-### Prefix Lists Summary
-
-**PL-LOOPBACKS-EVPN-OVERLAY:**
-
-| Sequence | Action |
-| -------- | ------ |
-| 10 | permit 1.1.1.0/24 eq 32 |
-| 20 | permit 2.2.2.0/24 eq 32 |
-
-**PL-P2P-UNDERLAY:**
-
-| Sequence | Action |
-| -------- | ------ |
-| 10 | permit 10.2.1.0/24 le 31 |
-
-### Prefix Lists Device Configuration
-
-```eos
-!
-ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-   seq 10 permit 1.1.1.0/24 eq 32
-   seq 20 permit 2.2.2.0/24 eq 32
-!
-ip prefix-list PL-P2P-UNDERLAY
-   seq 10 permit 10.2.1.0/24 le 31
-```
-
-## IPv6 Prefix Lists
-
-IPv6 Prefix lists not defined
-
-## Route Maps
-
-### Route Maps Summary
-
-**RM-CONN-2-BGP:**
-
-| Sequence | Type | Match and/or Set |
-| -------- | ---- | ---------------- |
-| 10 | permit | match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY |
-
-### Route Maps Device Configuration
-
-```eos
-!
-route-map RM-CONN-2-BGP permit 10
-   match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-```
-
-## IP Extended Communities
-
-No Extended community defined
-
-# ACL
-
-## Standard Access-lists
-
-Standard Access-lists not defined
-
-## Extended Access-lists
-
-Extended Access-lists not defined
-
-## IPv6 Standard Access-lists
-
-IPv6 Standard Access-lists not defined
-
-## IPv6 Extended Access-lists
-
-IPv6 Extended Access-lists not defined
-
-# VRF Instances
-
-### VRF Instances Summary
-
-| VRF Name | IP Routing |
-| -------- | ---------- |
-| A |  enabled |
-| MGMT |  disabled |
-
-### VRF Instances Device Configuration
-
-```eos
-!
-vrf instance A
-!
-vrf instance MGMT
-```
-
-# Virtual Source NAT
-
-
-### Virtual Source NAT Summary
-
-| Source NAT VRF | Source NAT IP Address |
-| -------------- | --------------------- |
-| A | 10.255.1.7 |
-
-### Virtual Source NAT Configuration
-
-```eos
-!
-ip address virtual source-nat vrf A address 10.255.1.7
-```
-
-# Platform
+## Platform
 
 No Platform parameters defined
 
-# Router L2 VPN
+## Router ISIS
 
-### Router L2 VPN
-
-
-
-   Selective ARP is enabled.
-
-
-
-### Router L2 VPN Device Configuration
-
-```eos
-!
-router l2-vpn
-   arp selective-install
-```
-
-# IP DHCP Relay
-
-IP DHCP Relay not defined
-
-## Custom Templates
-
-No Custom Templates Defined
+Router ISIS not defined

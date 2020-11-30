@@ -2,6 +2,7 @@
 
 ### LEAF1A ###
 
+
 ### Leaf Info ###
 l3leaf_node_group: DC1_LEAF1
 switch_platform: 7280R
@@ -51,6 +52,9 @@ load_interval:
 ### Queue Monitor Lenght ###
 queue_monitor_length:
   enabled: true
+
+### Logging ###
+logging:
 
 ### Name Servers ###
 name_server:
@@ -283,7 +287,6 @@ route_maps:
         type: permit
         match:
           - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
-
 ### Routing - BGP ###
 router_bgp:
   as: 65002
@@ -360,9 +363,6 @@ router_bgp:
             - "51:51"
       redistribute_routes:
         - connected
-
-### Extended Community Lists ###
-ip_extcommunity_lists:
 
 ### Routing - OSPF ###
 router_ospf:

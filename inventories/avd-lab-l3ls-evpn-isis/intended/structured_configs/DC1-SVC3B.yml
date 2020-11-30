@@ -2,6 +2,7 @@
 
 ### DC1-SVC3B ###
 
+
 ### Leaf Info ###
 l3leaf_node_group: DC1_SVC3
 switch_platform: vEOS-LAB
@@ -55,6 +56,9 @@ load_interval:
 
 ### Queue Monitor Lenght ###
 queue_monitor_length:
+
+### Logging ###
+logging:
 
 ### Name Servers ###
 name_server:
@@ -583,6 +587,18 @@ static_routes:
 
 ### prefix-lists ###
 prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: "permit 192.168.255.0/24 eq 32"
+      20:
+        action: "permit 192.168.254.0/24 eq 32"
+  PL-P2P-UNDERLAY:
+    sequence_numbers:
+      10:
+        action: "permit 172.31.255.0/24 le 31"
+      20:
+        action: "permit 10.255.251.0/24 le 31"
 
 ### MLAG Configuration ###
 mlag_configuration:
@@ -599,7 +615,12 @@ mlag_configuration:
 
 ### route-maps ###
 route_maps:
-
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
 ### Routing - BGP ###
 router_bgp:
   as: 65103
@@ -618,16 +639,35 @@ router_bgp:
       password: "q+VNViP5i4rVjW1cxFv2wA=="
       send_community: true
       maximum_routes: 0
+    MLAG-IPv4-UNDERLAY-PEER:
+      type: ipv4
+      remote_as: 65103
+      next_hop_self: true
+      password: "vnEaG8gMeQf3d3cN6PktXQ=="
+      maximum_routes: 12000
+      send_community: true
   neighbors:
+    192.168.255.1:
+      peer_group: EVPN-OVERLAY-PEERS
+    192.168.255.2:
+      peer_group: EVPN-OVERLAY-PEERS
+    192.168.255.3:
+      peer_group: EVPN-OVERLAY-PEERS
+    192.168.255.4:
+      peer_group: EVPN-OVERLAY-PEERS
   redistribute_routes:
   address_family_evpn:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: true
+      MLAG-IPv4-UNDERLAY-PEER:
+        activate: false
   address_family_ipv4:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: false
+      MLAG-IPv4-UNDERLAY-PEER:
+        activate: true
   vlan_aware_bundles:
 ## Tenant_A ##
     Tenant_A_APP_Zone:
@@ -793,9 +833,6 @@ router_bgp:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
       redistribute_routes:
         - connected
-
-### Extended Community Lists ###
-ip_extcommunity_lists:
 
 ### Routing - OSPF ###
 router_ospf:
