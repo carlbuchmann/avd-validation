@@ -2,7 +2,6 @@
 
 ### DC1-LEAF1A ###
 
-
 ### Leaf Info ###
 l3leaf_node_group: DC1_LEAF1
 switch_platform: vEOS-LAB
@@ -50,9 +49,6 @@ load_interval:
 
 ### Queue Monitor Lenght ###
 queue_monitor_length:
-
-### Logging ###
-logging:
 
 ### Name Servers ###
 name_server:
@@ -261,12 +257,14 @@ vlan_interfaces:
     tenant: tech_friday_demo
     tags: ['app']
     description: tf_demo_app_1
+    enabled: True
     vrf: tf_web_zone
     ip_address_virtual: 10.4.10.1/24
   Vlan411:
     tenant: tech_friday_demo
     tags: ['app']
     description: tf_demo_app_2
+    enabled: True
     vrf: tf_web_zone
     ip_address_virtual: 10.4.11.1/24
 ## Tenant_A ##
@@ -274,24 +272,28 @@ vlan_interfaces:
     tenant: Tenant_A
     tags: ['app', 'erp1']
     description: Tenant_A_APP_Zone_1
+    enabled: True
     vrf: Tenant_A_APP_Zone
     ip_address_virtual: 10.1.30.1/24
   Vlan131:
     tenant: Tenant_A
     tags: ['app']
     description: Tenant_A_APP_Zone_2
+    enabled: True
     vrf: Tenant_A_APP_Zone
     ip_address_virtual: 10.1.31.1/24
   Vlan120:
     tenant: Tenant_A
     tags: ['web', 'erp1']
     description: Tenant_A_WEB_Zone_1
+    enabled: True
     vrf: Tenant_A_WEB_Zone
     ip_address_virtual: 10.1.20.1/24
   Vlan121:
     tenant: Tenant_A
     tags: ['web']
     description: Tenant_A_WEBZone_2
+    enabled: True
     vrf: Tenant_A_WEB_Zone
     ip_address_virtual: 10.1.21.1/24
 ## Tenant_B ##
@@ -343,6 +345,14 @@ ip_virtual_router_mac_address: 00:dc:00:00:00:0a
 
 virtual_source_nat_vrfs:
 
+ip_igmp_snooping:
+  globally_enabled: True
+  vlans:
+## tech_friday_demo ##
+## Tenant_A ##
+## Tenant_B ##
+## Tenant_C ##
+
 ### static routes ###
 static_routes:
   - vrf: MGMT
@@ -351,26 +361,11 @@ static_routes:
 
 ### prefix-lists ###
 prefix_lists:
-  PL-LOOPBACKS-EVPN-OVERLAY:
-    sequence_numbers:
-      10:
-        action: "permit 192.168.255.0/24 eq 32"
-      20:
-        action: "permit 192.168.254.0/24 eq 32"
-  PL-P2P-UNDERLAY:
-    sequence_numbers:
-      10:
-        action: "permit 172.31.255.0/24 le 31"
 
 
 ### route-maps ###
 route_maps:
-  RM-CONN-2-BGP:
-    sequence_numbers:
-      10:
-        type: permit
-        match:
-          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
+
 ### Routing - BGP ###
 router_bgp:
   as: 65101
@@ -479,6 +474,9 @@ router_bgp:
 ## Tenant_B ##
 ## Tenant_C ##
 
+### Extended Community Lists ###
+ip_extcommunity_lists:
+
 ### Routing - OSPF ###
 router_ospf:
   process_ids:
@@ -490,6 +488,7 @@ router_ospf:
         - Ethernet2
         - Ethernet3
         - Ethernet4
+      bfd_enable: true
       max_lsa: 12000
 
 ### Routing - ISIS ###

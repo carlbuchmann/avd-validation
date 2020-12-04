@@ -2,7 +2,6 @@
 
 ### LEAF2A ###
 
-
 ### Leaf Info ###
 l3leaf_node_group: DC1_LEAF2
 switch_platform: 7280R
@@ -58,9 +57,6 @@ load_interval:
 ### Queue Monitor Lenght ###
 queue_monitor_length:
   enabled: true
-
-### Logging ###
-logging:
 
 ### Name Servers ###
 name_server:
@@ -302,18 +298,21 @@ vlan_interfaces:
     tenant: Tenant_A
     tags: ['opzone']
     description: Ten-opzone
+    enabled: True
     vrf: A
     ip_address_virtual: 10.10.10.1/24
   Vlan20:
     tenant: Tenant_A
     tags: ['web']
     description: Twenty-web
+    enabled: True
     vrf: A
     ip_address_virtual: 20.20.20.1/24
   Vlan30:
     tenant: Tenant_A
     tags: ['app']
     description: Thirty-app
+    enabled: True
     vrf: A
     ip_address_virtual: 30.30.30.1/24
   Vlan3050:
@@ -327,24 +326,28 @@ vlan_interfaces:
     tenant: Tenant_B
     tags: ['opzone']
     description: Eleven-opzone
+    enabled: True
     vrf: B
     ip_address_virtual: 11.11.11.1/24
   Vlan21:
     tenant: Tenant_B
     tags: ['web']
     description: TwentyOne-web
+    enabled: True
     vrf: B
     ip_address_virtual: 21.21.21.1/24
   Vlan31:
     tenant: Tenant_B
     tags: ['app']
     description: ThirtyOne-app
+    enabled: True
     vrf: B
     ip_address_virtual: 31.31.31.1/24
   Vlan41:
     tenant: Tenant_B
     tags: ['db2']
     description: FortyOne-db
+    enabled: True
     vrf: B
     ip_address_virtual: 41.41.41.1/24
   Vlan3150:
@@ -405,6 +408,12 @@ virtual_source_nat_vrfs:
   B:
     ip_address: 10.255.2.21
 
+ip_igmp_snooping:
+  globally_enabled: True
+  vlans:
+## Tenant_A ##
+## Tenant_B ##
+
 ### static routes ###
 static_routes:
   - vrf: MGMT
@@ -447,6 +456,7 @@ route_maps:
         type: permit
         match:
           - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
+
 ### Routing - BGP ###
 router_bgp:
   as: 65003
@@ -465,6 +475,13 @@ router_bgp:
       password: "AQQvKeimxJu+uGQ/yYvv9w=="
       maximum_routes: 12000
       send_community: true
+    MLAG-IPv4-UNDERLAY-PEER:
+      type: ipv4
+      remote_as: 65003
+      next_hop_self: true
+      password: "vnEaG8gMeQf3d3cN6PktXQ=="
+      maximum_routes: 12000
+      send_community: true
     EVPN-OVERLAY-PEERS:
       type: evpn
       remote_as: 65001
@@ -474,24 +491,17 @@ router_bgp:
       password: "q+VNViP5i4rVjW1cxFv2wA=="
       send_community: true
       maximum_routes: 0
-    MLAG-IPv4-UNDERLAY-PEER:
-      type: ipv4
-      remote_as: 65003
-      next_hop_self: true
-      password: "vnEaG8gMeQf3d3cN6PktXQ=="
-      maximum_routes: 12000
-      send_community: true
   neighbors:
     10.2.1.72:
       peer_group: IPv4-UNDERLAY-PEERS
     10.2.1.74:
       peer_group: IPv4-UNDERLAY-PEERS
+    10.255.251.37:
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
     1.1.1.1:
       peer_group: EVPN-OVERLAY-PEERS
     1.1.1.2:
       peer_group: EVPN-OVERLAY-PEERS
-    10.255.251.37:
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
   redistribute_routes:
     connected:
       route_map: RM-CONN-2-BGP
@@ -564,6 +574,9 @@ router_bgp:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
       redistribute_routes:
         - connected
+
+### Extended Community Lists ###
+ip_extcommunity_lists:
 
 ### Routing - OSPF ###
 router_ospf:

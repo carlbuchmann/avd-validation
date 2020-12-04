@@ -42,9 +42,6 @@ load_interval:
 queue_monitor_length:
   enabled: true
 
-### Logging ###
-logging:
-
 ### Name Servers ###
 name_server:
   source:
@@ -163,6 +160,7 @@ prefix_lists:
       10:
         action: "permit 1.1.1.0/24 le 32"
 
+
 ### route-maps ###
 route_maps:
   RM-CONN-2-BGP:
@@ -172,12 +170,10 @@ route_maps:
         match:
           - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
 
+
 ### peer-filters ###
 peer_filters:
-  LEAF-AS-RANGE:
-    sequence_numbers:
-      10:
-        match: as-range 65001-65199 result accept
+
 
 ### Routing - BGP ###
 router_bgp:
@@ -231,16 +227,16 @@ router_bgp:
       route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
-      EVPN-OVERLAY-PEERS:
-        activate: true
       IPv4-UNDERLAY-PEERS:
         activate: false
+      EVPN-OVERLAY-PEERS:
+        activate: true
   address_family_ipv4:
     peer_groups:
-      EVPN-OVERLAY-PEERS:
-        activate: false
       IPv4-UNDERLAY-PEERS:
         activate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
 
 ### Routing - OSPF ###
 router_ospf:

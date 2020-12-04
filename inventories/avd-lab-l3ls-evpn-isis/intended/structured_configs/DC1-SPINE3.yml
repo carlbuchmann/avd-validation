@@ -40,9 +40,6 @@ load_interval:
 ### Queue Monitor Lenght ###
 queue_monitor_length:
 
-### Logging ###
-logging:
-
 ### Name Servers ###
 name_server:
   source:
@@ -213,21 +210,14 @@ prefix_lists:
       10:
         action: "permit 192.168.255.0/24 le 32"
 
+
 ### route-maps ###
 route_maps:
-  RM-CONN-2-BGP:
-    sequence_numbers:
-      10:
-        type: permit
-        match:
-          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
+
 
 ### peer-filters ###
 peer_filters:
-  LEAF-AS-RANGE:
-    sequence_numbers:
-      10:
-        match: as-range 65101-65132 result accept
+
 
 ### Routing - BGP ###
 router_bgp:
