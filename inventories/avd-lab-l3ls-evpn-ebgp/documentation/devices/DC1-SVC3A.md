@@ -610,6 +610,7 @@ interface Vlan110
 !
 interface Vlan111
    description Tenant_A_OP_Zone_2
+   shutdown
    vrf Tenant_A_OP_Zone
    ip address virtual 10.1.11.1/24
 !
