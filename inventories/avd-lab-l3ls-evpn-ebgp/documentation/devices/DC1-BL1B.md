@@ -387,6 +387,7 @@ vlan 4094
 | Ethernet4 | P2P_LINK_TO_DC1-SPINE4_Ethernet7 | 1500 | routed | access | - | - | - | 172.31.255.55/31 | - | - |
 | Ethernet5 | MLAG_PEER_DC1-BL1A_Ethernet5 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 5 | active |
 | Ethernet6 | MLAG_PEER_DC1-BL1A_Ethernet6 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 5 | active |
+| Ethernet10 | P2P_LINK_TO_DC2-BL1B_Ethernet10 | 1500 | routed | access | - | - | - | 172.31.0.2/31 | - | - |
 
 *Inherited from Port-Channel Interface
 
@@ -421,6 +422,11 @@ interface Ethernet5
 interface Ethernet6
    description MLAG_PEER_DC1-BL1A_Ethernet6
    channel-group 5 mode active
+!
+interface Ethernet10
+   description P2P_LINK_TO_DC2-BL1B_Ethernet10
+   no switchport
+   ip address 172.31.0.2/31
 ```
 
 ## Port-Channel Interfaces

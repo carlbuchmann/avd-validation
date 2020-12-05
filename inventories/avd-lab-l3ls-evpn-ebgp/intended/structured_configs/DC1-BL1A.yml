@@ -239,6 +239,15 @@ ethernet_interfaces:
     channel_group:
       id: 5
       mode: active
+  Ethernet10:
+    description: P2P_LINK_TO_DC2-BL1A_Ethernet10
+    ip_address: 172.31.0.0/31
+    mtu: 1500
+    peer: DC2-BL1A
+    peer_interface: Ethernet10
+    peer_type: leaf
+    type: routed
+
 
 
 ### Loopback Interfaces ###
