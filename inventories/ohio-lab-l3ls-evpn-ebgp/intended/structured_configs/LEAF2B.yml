@@ -81,7 +81,7 @@ redundancy:
 spanning_tree:
   mode: mstp
   priority: 4096
-  no_spanning_tree_vlan: 4094
+  no_spanning_tree_vlan: 4093-4094
 
 
 ### AAA authorization ###
@@ -307,21 +307,21 @@ vlan_interfaces:
     tenant: Tenant_A
     tags: ['opzone']
     description: Ten-opzone
-    enabled: True
+    shutdown: false
     vrf: A
     ip_address_virtual: 10.10.10.1/24
   Vlan20:
     tenant: Tenant_A
     tags: ['web']
     description: Twenty-web
-    enabled: True
+    shutdown: false
     vrf: A
     ip_address_virtual: 20.20.20.1/24
   Vlan30:
     tenant: Tenant_A
     tags: ['app']
     description: Thirty-app
-    enabled: True
+    shutdown: false
     vrf: A
     ip_address_virtual: 30.30.30.1/24
   Vlan3050:
@@ -335,28 +335,28 @@ vlan_interfaces:
     tenant: Tenant_B
     tags: ['opzone']
     description: Eleven-opzone
-    enabled: True
+    shutdown: false
     vrf: B
     ip_address_virtual: 11.11.11.1/24
   Vlan21:
     tenant: Tenant_B
     tags: ['web']
     description: TwentyOne-web
-    enabled: True
+    shutdown: false
     vrf: B
     ip_address_virtual: 21.21.21.1/24
   Vlan31:
     tenant: Tenant_B
     tags: ['app']
     description: ThirtyOne-app
-    enabled: True
+    shutdown: false
     vrf: B
     ip_address_virtual: 31.31.31.1/24
   Vlan41:
     tenant: Tenant_B
     tags: ['db2']
     description: FortyOne-db
-    enabled: True
+    shutdown: false
     vrf: B
     ip_address_virtual: 41.41.41.1/24
   Vlan3150:
@@ -437,12 +437,6 @@ prefix_lists:
         action: "permit 1.1.1.0/24 eq 32"
       20:
         action: "permit 2.2.2.0/24 eq 32"
-  PL-P2P-UNDERLAY:
-    sequence_numbers:
-      10:
-        action: "permit 10.2.1.0/24 le 31"
-      20:
-        action: "permit 10.255.251.0/24 le 31"
 
 ### MLAG Configuration ###
 mlag_configuration:

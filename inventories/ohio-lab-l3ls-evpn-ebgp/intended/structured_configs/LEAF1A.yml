@@ -206,21 +206,21 @@ vlan_interfaces:
     tenant: Tenant_A
     tags: ['opzone']
     description: Ten-opzone
-    enabled: True
+    shutdown: false
     vrf: A
     ip_address_virtual: 10.10.10.1/24
   Vlan20:
     tenant: Tenant_A
     tags: ['web']
     description: Twenty-web
-    enabled: True
+    shutdown: false
     vrf: A
     ip_address_virtual: 20.20.20.1/24
   Vlan40:
     tenant: Tenant_A
     tags: ['db']
     description: Forty-db
-    enabled: True
+    shutdown: false
     vrf: A
     ip_address_virtual: 40.40.40.1/24
 
@@ -277,10 +277,6 @@ prefix_lists:
         action: "permit 1.1.1.0/24 eq 32"
       20:
         action: "permit 2.2.2.0/24 eq 32"
-  PL-P2P-UNDERLAY:
-    sequence_numbers:
-      10:
-        action: "permit 10.2.1.0/24 le 31"
 
 
 ### route-maps ###
