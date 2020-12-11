@@ -9,8 +9,6 @@
   - [Domain Lookup](#domain-lookup)
   - [NTP](#ntp)
   - [Management SSH](#management-ssh)
-  - [Management GNMI](#management-api-gnmi)
-  - [Management API](#Management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
   - [TACACS Servers](#tacacs-servers)
@@ -99,6 +97,7 @@ interface Management1
 
 ## DNS Domain
 
+
 ### DNS domain: avd-lab.local
 
 ### DNS Domain Device Configuration
@@ -140,6 +139,7 @@ Local Interface: Management1
 
 VRF: MGMT
 
+
 | Node | Primary |
 | ---- | ------- |
 | 0.north-america.pool.ntp.org | true |
@@ -156,37 +156,8 @@ ntp server vrf MGMT 1.north-america.pool.ntp.org
 
 ## Management SSH
 
+
 Management SSH is not defined
-
-## Management API GNMI
-
-Management API gnmi is not defined
-  
-## Management API HTTP
-
-
-### Management API HTTP Summary
-
-| HTTP | HTTPS |
-| ---------- | ---------- |
-|  default  |  True  |
-
-### Management API VRF Access
-
-| VRF Name | IPv4 ACL | IPv6 ACL |
-| -------- | -------- | -------- |
-| MGMT |  Not defined  |  Not defined  |
-
-### Management API HTTP Configuration
-
-```eos
-!
-management api http-commands
-   no shutdown
-   !
-   vrf MGMT
-      no shutdown
-```
 
 # Authentication
 
@@ -272,6 +243,7 @@ No sFlow defined
 
 ## Hardware Counters
 
+
 No Hardware Counters defined
 
 ## VM Tracer Sessions
@@ -284,7 +256,7 @@ No Event Handler Defined
 
 # MLAG
 
-## MLAG Summary
+### MLAG Summary
 
 | domain-id | local-interface | peer-address | peer-link |
 | --------- | --------------- | ------------ | --------- |
@@ -292,7 +264,7 @@ No Event Handler Defined
 
 Dual primary detection is enabled. The detection delay is 5 seconds.
 
-## MLAG Device Configuration
+### MLAG Device Configuration
 
 ```eos
 !
@@ -309,7 +281,7 @@ mlag configuration
 
 # Spanning Tree
 
-## Spanning Tree Summary
+### Spanning Tree Summary
 
 Mode: mstp
 
@@ -319,24 +291,24 @@ Mode: mstp
 | -------- | -------- |
 | 0 | 4096 |
 
-## Spanning Tree Device Configuration
+### Spanning Tree Device Configuration
 
 ```eos
 !
 spanning-tree mode mstp
-no spanning-tree vlan-id 4093-4094
+no spanning-tree vlan-id 4094
 spanning-tree mst 0 priority 4096
 ```
 
 # Internal VLAN Allocation Policy
 
-## Internal VLAN Allocation Policy Summary
+### Internal VLAN Allocation Policy Summary
 
 | Policy Allocation | Range Beginning | Range Ending |
 | ------------------| --------------- | ------------ |
 | ascending | 1006 | 1199 |
 
-## Internal VLAN Allocation Policy Configuration
+### Internal VLAN Allocation Policy Configuration
 
 ```eos
 !
@@ -345,7 +317,7 @@ vlan internal order ascending range 1006 1199
 
 # VLANs
 
-## VLANs Summary
+### VLANs Summary
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
@@ -373,7 +345,7 @@ vlan internal order ascending range 1006 1199
 | 4093 | LEAF_PEER_L3 | LEAF_PEER_L3  |
 | 4094 | MLAG_PEER | MLAG  |
 
-## VLANs Device Configuration
+### VLANs Device Configuration
 
 ```eos
 !
@@ -638,7 +610,6 @@ interface Vlan110
 !
 interface Vlan111
    description Tenant_A_OP_Zone_2
-   shutdown
    vrf Tenant_A_OP_Zone
    ip address virtual 10.1.11.1/24
 !
@@ -829,14 +800,14 @@ ip virtual-router mac-address 00:dc:00:00:00:0a
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default |  True| | MGMT | False |
+| default |  True | 
+| MGMT | False |
 | Tenant_A_APP_Zone | True |
 | Tenant_A_DB_Zone | True |
 | Tenant_A_OP_Zone | True |
 | Tenant_A_WEB_Zone | True |
 | Tenant_B_OP_Zone | True |
 | Tenant_C_OP_Zone | True |
-
 
 ### IP Routing Device Configuration
 
@@ -857,23 +828,24 @@ ip routing vrf Tenant_C_OP_Zone
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default |  False | | MGMT | False |
+| default |  False | 
+| MGMT | False |
 | Tenant_A_APP_Zone | False |
 | Tenant_A_DB_Zone | False |
 | Tenant_A_OP_Zone | False |
 | Tenant_A_WEB_Zone | False |
 | Tenant_B_OP_Zone | False |
 | Tenant_C_OP_Zone | False |
+ 
 
 
 ## Static Routes
 
-
 ### Static Routes Summary
 
-| VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
-| --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| MGMT  | 0.0.0.0/0 |  192.168.200.1  |  -  |  Default  |  -  |  -  |  - |
+| VRF | Destination Prefix | Fowarding Address / Interface |
+| --- | ------------------ | ----------------------------- |
+| MGMT | 0.0.0.0/0 | 192.168.200.1 |
 
 ### Static Routes Device Configuration
 
@@ -882,20 +854,18 @@ ip routing vrf Tenant_C_OP_Zone
 ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ```
 
-## IPv6 Static Routes
-
-
 ## Router ISIS
 
 Router ISIS not defined
 
-## Router BGP
+# Router BGP
 
 ### Router BGP Summary
 
 | BGP AS | Router ID |
 | ------ | --------- |
 | 65102|  192.168.255.6 |
+
 
 | BGP Tuning |
 | ---------- |
@@ -966,6 +936,7 @@ Router ISIS not defined
 | Tenant_A_WEB_Zone | 192.168.255.6:11 |  11:11  |  |  | learned | 120-121 |
 | Tenant_B_OP_Zone | 192.168.255.6:20 |  20:20  |  |  | learned | 210-211 |
 | Tenant_C_OP_Zone | 192.168.255.6:30 |  30:30  |  |  | learned | 310-311 |
+
 
 #### Router BGP EVPN VRFs
 
@@ -1175,6 +1146,13 @@ No Peer Filters defined
 | 10 | permit 192.168.255.0/24 eq 32 |
 | 20 | permit 192.168.254.0/24 eq 32 |
 
+**PL-P2P-UNDERLAY:**
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 172.31.255.0/24 le 31 |
+| 20 | permit 10.255.251.0/24 le 31 |
+
 ### Prefix Lists Device Configuration
 
 ```eos
@@ -1182,6 +1160,10 @@ No Peer Filters defined
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.255.0/24 eq 32
    seq 20 permit 192.168.254.0/24 eq 32
+!
+ip prefix-list PL-P2P-UNDERLAY
+   seq 10 permit 172.31.255.0/24 le 31
+   seq 20 permit 10.255.251.0/24 le 31
 ```
 
 ## IPv6 Prefix Lists
@@ -1230,7 +1212,7 @@ IPv6 Extended Access-lists not defined
 
 # VRF Instances
 
-## VRF Instances Summary
+### VRF Instances Summary
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
@@ -1242,7 +1224,7 @@ IPv6 Extended Access-lists not defined
 | Tenant_B_OP_Zone |  enabled |
 | Tenant_C_OP_Zone |  enabled |
 
-## VRF Instances Device Configuration
+### VRF Instances Device Configuration
 
 ```eos
 !
@@ -1263,13 +1245,14 @@ vrf instance Tenant_C_OP_Zone
 
 # Virtual Source NAT
 
-## Virtual Source NAT Summary
+
+### Virtual Source NAT Summary
 
 | Source NAT VRF | Source NAT IP Address |
 | -------------- | --------------------- |
 | Tenant_A_OP_Zone | 10.255.1.6 |
 
-## Virtual Source NAT Configuration
+### Virtual Source NAT Configuration
 
 ```eos
 !
@@ -1288,6 +1271,6 @@ Router L2 VPN not defined
 
 IP DHCP Relay not defined
 
-# Custom Templates
+## Custom Templates
 
 No Custom Templates Defined

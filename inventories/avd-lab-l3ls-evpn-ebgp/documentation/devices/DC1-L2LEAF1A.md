@@ -9,8 +9,6 @@
   - [Domain Lookup](#domain-lookup)
   - [NTP](#ntp)
   - [Management SSH](#management-ssh)
-  - [Management GNMI](#management-api-gnmi)
-  - [Management API](#Management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
   - [TACACS Servers](#tacacs-servers)
@@ -99,6 +97,7 @@ interface Management1
 
 ## DNS Domain
 
+
 ### DNS domain: avd-lab.local
 
 ### DNS Domain Device Configuration
@@ -140,6 +139,7 @@ Local Interface: Management1
 
 VRF: MGMT
 
+
 | Node | Primary |
 | ---- | ------- |
 | 0.north-america.pool.ntp.org | true |
@@ -156,37 +156,8 @@ ntp server vrf MGMT 1.north-america.pool.ntp.org
 
 ## Management SSH
 
+
 Management SSH is not defined
-
-## Management API GNMI
-
-Management API gnmi is not defined
-  
-## Management API HTTP
-
-
-### Management API HTTP Summary
-
-| HTTP | HTTPS |
-| ---------- | ---------- |
-|  default  |  True  |
-
-### Management API VRF Access
-
-| VRF Name | IPv4 ACL | IPv6 ACL |
-| -------- | -------- | -------- |
-| MGMT |  Not defined  |  Not defined  |
-
-### Management API HTTP Configuration
-
-```eos
-!
-management api http-commands
-   no shutdown
-   !
-   vrf MGMT
-      no shutdown
-```
 
 # Authentication
 
@@ -272,6 +243,7 @@ No sFlow defined
 
 ## Hardware Counters
 
+
 No Hardware Counters defined
 
 ## VM Tracer Sessions
@@ -288,7 +260,7 @@ MLAG not defined
 
 # Spanning Tree
 
-## Spanning Tree Summary
+### Spanning Tree Summary
 
 Mode: mstp
 
@@ -298,7 +270,7 @@ Mode: mstp
 | -------- | -------- |
 | 0 | 16384 |
 
-## Spanning Tree Device Configuration
+### Spanning Tree Device Configuration
 
 ```eos
 !
@@ -308,13 +280,13 @@ spanning-tree mst 0 priority 16384
 
 # Internal VLAN Allocation Policy
 
-## Internal VLAN Allocation Policy Summary
+### Internal VLAN Allocation Policy Summary
 
 | Policy Allocation | Range Beginning | Range Ending |
 | ------------------| --------------- | ------------ |
 | ascending | 1006 | 1199 |
 
-## Internal VLAN Allocation Policy Configuration
+### Internal VLAN Allocation Policy Configuration
 
 ```eos
 !
@@ -323,7 +295,7 @@ vlan internal order ascending range 1006 1199
 
 # VLANs
 
-## VLANs Summary
+### VLANs Summary
 
 | VLAN ID | Name | Trunk Groups |
 | ------- | ---- | ------------ |
@@ -334,7 +306,7 @@ vlan internal order ascending range 1006 1199
 | 130 | Tenant_A_APP_Zone_1 | none  |
 | 131 | Tenant_A_APP_Zone_2 | none  |
 
-## VLANs Device Configuration
+### VLANs Device Configuration
 
 ```eos
 !
@@ -426,8 +398,8 @@ IP Virtual Router MAC Address is not defined
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default |  True| | MGMT | False |
-
+| default |  True | 
+| MGMT | False |
 
 ### IP Routing Device Configuration
 
@@ -442,17 +414,18 @@ no ip routing vrf MGMT
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default |  False | | MGMT | False |
+| default |  False | 
+| MGMT | False |
+ 
 
 
 ## Static Routes
 
-
 ### Static Routes Summary
 
-| VRF | Destination Prefix | Next Hop IP             | Exit interface      | Administrative Distance       | Tag               | Route Name                    | Metric         |
-| --- | ------------------ | ----------------------- | ------------------- | ----------------------------- | ----------------- | ----------------------------- | -------------- |
-| MGMT  | 0.0.0.0/0 |  192.168.200.1  |  -  |  Default  |  -  |  -  |  - |
+| VRF | Destination Prefix | Fowarding Address / Interface |
+| --- | ------------------ | ----------------------------- |
+| MGMT | 0.0.0.0/0 | 192.168.200.1 |
 
 ### Static Routes Device Configuration
 
@@ -461,14 +434,11 @@ no ip routing vrf MGMT
 ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ```
 
-## IPv6 Static Routes
-
-
 ## Router ISIS
 
 Router ISIS not defined
 
-## Router BGP
+# Router BGP
 
 Router BGP not defined
 
@@ -548,13 +518,13 @@ IPv6 Extended Access-lists not defined
 
 # VRF Instances
 
-## VRF Instances Summary
+### VRF Instances Summary
 
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | MGMT |  disabled |
 
-## VRF Instances Device Configuration
+### VRF Instances Device Configuration
 
 ```eos
 !
@@ -577,6 +547,6 @@ Router L2 VPN not defined
 
 IP DHCP Relay not defined
 
-# Custom Templates
+## Custom Templates
 
 No Custom Templates Defined
