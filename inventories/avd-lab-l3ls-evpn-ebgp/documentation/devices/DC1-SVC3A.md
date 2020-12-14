@@ -462,20 +462,34 @@ vlan 4094
 
 ### Ethernet Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (Trunk) | Trunk Group | VRF | IP Address | Channel-Group ID | Channel-Group Type |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --- | ---------- | ---------------- | ------------------ |
-| Ethernet1 | P2P_LINK_TO_DC1-SPINE1_Ethernet4 | 1500 | routed | access | - | - | - | 172.31.255.25/31 | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SPINE2_Ethernet4 | 1500 | routed | access | - | - | - | 172.31.255.27/31 | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-SPINE3_Ethernet4 | 1500 | routed | access | - | - | - | 172.31.255.29/31 | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SPINE4_Ethernet4 | 1500 | routed | access | - | - | - | 172.31.255.31/31 | - | - |
-| Ethernet5 | MLAG_PEER_DC1-SVC3B_Ethernet5 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 5 | active |
-| Ethernet6 | MLAG_PEER_DC1-SVC3B_Ethernet6 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 5 | active |
-| Ethernet7 | DC1-L2LEAF2A_Ethernet1 | *1500 | *switched | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | 7 | active |
-| Ethernet8 | DC1-L2LEAF2B_Ethernet1 | *1500 | *switched | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | 7 | active |
-| Ethernet10 | server03_Eth1 | *1500 | *switched | *trunk | *110-111,210-211 | - | - | - | 10 | active |
-| Ethernet11 | server04_Eth1 | *1500 | *switched | *trunk | *110-111,210-211 | - | - | - | 11 | active |
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet5 | MLAG_PEER_DC1-SVC3B_Ethernet5 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 5 |
+| Ethernet6 | MLAG_PEER_DC1-SVC3B_Ethernet6 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 5 |
+| Ethernet7 | DC1-L2LEAF2A_Ethernet1 | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | *- | *- | 7 |
+| Ethernet8 | DC1-L2LEAF2B_Ethernet1 | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | *- | *- | 7 |
+| Ethernet10 | server03_Eth1 | *trunk | *110-111,210-211 | *- | *- | 10 |
+| Ethernet11 | server04_Eth1 | *trunk | *110-111,210-211 | *- | *- | 11 |
 
 *Inherited from Port-Channel Interface
+
+
+#### IPv4
+
+| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet4  |  routed  | - |  172.31.255.25/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet4  |  routed  | - |  172.31.255.27/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet4  |  routed  | - |  172.31.255.29/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet4  |  routed  | - |  172.31.255.31/31  |  default  |  1500  |  -  |  -  |  -  |
+
+
+
+
+
+
 
 
 ### Ethernet Interfaces Device Configuration

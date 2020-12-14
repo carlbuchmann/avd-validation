@@ -8,6 +8,7 @@ switch_platform: 7280R
 leaf_bgp_as: 65003
 leaf_id: 20
 switch_mgmt_ip: 192.168.100.34/24
+leaf_evpn_services_l2_only: False
 leaf_filter_tenants: ['Tenant_A', 'Tenant_B']
 leaf_filter_tags: ['opzone', 'web', 'app', 'db2']
 leaf_allowed_vrfs: ['A', 'B']

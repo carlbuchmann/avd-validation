@@ -413,15 +413,29 @@ vlan 40
 
 ### Ethernet Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (Trunk) | Trunk Group | VRF | IP Address | Channel-Group ID | Channel-Group Type |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --- | ---------- | ---------------- | ------------------ |
-| Ethernet1 | P2P_LINK_TO_SPINE1_Ethernet1 | 9216 | routed | access | - | - | - | 10.2.1.17/31 | - | - |
-| Ethernet2 | P2P_LINK_TO_SPINE2_Ethernet1 | 9216 | routed | access | - | - | - | 10.2.1.19/31 | - | - |
-| Ethernet10 | HostA_eth0 | 1500 | switched | access | 10 | - | - | - | - | - |
-| Ethernet11 | HostB_eth0 | 1500 | switched | access | 20 | - | - | - | - | - |
-| Ethernet12 | HostF_eth0 | 1500 | switched | access | 40 | - | - | - | - | - |
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet10 |  HostA_eth0 | access | 10 | - | - | - |
+| Ethernet11 |  HostB_eth0 | access | 20 | - | - | - |
+| Ethernet12 |  HostF_eth0 | access | 40 | - | - | - |
 
 *Inherited from Port-Channel Interface
+
+
+#### IPv4
+
+| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet1  |  routed  | - |  10.2.1.17/31  |  default  |  9216  |  -  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet1  |  routed  | - |  10.2.1.19/31  |  default  |  9216  |  -  |  -  |  -  |
+
+
+
+
+
+
 
 
 ### Ethernet Interfaces Device Configuration

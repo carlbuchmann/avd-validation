@@ -471,16 +471,30 @@ vlan 4094
 
 ### Ethernet Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (Trunk) | Trunk Group | VRF | IP Address | Channel-Group ID | Channel-Group Type |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --- | ---------- | ---------------- | ------------------ |
-| Ethernet1 | P2P_LINK_TO_SPINE1_Ethernet2 | 9216 | routed | access | - | - | - | 10.2.1.73/31 | - | - |
-| Ethernet2 | P2P_LINK_TO_SPINE2_Ethernet2 | 9216 | routed | access | - | - | - | 10.2.1.75/31 | - | - |
-| Ethernet10 | HostC_eth0 | *1500 | *switched | *access | *30 | - | - | - | 10 | active |
-| Ethernet11 | HostE_eth0 | *1500 | *switched | *access | *20 | - | - | - | 11 | active |
-| Ethernet47 | MLAG_PEER_LEAF2B_Ethernet47 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 47 | active |
-| Ethernet48 | MLAG_PEER_LEAF2B_Ethernet48 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 47 | active |
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet10 | HostC_eth0 | *access | *30 | *- | *- | 10 |
+| Ethernet11 | HostE_eth0 | *access | *20 | *- | *- | 11 |
+| Ethernet47 | MLAG_PEER_LEAF2B_Ethernet47 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 47 |
+| Ethernet48 | MLAG_PEER_LEAF2B_Ethernet48 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 47 |
 
 *Inherited from Port-Channel Interface
+
+
+#### IPv4
+
+| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet2  |  routed  | - |  10.2.1.73/31  |  default  |  9216  |  -  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet2  |  routed  | - |  10.2.1.75/31  |  default  |  9216  |  -  |  -  |  -  |
+
+
+
+
+
+
 
 
 ### Ethernet Interfaces Device Configuration

@@ -466,19 +466,41 @@ vlan 4094
 
 ### Ethernet Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (Trunk) | Trunk Group | VRF | IP Address | Channel-Group ID | Channel-Group Type |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --- | ---------- | ---------------- | ------------------ |
-| Ethernet1 | P2P_LINK_TO_DC1-SPINE1_Ethernet3 | 1500 | routed | access | - | - | - | 172.31.255.17/31 | - | - |
-| Ethernet2 | P2P_LINK_TO_DC1-SPINE2_Ethernet3 | 1500 | routed | access | - | - | - | 172.31.255.19/31 | - | - |
-| Ethernet3 | P2P_LINK_TO_DC1-SPINE3_Ethernet3 | 1500 | routed | access | - | - | - | 172.31.255.21/31 | - | - |
-| Ethernet4 | P2P_LINK_TO_DC1-SPINE4_Ethernet3 | 1500 | routed | access | - | - | - | 172.31.255.23/31 | - | - |
-| Ethernet5 | MLAG_PEER_DC1-LEAF2A_Ethernet5 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 5 | active |
-| Ethernet6 | MLAG_PEER_DC1-LEAF2A_Ethernet6 | *1500 | *switched | *trunk | *2-4094 | *LEAF_PEER_L3<br> *MLAG | - | - | 5 | active |
-| Ethernet7 | DC1-L2LEAF1A_Ethernet2 | *1500 | *switched | *trunk | *110-111,120-121,130-131 | - | - | - | 7 | active |
-| Ethernet10 | server01_Eth3 | *1500 | *switched | *trunk | *210-211 | - | - | - | 10 | active |
-| Ethernet11 | server02_Eth3 | *1500 | *switched | *trunk | *210-211 | - | - | - | 11 | active |
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet5 | MLAG_PEER_DC1-LEAF2A_Ethernet5 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 5 |
+| Ethernet6 | MLAG_PEER_DC1-LEAF2A_Ethernet6 | *trunk | *2-4094 | *- | *['LEAF_PEER_L3', 'MLAG'] | 5 |
+| Ethernet7 | DC1-L2LEAF1A_Ethernet2 | *trunk | *110-111,120-121,130-131 | *- | *- | 7 |
+| Ethernet10 | server01_Eth3 | *trunk | *210-211 | *- | *- | 10 |
+| Ethernet11 | server02_Eth3 | *trunk | *210-211 | *- | *- | 11 |
 
 *Inherited from Port-Channel Interface
+
+
+#### IPv4
+
+| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet3  |  routed  | - |  172.31.255.17/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet3  |  routed  | - |  172.31.255.19/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet3  |  routed  | - |  172.31.255.21/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet3  |  routed  | - |  172.31.255.23/31  |  default  |  1500  |  -  |  -  |  -  |
+
+
+
+
+
+#### OSPF
+| Interface | Channel Group | Area | Cost | Mode |
+| --------- | ------------- | ---- | ---- |----- |
+| Ethernet1 | - | 0.0.0.0 |  -  |  point-to-point  |
+| Ethernet2 | - | 0.0.0.0 |  -  |  point-to-point  |
+| Ethernet3 | - | 0.0.0.0 |  -  |  point-to-point  |
+| Ethernet4 | - | 0.0.0.0 |  -  |  point-to-point  |
+
+
 
 
 ### Ethernet Interfaces Device Configuration

@@ -386,13 +386,27 @@ No VLANs defined
 
 ### Ethernet Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (Trunk) | Trunk Group | VRF | IP Address | Channel-Group ID | Channel-Group Type |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --- | ---------- | ---------------- | ------------------ |
-| Ethernet1 | P2P_LINK_TO_LEAF1A_Ethernet2 | 9216 | routed | access | - | - | - | 10.2.1.18/31 | - | - |
-| Ethernet2 | P2P_LINK_TO_LEAF2A_Ethernet2 | 9216 | routed | access | - | - | - | 10.2.1.74/31 | - | - |
-| Ethernet3 | P2P_LINK_TO_LEAF2B_Ethernet2 | 9216 | routed | access | - | - | - | 10.2.1.78/31 | - | - |
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 
 *Inherited from Port-Channel Interface
+
+
+#### IPv4
+
+| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet1 |  P2P_LINK_TO_LEAF1A_Ethernet2  |  routed  | - |  10.2.1.18/31  |  default  |  9216  |  -  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_LEAF2A_Ethernet2  |  routed  | - |  10.2.1.74/31  |  default  |  9216  |  -  |  -  |  -  |
+| Ethernet3 |  P2P_LINK_TO_LEAF2B_Ethernet2  |  routed  | - |  10.2.1.78/31  |  default  |  9216  |  -  |  -  |  -  |
+
+
+
+
+
+
 
 
 ### Ethernet Interfaces Device Configuration

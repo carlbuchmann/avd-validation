@@ -427,14 +427,23 @@ vlan 4094
 
 ### Ethernet Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (Trunk) | Trunk Group | VRF | IP Address | Channel-Group ID | Channel-Group Type |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --- | ---------- | ---------------- | ------------------ |
-| Ethernet1 | DC1-SVC3A_Ethernet7 | *1500 | *switched | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | 1 | active |
-| Ethernet2 | DC1-SVC3B_Ethernet7 | *1500 | *switched | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | 1 | active |
-| Ethernet3 | MLAG_PEER_DC1-L2LEAF2B_Ethernet3 | *1500 | *switched | *trunk | *2-4094 | *MLAG | - | - | 3 | active |
-| Ethernet4 | MLAG_PEER_DC1-L2LEAF2B_Ethernet4 | *1500 | *switched | *trunk | *2-4094 | *MLAG | - | - | 3 | active |
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+| Ethernet1 | DC1-SVC3A_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | *- | *- | 1 |
+| Ethernet2 | DC1-SVC3B_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | *- | *- | 1 |
+| Ethernet3 | MLAG_PEER_DC1-L2LEAF2B_Ethernet3 | *trunk | *2-4094 | *- | *['MLAG'] | 3 |
+| Ethernet4 | MLAG_PEER_DC1-L2LEAF2B_Ethernet4 | *trunk | *2-4094 | *- | *['MLAG'] | 3 |
 
 *Inherited from Port-Channel Interface
+
+
+
+
+
+
+
 
 
 ### Ethernet Interfaces Device Configuration
