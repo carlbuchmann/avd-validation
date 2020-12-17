@@ -377,14 +377,6 @@ vlan 131
 
 *Inherited from Port-Channel Interface
 
-
-
-
-
-
-
-
-
 ### Ethernet Interfaces Device Configuration
 
 ```eos
@@ -402,9 +394,11 @@ interface Ethernet2
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --------------------- ! ------------------ | ------- | -------- | --- | ---------- | ------------ |
-| Port-Channel1 | DC1-LEAF2A_Po7 | 1500 | switched | trunk | 110-111,120-121,130-131 | - | - | - | 1 | - | - | - | - |
+#### L2
+
+| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel1 | DC1-LEAF2A_Po7 | switched | access | 110-111,120-121,130-131 | - | - | - | - | 1 | - |
 
 ### Port-Channel Interfaces Device Configuration
 

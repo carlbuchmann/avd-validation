@@ -15,22 +15,26 @@
 
 ## Fabric Switches and Management IP
 
-| Node | Management IP | Platform |
-| ---- | ------------- | -------- |
-| DC1-SPINE1 | 192.168.200.101/24 | vEOS-LAB |
-| DC1-SPINE2 | 192.168.200.102/24 | vEOS-LAB |
-| DC1-SPINE3 | 192.168.200.103/24 | vEOS-LAB |
-| DC1-SPINE4 | 192.168.200.104/24 | vEOS-LAB |
-| DC1-BL1A | 192.168.200.110/24 | vEOS-LAB |
-| DC1-BL1B | 192.168.200.111/24 | vEOS-LAB |
-| DC1-LEAF1A | 192.168.200.105/24 | vEOS-LAB |
-| DC1-LEAF2A | 192.168.200.106/24 | vEOS-LAB |
-| DC1-LEAF2B | 192.168.200.107/24 | vEOS-LAB |
-| DC1-SVC3A | 192.168.200.108/24 | vEOS-LAB |
-| DC1-SVC3B | 192.168.200.109/24 | vEOS-LAB |
-| DC1-L2LEAF1A | 192.168.200.112/24 | vEOS-LAB |
-| DC1-L2LEAF2A | 192.168.200.113/24 | vEOS-LAB |
-| DC1-L2LEAF2B | 192.168.200.114/24 | vEOS-LAB |
+| Node | Management IP | Platform | Provisioned in Cloudvision |
+| ---- | ------------- | -------- | -------------------------- |
+| DC1-SPINE1 | 192.168.200.101/24 | vEOS-LAB | Provisioned |
+| DC1-SPINE2 | 192.168.200.102/24 | vEOS-LAB | Provisioned |
+| DC1-SPINE3 | 192.168.200.103/24 | vEOS-LAB | Provisioned |
+| DC1-SPINE4 | 192.168.200.104/24 | vEOS-LAB | Provisioned |
+| DC1-BL1A | 192.168.200.110/24 | vEOS-LAB | Provisioned |
+| DC1-BL1B | 192.168.200.111/24 | vEOS-LAB | Provisioned |
+| DC1-BL2A | 192.168.200.115/24 | vEOS-LAB | Not Available |
+| DC1-BL2B | 192.168.200.116/24 | vEOS-LAB | Not Available |
+| DC1-LEAF1A | 192.168.200.105/24 | vEOS-LAB | Provisioned |
+| DC1-LEAF2A | 192.168.200.106/24 | vEOS-LAB | Provisioned |
+| DC1-LEAF2B | 192.168.200.107/24 | vEOS-LAB | Provisioned |
+| DC1-SVC3A | 192.168.200.108/24 | vEOS-LAB | Provisioned |
+| DC1-SVC3B | 192.168.200.109/24 | vEOS-LAB | Provisioned |
+| DC1-L2LEAF1A | 192.168.200.112/24 | vEOS-LAB | Provisioned |
+| DC1-L2LEAF2A | 192.168.200.113/24 | vEOS-LAB | Provisioned |
+| DC1-L2LEAF2B | 192.168.200.114/24 | vEOS-LAB | Provisioned |
+
+> Provision status is based on Ansible inventory declaration and do not represent real status from Cloudvision.
 
 ## Fabric Topology
 
@@ -44,6 +48,14 @@
 | L3 Leaf | DC1-BL1B | Ethernet2 | DC1-SPINE2 | Ethernet7 |
 | L3 Leaf | DC1-BL1B | Ethernet3 | DC1-SPINE3 | Ethernet7 |
 | L3 Leaf | DC1-BL1B | Ethernet4 | DC1-SPINE4 | Ethernet7 |
+| L3 Leaf | DC1-BL2A | Ethernet1 | DC1-SPINE1 | Ethernet8 |
+| L3 Leaf | DC1-BL2A | Ethernet2 | DC1-SPINE2 | Ethernet8 |
+| L3 Leaf | DC1-BL2A | Ethernet3 | DC1-SPINE3 | Ethernet8 |
+| L3 Leaf | DC1-BL2A | Ethernet4 | DC1-SPINE4 | Ethernet8 |
+| L3 Leaf | DC1-BL2B | Ethernet1 | DC1-SPINE1 | Ethernet9 |
+| L3 Leaf | DC1-BL2B | Ethernet2 | DC1-SPINE2 | Ethernet9 |
+| L3 Leaf | DC1-BL2B | Ethernet3 | DC1-SPINE3 | Ethernet9 |
+| L3 Leaf | DC1-BL2B | Ethernet4 | DC1-SPINE4 | Ethernet9 |
 | L3 Leaf | DC1-LEAF1A | Ethernet1 | DC1-SPINE1 | Ethernet1 |
 | L3 Leaf | DC1-LEAF1A | Ethernet2 | DC1-SPINE2 | Ethernet1 |
 | L3 Leaf | DC1-LEAF1A | Ethernet3 | DC1-SPINE3 | Ethernet1 |
@@ -77,7 +89,7 @@
 
 | P2P Summary | Available Addresses | Assigned addresses | Assigned Address % |
 | ----------- | ------------------- | ------------------ | ------------------ |
-| 172.31.255.0/24 | 256 | 56 | 21.88 % |
+| 172.31.255.0/24 | 256 | 72 | 28.13 % |
 
 ### Point-To-Point Links Node Allocation
 
@@ -91,6 +103,14 @@
 | DC1-BL1B | Ethernet2 | 172.31.255.51/31 | DC1-SPINE2 | Ethernet7 | 172.31.255.50/31 |
 | DC1-BL1B | Ethernet3 | 172.31.255.53/31 | DC1-SPINE3 | Ethernet7 | 172.31.255.52/31 |
 | DC1-BL1B | Ethernet4 | 172.31.255.55/31 | DC1-SPINE4 | Ethernet7 | 172.31.255.54/31 |
+| DC1-BL2A | Ethernet1 | 172.31.255.57/31 | DC1-SPINE1 | Ethernet8 | 172.31.255.56/31 |
+| DC1-BL2A | Ethernet2 | 172.31.255.59/31 | DC1-SPINE2 | Ethernet8 | 172.31.255.58/31 |
+| DC1-BL2A | Ethernet3 | 172.31.255.61/31 | DC1-SPINE3 | Ethernet8 | 172.31.255.60/31 |
+| DC1-BL2A | Ethernet4 | 172.31.255.63/31 | DC1-SPINE4 | Ethernet8 | 172.31.255.62/31 |
+| DC1-BL2B | Ethernet1 | 172.31.255.65/31 | DC1-SPINE1 | Ethernet9 | 172.31.255.64/31 |
+| DC1-BL2B | Ethernet2 | 172.31.255.67/31 | DC1-SPINE2 | Ethernet9 | 172.31.255.66/31 |
+| DC1-BL2B | Ethernet3 | 172.31.255.69/31 | DC1-SPINE3 | Ethernet9 | 172.31.255.68/31 |
+| DC1-BL2B | Ethernet4 | 172.31.255.71/31 | DC1-SPINE4 | Ethernet9 | 172.31.255.70/31 |
 | DC1-LEAF1A | Ethernet1 | 172.31.255.1/31 | DC1-SPINE1 | Ethernet1 | 172.31.255.0/31 |
 | DC1-LEAF1A | Ethernet2 | 172.31.255.3/31 | DC1-SPINE2 | Ethernet1 | 172.31.255.2/31 |
 | DC1-LEAF1A | Ethernet3 | 172.31.255.5/31 | DC1-SPINE3 | Ethernet1 | 172.31.255.4/31 |
@@ -116,7 +136,7 @@
 
 | Overlay Loopback Summary | Available Addresses | Assigned addresses | Assigned Address % |
 | ------------------------ | ------------------- | ------------------ | ------------------ |
-| 192.168.255.0/24 | 256 | 11 | 4.3 % |
+| 192.168.255.0/24 | 256 | 13 | 5.08 % |
 
 ### Loopback0 Interfaces Node Allocation
 
@@ -128,6 +148,8 @@
 | DC1-SPINE4 | 192.168.255.4/32 |
 | DC1-BL1A | 192.168.255.10/32 |
 | DC1-BL1B | 192.168.255.11/32 |
+| DC1-BL2A | 192.168.255.12/32 |
+| DC1-BL2B | 192.168.255.13/32 |
 | DC1-LEAF1A | 192.168.255.5/32 |
 | DC1-LEAF2A | 192.168.255.6/32 |
 | DC1-LEAF2B | 192.168.255.7/32 |
@@ -138,7 +160,7 @@
 
 | VTEP Loopback Summary | Available Addresses | Assigned addresses | Assigned Address % |
 | --------------------- | ------------------- | ------------------ | ------------------ |
-| 192.168.254.0/24 | 256 | 7 | 2.74 % |
+| 192.168.254.0/24 | 256 | 9 | 3.52 % |
 
 ### VTEP Loopback Node allocation
 
@@ -146,6 +168,8 @@
 | ---- | --------- |
 | DC1-BL1A | 192.168.254.10/32 |
 | DC1-BL1B | 192.168.254.10/32 |
+| DC1-BL2A | 192.168.254.12/32 |
+| DC1-BL2B | 192.168.254.12/32 |
 | DC1-LEAF1A | 192.168.254.5/32 |
 | DC1-LEAF2A | 192.168.254.6/32 |
 | DC1-LEAF2B | 192.168.254.6/32 |

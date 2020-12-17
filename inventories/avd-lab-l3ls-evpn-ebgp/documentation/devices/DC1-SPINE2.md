@@ -336,7 +336,6 @@ No VLANs defined
 
 *Inherited from Port-Channel Interface
 
-
 #### IPv4
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
@@ -348,13 +347,8 @@ No VLANs defined
 | Ethernet5 |  P2P_LINK_TO_DC1-SVC3B_Ethernet2  |  routed  | - |  172.31.255.34/31  |  default  |  1500  |  -  |  -  |  -  |
 | Ethernet6 |  P2P_LINK_TO_DC1-BL1A_Ethernet2  |  routed  | - |  172.31.255.42/31  |  default  |  1500  |  -  |  -  |  -  |
 | Ethernet7 |  P2P_LINK_TO_DC1-BL1B_Ethernet2  |  routed  | - |  172.31.255.50/31  |  default  |  1500  |  -  |  -  |  -  |
-
-
-
-
-
-
-
+| Ethernet8 |  P2P_LINK_TO_DC1-BL2A_Ethernet2  |  routed  | - |  172.31.255.58/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet9 |  P2P_LINK_TO_DC1-BL2B_Ethernet2  |  routed  | - |  172.31.255.66/31  |  default  |  1500  |  -  |  -  |  -  |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -394,6 +388,16 @@ interface Ethernet7
    description P2P_LINK_TO_DC1-BL1B_Ethernet2
    no switchport
    ip address 172.31.255.50/31
+!
+interface Ethernet8
+   description P2P_LINK_TO_DC1-BL2A_Ethernet2
+   no switchport
+   ip address 172.31.255.58/31
+!
+interface Ethernet9
+   description P2P_LINK_TO_DC1-BL2B_Ethernet2
+   no switchport
+   ip address 172.31.255.66/31
 ```
 
 ## Port-Channel Interfaces
@@ -534,6 +538,8 @@ Router ISIS not defined
 | 172.31.255.35 | 65103 |
 | 172.31.255.43 | 65104 |
 | 172.31.255.51 | 65104 |
+| 172.31.255.59 | 65105 |
+| 172.31.255.67 | 65105 |
 | 192.168.255.5 | 65101 |
 | 192.168.255.6 | 65102 |
 | 192.168.255.7 | 65102 |
@@ -541,6 +547,8 @@ Router ISIS not defined
 | 192.168.255.9 | 65103 |
 | 192.168.255.10 | 65104 |
 | 192.168.255.11 | 65104 |
+| 192.168.255.12 | 65105 |
+| 192.168.255.13 | 65105 |
 
 ### Router BGP EVPN Address Family
 
@@ -582,6 +590,10 @@ router bgp 65001
    neighbor 172.31.255.43 remote-as 65104
    neighbor 172.31.255.51 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.51 remote-as 65104
+   neighbor 172.31.255.59 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.59 remote-as 65105
+   neighbor 172.31.255.67 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.67 remote-as 65105
    neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.5 remote-as 65101
    neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS
@@ -596,6 +608,10 @@ router bgp 65001
    neighbor 192.168.255.10 remote-as 65104
    neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.11 remote-as 65104
+   neighbor 192.168.255.12 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.12 remote-as 65105
+   neighbor 192.168.255.13 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.13 remote-as 65105
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn

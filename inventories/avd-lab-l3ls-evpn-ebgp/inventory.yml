@@ -42,6 +42,14 @@ all:
                       ansible_host: 192.168.200.110
                     DC1-BL1B:
                       ansible_host: 192.168.200.111
+                DC1_BL2:
+                  hosts:
+                    DC1-BL2A:
+                      ansible_host: 192.168.200.115
+                      is_deployed: false
+                    DC1-BL2B:
+                      ansible_host: 192.168.200.116
+                      is_deployed: false
             DC1_L2LEAFS:
               children:
                 DC1_L2LEAF1:
