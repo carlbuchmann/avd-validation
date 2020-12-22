@@ -70,6 +70,7 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
 
 # Management
 
@@ -250,9 +251,9 @@ Aliases not defined
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -329,7 +330,7 @@ Mode: mstp
 ```eos
 !
 spanning-tree mode mstp
-no spanning-tree vlan-id 4093-4094
+no spanning-tree vlan-id 4094
 spanning-tree mst 0 priority 16384
 ```
 
@@ -438,14 +439,6 @@ vlan 4094
 
 *Inherited from Port-Channel Interface
 
-
-
-
-
-
-
-
-
 ### Ethernet Interfaces Device Configuration
 
 ```eos
@@ -471,10 +464,12 @@ interface Ethernet4
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --------------------- ! ------------------ | ------- | -------- | --- | ---------- | ------------ |
-| Port-Channel1 | DC1-SVC3B_Po7 | 1500 | switched | trunk | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | 1 | - | - | - | - |
-| Port-Channel3 | MLAG_PEER_DC1-L2LEAF2A_Po3 | 1500 | switched | trunk | 2-4094 | MLAG | - | - | - | - | - | - | - |
+#### L2
+
+| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel1 | DC1-SVC3B_Po7 | switched | access | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | - | 1 | - |
+| Port-Channel3 | MLAG_PEER_DC1-L2LEAF2A_Po3 | switched | access | 2-4094 | - | ['MLAG'] | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -501,9 +496,16 @@ No loopback interfaces defined
 
 ### VLAN Interfaces Summary
 
-| Interface | Description | VRF | IP Address | IP Address Virtual | IP Router Virtual Address (vARP) |
-| --------- | ----------- | --- | ---------- | ------------------ | -------------------------------- |
-| Vlan4094 | MLAG_PEER | default | 10.255.252.17/31 | - | - |
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan4094 |  MLAG_PEER  |  default  |  1500  |  -  |
+
+#### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan4094 |  default  |  10.255.252.17/31  |  -  |  -  |  -  |  -  |  -  |
+
 
 
 ### VLAN Interfaces Device Configuration
@@ -570,6 +572,10 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 
 IPv6 static routes not defined
 
+## ARP
+
+Global ARP timeout not defined.
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -599,6 +605,15 @@ router bfd
 ## IP IGMP Snooping
 
 ### IP IGMP Snooping Summary
+
+IGMP snooping is globally enabled.
+
+
+### IP IGMP Snooping Device Configuration
+
+```eos
+```
+
 
 ## Router Multicast
 
@@ -682,6 +697,10 @@ Router L2 VPN not defined
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
 
 # Custom Templates
 

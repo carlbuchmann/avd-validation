@@ -70,6 +70,7 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
 
 # Management
 
@@ -307,9 +308,9 @@ alias shprefix show bgp evpn route-type ip-prefix ipv4 detail | awk '/for ip-pre
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -393,7 +394,6 @@ No VLANs defined
 
 *Inherited from Port-Channel Interface
 
-
 #### IPv4
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
@@ -401,13 +401,6 @@ No VLANs defined
 | Ethernet1 |  P2P_LINK_TO_LEAF1A_Ethernet2  |  routed  | - |  10.2.1.18/31  |  default  |  9216  |  -  |  -  |  -  |
 | Ethernet2 |  P2P_LINK_TO_LEAF2A_Ethernet2  |  routed  | - |  10.2.1.74/31  |  default  |  9216  |  -  |  -  |  -  |
 | Ethernet3 |  P2P_LINK_TO_LEAF2B_Ethernet2  |  routed  | - |  10.2.1.78/31  |  default  |  9216  |  -  |  -  |  -  |
-
-
-
-
-
-
-
 
 ### Ethernet Interfaces Device Configuration
 
@@ -519,6 +512,10 @@ ip route vrf MGMT 0.0.0.0/0 192.168.100.1
 ## IPv6 Static Routes
 
 IPv6 static routes not defined
+
+## ARP
+
+Global ARP timeout not defined.
 
 ## Router ISIS
 
@@ -753,6 +750,10 @@ Router L2 VPN not defined
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
 
 # Custom Templates
 

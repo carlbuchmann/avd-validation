@@ -70,6 +70,7 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
 
 # Management
 
@@ -307,9 +308,9 @@ alias shprefix show bgp evpn route-type ip-prefix ipv4 detail | awk '/for ip-pre
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -423,20 +424,12 @@ vlan 40
 
 *Inherited from Port-Channel Interface
 
-
 #### IPv4
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet1  |  routed  | - |  10.2.1.17/31  |  default  |  9216  |  -  |  -  |  -  |
 | Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet1  |  routed  | - |  10.2.1.19/31  |  default  |  9216  |  -  |  -  |  -  |
-
-
-
-
-
-
-
 
 ### Ethernet Interfaces Device Configuration
 
@@ -517,11 +510,20 @@ interface Loopback100
 
 ### VLAN Interfaces Summary
 
-| Interface | Description | VRF | IP Address | IP Address Virtual | IP Router Virtual Address (vARP) |
-| --------- | ----------- | --- | ---------- | ------------------ | -------------------------------- |
-| Vlan10 | Ten-opzone | A | - | 10.10.10.1/24 | - |
-| Vlan20 | Twenty-web | A | - | 20.20.20.1/24 | - |
-| Vlan40 | Forty-db | A | - | 40.40.40.1/24 | - |
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan10 |  Ten-opzone  |  A  |  -  |  false  |
+| Vlan20 |  Twenty-web  |  A  |  -  |  false  |
+| Vlan40 |  Forty-db  |  A  |  -  |  false  |
+
+#### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan10 |  A  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan20 |  A  |  -  |  20.20.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan40 |  A  |  -  |  40.40.40.1/24  |  -  |  -  |  -  |  -  |
+
 
 
 ### VLAN Interfaces Device Configuration
@@ -641,6 +643,10 @@ ip route vrf MGMT 0.0.0.0/0 192.168.100.1
 ## IPv6 Static Routes
 
 IPv6 static routes not defined
+
+## ARP
+
+Global ARP timeout not defined.
 
 ## Router ISIS
 
@@ -780,6 +786,15 @@ router bgp 65002
 
 ### IP IGMP Snooping Summary
 
+IGMP snooping is globally enabled.
+
+
+### IP IGMP Snooping Device Configuration
+
+```eos
+```
+
+
 ## Router Multicast
 
 Routing multicast not defined
@@ -916,6 +931,10 @@ router l2-vpn
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
 
 # Custom Templates
 

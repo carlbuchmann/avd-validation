@@ -1,93 +1,76 @@
-## Ansible Generated ##
-
-### DC1-BL1A ###
-
-### Leaf Info ###
 l3leaf_node_group: DC1_BL1
 switch_platform: vEOS-LAB
 leaf_bgp_as: 65104
 leaf_id: 6
 switch_mgmt_ip: 192.168.200.110/24
-leaf_evpn_services_l2_only: False
-leaf_filter_tenants: ['all']
-leaf_filter_tags: ['wan']
-leaf_allowed_vrfs: ['Tenant_A_OP_Zone', 'Tenant_A_WAN_Zone', 'Tenant_B_WAN_Zone', 'Tenant_C_WAN_Zone']
-leaf_allowed_svis: [113, 150, 250, 350]
-leaf_allowed_vlans: [113, 150, 250, 350]
-leaf_mlag: True
+leaf_evpn_services_l2_only: false
+leaf_filter_tenants:
+- all
+leaf_filter_tags:
+- wan
+leaf_allowed_vrfs:
+- Tenant_A_OP_Zone
+- Tenant_A_WAN_Zone
+- Tenant_B_WAN_Zone
+- Tenant_C_WAN_Zone
+leaf_allowed_svis:
+- 113
+- 150
+- 250
+- 350
+leaf_allowed_vlans:
+- 113
+- 150
+- 250
+- 350
+leaf_mlag: true
 leaf_mlag_group: DC1_BL1
 leaf_mlag_role: primary
 leaf_mlag_peer: DC1-BL1B
 leaf_mlag_ip: 10
 leaf_mlag_peer_ip: 11
 leaf_mlag_peer_id: 7
-
 service_routing_protocols_model: multi-agent
 ip_routing: true
-
-### Hardware Counters
-hardware_counters:
-
-### Daemon TerminAttr
+hardware_counters: null
 daemon_terminattr:
   ingestgrpcurl:
     ips:
-      - 192.168.200.11
+    - 192.168.200.11
     port: 9910
   ingestauth_key: telarista
   ingestvrf: MGMT
-  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
-  ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
-
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-
-### Event Monitor ###
-event_monitor:
-
-### Event Handler ###
-event_handlers:
-
-### Load Interval ###
-load_interval:
-
-### Queue Monitor Lenght ###
-queue_monitor_length:
-
-### Name Servers ###
+event_monitor: null
+event_handlers: null
+load_interval: null
+queue_monitor_length: null
 name_server:
   source:
     vrf: MGMT
   nodes:
-    - 192.168.200.5
-    - 8.8.8.8
-
-### NTP Servers ###
+  - 192.168.200.5
+  - 8.8.8.8
 ntp_server:
   local_interface:
     vrf: MGMT
     interface: Management1
   nodes:
-    - 0.north-america.pool.ntp.org
-    - 1.north-america.pool.ntp.org
-
-### Redundancy ###
-redundancy:
-
-### Spanning-tree ###
+  - 0.north-america.pool.ntp.org
+  - 1.north-america.pool.ntp.org
+redundancy: null
 spanning_tree:
   mode: mstp
   priority: 4096
   no_spanning_tree_vlan: 4093-4094
-
-
-### AAA authorization ###
-aaa_authorization:
-
-### local users ###
+aaa_authorization: null
 local_users:
   admin:
     privilege: 15
@@ -97,26 +80,18 @@ local_users:
     privilege: 15
     role: network-admin
     sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-
-### Clock Timezone ###
-clock:
-
-### VLANs ###
+clock: null
 vlans:
-## mlag vlans ##
   4093:
     tenant: system
     name: LEAF_PEER_L3
     trunk_groups:
-      - LEAF_PEER_L3
+    - LEAF_PEER_L3
   4094:
     tenant: system
     name: MLAG_PEER
     trunk_groups:
-      - MLAG
-
-## tech_friday_demo ##
-## Tenant_A ##
+    - MLAG
   113:
     tenant: Tenant_A
     name: Tenant_A_OP_Zone_WAN
@@ -124,7 +99,7 @@ vlans:
     tenant: Tenant_A
     name: MLAG_iBGP_Tenant_A_OP_Zone
     trunk_groups:
-      - LEAF_PEER_L3
+    - LEAF_PEER_L3
   150:
     tenant: Tenant_A
     name: Tenant_A_WAN_Zone_1
@@ -132,8 +107,7 @@ vlans:
     tenant: Tenant_A
     name: MLAG_iBGP_Tenant_A_WAN_Zone
     trunk_groups:
-      - LEAF_PEER_L3
-## Tenant_B ##
+    - LEAF_PEER_L3
   250:
     tenant: Tenant_B
     name: Tenant_B_WAN_Zone_1
@@ -141,8 +115,7 @@ vlans:
     tenant: Tenant_B
     name: MLAG_iBGP_Tenant_B_WAN_Zone
     trunk_groups:
-      - LEAF_PEER_L3
-## Tenant_C ##
+    - LEAF_PEER_L3
   350:
     tenant: Tenant_C
     name: Tenant_C_WAN_Zone_1
@@ -150,46 +123,34 @@ vlans:
     tenant: Tenant_C
     name: MLAG_iBGP_Tenant_C_WAN_Zone
     trunk_groups:
-      - LEAF_PEER_L3
-
-### VRFs ###
+    - LEAF_PEER_L3
 vrfs:
   MGMT:
-    ip_routing: False
-## Tenant_A ##
+    ip_routing: false
   Tenant_A_OP_Zone:
     tenant: Tenant_A
     ip_routing: true
   Tenant_A_WAN_Zone:
     tenant: Tenant_A
     ip_routing: true
-## Tenant_B ##
   Tenant_B_WAN_Zone:
     tenant: Tenant_B
     ip_routing: true
-## Tenant_C ##
   Tenant_C_WAN_Zone:
     tenant: Tenant_C
     ip_routing: true
-
-### bfd multihop ###
 bfd_multihop:
   interval: 1200
   min_rx: 1200
   multiplier: 3
-
-### Port-Channel Interfaces ###
 port_channel_interfaces:
-## mlag peer-link ##
   Port-Channel5:
     description: MLAG_PEER_DC1-BL1B_Po5
-    vlans: "2-4094"
+    vlans: 2-4094
     mode: trunk
     trunk_groups:
-      - LEAF_PEER_L3
-      - MLAG
-
-### Ethernet Interfaces ###
+    - LEAF_PEER_L3
+    - MLAG
 ethernet_interfaces:
   Ethernet1:
     peer: DC1-SPINE1
@@ -235,7 +196,6 @@ ethernet_interfaces:
     isis_enable: EVPN_UNDERLAY
     isis_metric: 50
     isis_network_point_to_point: true
-## mlag interfaces ##
   Ethernet5:
     peer: DC1-BL1B
     peer_interface: Ethernet5
@@ -252,40 +212,32 @@ ethernet_interfaces:
     channel_group:
       id: 5
       mode: active
-
-
-### Loopback Interfaces ###
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     ip_address: 192.168.255.10/32
     isis_enable: EVPN_UNDERLAY
     isis_passive: true
-
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
     ip_address: 192.168.254.10/32
     isis_enable: EVPN_UNDERLAY
     isis_passive: true
-## Tenant_A ##
   Loopback100:
     description: Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
     vrf: Tenant_A_OP_Zone
     ip_address: 10.255.1.10/32
-
-### Management Interfaces ###
 management_interfaces:
   Management1:
     description: oob_management
     vrf: MGMT
     ip_address: 192.168.200.110/24
     gateway: 192.168.200.1
-
-### VLAN Interfaces ###
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
     ip_address: 10.255.251.10/31
+    mtu: 1500
     isis_enable: EVPN_UNDERLAY
     isis_metric: 50
     isis_network_point_to_point: true
@@ -294,11 +246,10 @@ vlan_interfaces:
     ip_address: 10.255.252.10/31
     no_autostate: true
     mtu: 1500
-## tech_friday_demo ##
-## Tenant_A ##
   Vlan113:
     tenant: Tenant_A
-    tags: ['DC1_BL1']
+    tags:
+    - DC1_BL1
     description: Tenant_A_OP_Zone_WAN
     shutdown: false
     vrf: Tenant_A_OP_Zone
@@ -306,12 +257,13 @@ vlan_interfaces:
   Vlan3009:
     tenant: Tenant_A
     type: underlay_peering
-    description: "MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone"
+    description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone'
     vrf: Tenant_A_OP_Zone
     ip_address: 10.255.251.10/31
   Vlan150:
     tenant: Tenant_A
-    tags: ['wan']
+    tags:
+    - wan
     description: Tenant_A_WAN_Zone_1
     shutdown: false
     vrf: Tenant_A_WAN_Zone
@@ -319,13 +271,13 @@ vlan_interfaces:
   Vlan3013:
     tenant: Tenant_A
     type: underlay_peering
-    description: "MLAG_PEER_L3_iBGP: vrf Tenant_A_WAN_Zone"
+    description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_WAN_Zone'
     vrf: Tenant_A_WAN_Zone
     ip_address: 10.255.251.10/31
-## Tenant_B ##
   Vlan250:
     tenant: Tenant_B
-    tags: ['wan']
+    tags:
+    - wan
     description: Tenant_B_WAN_Zone_1
     shutdown: false
     vrf: Tenant_B_WAN_Zone
@@ -333,13 +285,13 @@ vlan_interfaces:
   Vlan3020:
     tenant: Tenant_B
     type: underlay_peering
-    description: "MLAG_PEER_L3_iBGP: vrf Tenant_B_WAN_Zone"
+    description: 'MLAG_PEER_L3_iBGP: vrf Tenant_B_WAN_Zone'
     vrf: Tenant_B_WAN_Zone
     ip_address: 10.255.251.10/31
-## Tenant_C ##
   Vlan350:
     tenant: Tenant_C
-    tags: ['wan']
+    tags:
+    - wan
     description: Tenant_C_WAN_Zone_1
     shutdown: false
     vrf: Tenant_C_WAN_Zone
@@ -347,77 +299,49 @@ vlan_interfaces:
   Vlan3030:
     tenant: Tenant_C
     type: underlay_peering
-    description: "MLAG_PEER_L3_iBGP: vrf Tenant_C_WAN_Zone"
+    description: 'MLAG_PEER_L3_iBGP: vrf Tenant_C_WAN_Zone'
     vrf: Tenant_C_WAN_Zone
     ip_address: 10.255.251.10/31
-
-### VxLAN interface ###
 vxlan_tunnel_interface:
   Vxlan1:
     description: DC1-BL1A_VTEP
     source_interface: Loopback1
     virtual_router:
-      encapsulation_mac_address: "mlag-system-id"
+      encapsulation_mac_address: mlag-system-id
     vxlan_udp_port: 4789
     vxlan_vni_mappings:
       vlans:
-## tech_friday_demo ##
-## Tenant_A ##
         113:
           vni: 10113
         150:
           vni: 10150
-## Tenant_B ##
         250:
           vni: 20250
-## Tenant_C ##
         350:
           vni: 30350
       vrfs:
-## tech_friday_demo ##
-## Tenant_A ##
         Tenant_A_OP_Zone:
           vni: 10
         Tenant_A_WAN_Zone:
           vni: 14
-## Tenant_B ##
         Tenant_B_WAN_Zone:
           vni: 21
-## Tenant_C ##
         Tenant_C_WAN_Zone:
           vni: 31
-
-### TCAM Profiles ###
-tcam_profile:
-
-### MAC address table ###
-mac_address_table:
-
+tcam_profile: null
+mac_address_table: null
 ip_virtual_router_mac_address: 00:dc:00:00:00:0a
-
 virtual_source_nat_vrfs:
-## Tenant_A ##
   Tenant_A_OP_Zone:
     ip_address: 10.255.1.10
-
 ip_igmp_snooping:
-  globally_enabled: True
-  vlans:
-## tech_friday_demo ##
-## Tenant_A ##
-## Tenant_B ##
-## Tenant_C ##
-
-### static routes ###
+  globally_enabled: true
+  vlans: null
 static_routes:
-  - vrf: MGMT
-    destination_address_prefix: 0.0.0.0/0
-    gateway: 192.168.200.1
-
-### prefix-lists ###
-prefix_lists:
-
-### MLAG Configuration ###
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.200.1
+prefix_lists: null
 mlag_configuration:
   domain_id: DC1_BL1
   local_interface: Vlan4094
@@ -429,18 +353,14 @@ mlag_configuration:
   peer_link: Port-Channel5
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
-
-### route-maps ###
-route_maps:
-
-### Routing - BGP ###
+route_maps: null
 router_bgp:
   as: 65104
   router_id: 192.168.255.10
   bgp_defaults:
-    - no bgp default ipv4-unicast
-    - distance bgp 20 200 200
-    - maximum-paths 4 ecmp 4
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - maximum-paths 4 ecmp 4
   peer_groups:
     EVPN-OVERLAY-PEERS:
       type: evpn
@@ -448,7 +368,7 @@ router_bgp:
       update_source: Loopback0
       bfd: true
       ebgp_multihop: 3
-      password: "q+VNViP5i4rVjW1cxFv2wA=="
+      password: q+VNViP5i4rVjW1cxFv2wA==
       send_community: true
       maximum_routes: 0
   neighbors:
@@ -460,7 +380,7 @@ router_bgp:
       peer_group: EVPN-OVERLAY-PEERS
     192.168.255.4:
       peer_group: EVPN-OVERLAY-PEERS
-  redistribute_routes:
+  redistribute_routes: null
   address_family_evpn:
     peer_groups:
       EVPN-OVERLAY-PEERS:
@@ -470,137 +390,120 @@ router_bgp:
       EVPN-OVERLAY-PEERS:
         activate: false
   vlan_aware_bundles:
-## tech_friday_demo ##
-## Tenant_A ##
     Tenant_A_OP_Zone:
-      rd: "192.168.255.10:10"
+      rd: 192.168.255.10:10
       route_targets:
         both:
-          - "10:10"
+        - '10:10'
       redistribute_routes:
-        - learned
+      - learned
       vlan: 113
     Tenant_A_WAN_Zone:
-      rd: "192.168.255.10:14"
+      rd: 192.168.255.10:14
       route_targets:
         both:
-          - "14:14"
+        - '14:14'
       redistribute_routes:
-        - learned
+      - learned
       vlan: 150
-## Tenant_B ##
     Tenant_B_WAN_Zone:
-      rd: "192.168.255.10:21"
+      rd: 192.168.255.10:21
       route_targets:
         both:
-          - "21:21"
+        - '21:21'
       redistribute_routes:
-        - learned
+      - learned
       vlan: 250
-## Tenant_C ##
     Tenant_C_WAN_Zone:
-      rd: "192.168.255.10:31"
+      rd: 192.168.255.10:31
       route_targets:
         both:
-          - "31:31"
+        - '31:31'
       redistribute_routes:
-        - learned
+      - learned
       vlan: 350
-  vlans:
+  vlans: null
   vrfs:
-## tech_friday_demo ##
-## Tenant_A ##
     Tenant_A_OP_Zone:
       router_id: 192.168.255.10
-      rd: "192.168.255.10:10"
+      rd: 192.168.255.10:10
       route_targets:
         import:
           evpn:
-            - "10:10"
+          - '10:10'
         export:
           evpn:
-            - "10:10"
+          - '10:10'
       neighbors:
         10.255.251.11:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
       redistribute_routes:
-        - connected
+      - connected
     Tenant_A_WAN_Zone:
       router_id: 192.168.255.10
-      rd: "192.168.255.10:14"
+      rd: 192.168.255.10:14
       route_targets:
         import:
           evpn:
-            - "14:14"
+          - '14:14'
         export:
           evpn:
-            - "14:14"
+          - '14:14'
       neighbors:
         10.255.251.11:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
       redistribute_routes:
-        - connected
-## Tenant_B ##
+      - connected
     Tenant_B_WAN_Zone:
       router_id: 192.168.255.10
-      rd: "192.168.255.10:21"
+      rd: 192.168.255.10:21
       route_targets:
         import:
           evpn:
-            - "21:21"
+          - '21:21'
         export:
           evpn:
-            - "21:21"
+          - '21:21'
       neighbors:
         10.255.251.11:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
       redistribute_routes:
-        - connected
-## Tenant_C ##
+      - connected
     Tenant_C_WAN_Zone:
       router_id: 192.168.255.10
-      rd: "192.168.255.10:31"
+      rd: 192.168.255.10:31
       route_targets:
         import:
           evpn:
-            - "31:31"
+          - '31:31'
         export:
           evpn:
-            - "31:31"
+          - '31:31'
       neighbors:
         10.255.251.11:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
       redistribute_routes:
-        - connected
-
-### Extended Community Lists ###
-ip_extcommunity_lists:
-
-### Routing - OSPF ###
-router_ospf:
-
-### Routing - ISIS ###
+      - connected
+ip_extcommunity_lists: null
+router_ospf: null
 router_isis:
   instance: EVPN_UNDERLAY
   net: 49.0001.0001.0001.0006.00
   router_id: 192.168.255.10
   no_passive_interfaces:
-    - Ethernet1
-    - Ethernet2
-    - Ethernet3
-    - Ethernet4
-    - Vlan4093
-    - Loopback1
+  - Ethernet1
+  - Ethernet2
+  - Ethernet3
+  - Ethernet4
+  - Vlan4093
+  - Loopback1
   is_type: level-2
-  address_family: ['ipv4 unicast']
+  address_family:
+  - ipv4 unicast
   isis_af_defaults:
-    - maximum-paths 4
-
-### Queue Monitor Streaming ###
-queue_monitor_streaming:
-
-### Management API http ###
+  - maximum-paths 4
+queue_monitor_streaming: null
 management_api_http:
-  enable_https: True
+  enable_https: true
   enable_vrfs:
-    MGMT:
+    MGMT: null

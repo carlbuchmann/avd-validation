@@ -70,6 +70,7 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
 
 # Management
 
@@ -250,9 +251,9 @@ Aliases not defined
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -379,7 +380,6 @@ vlan 411
 
 *Inherited from Port-Channel Interface
 
-
 #### IPv4
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
@@ -389,10 +389,6 @@ vlan 411
 | Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet1  |  routed  | - |  172.31.255.5/31  |  default  |  1500  |  -  |  -  |  -  |
 | Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet1  |  routed  | - |  172.31.255.7/31  |  default  |  1500  |  -  |  -  |  -  |
 
-
-
-
-
 #### OSPF
 | Interface | Channel Group | Area | Cost | Mode |
 | --------- | ------------- | ---- | ---- |----- |
@@ -400,9 +396,6 @@ vlan 411
 | Ethernet2 | - | 0.0.0.0 |  -  |  point-to-point  |
 | Ethernet3 | - | 0.0.0.0 |  -  |  point-to-point  |
 | Ethernet4 | - | 0.0.0.0 |  -  |  point-to-point  |
-
-
-
 
 ### Ethernet Interfaces Device Configuration
 
@@ -459,9 +452,11 @@ interface Ethernet8
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --------------------- ! ------------------ | ------- | -------- | --- | ---------- | ------------ |
-| Port-Channel7 | server01_PortChanne1 | 1500 | switched | trunk | 110 | - | - | - | - | - | - | - | - |
+#### L2
+
+| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel7 | server01_PortChanne1 | switched | access | 110 | - | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -511,14 +506,26 @@ interface Loopback1
 
 ### VLAN Interfaces Summary
 
-| Interface | Description | VRF | IP Address | IP Address Virtual | IP Router Virtual Address (vARP) |
-| --------- | ----------- | --- | ---------- | ------------------ | -------------------------------- |
-| Vlan120 | Tenant_A_WEB_Zone_1 | Tenant_A_WEB_Zone | - | 10.1.20.1/24 | - |
-| Vlan121 | Tenant_A_WEBZone_2 | Tenant_A_WEB_Zone | - | 10.1.21.1/24 | - |
-| Vlan130 | Tenant_A_APP_Zone_1 | Tenant_A_APP_Zone | - | 10.1.30.1/24 | - |
-| Vlan131 | Tenant_A_APP_Zone_2 | Tenant_A_APP_Zone | - | 10.1.31.1/24 | - |
-| Vlan410 | tf_demo_app_1 | tf_web_zone | - | 10.4.10.1/24 | - |
-| Vlan411 | tf_demo_app_2 | tf_web_zone | - | 10.4.11.1/24 | - |
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan120 |  Tenant_A_WEB_Zone_1  |  Tenant_A_WEB_Zone  |  -  |  false  |
+| Vlan121 |  Tenant_A_WEBZone_2  |  Tenant_A_WEB_Zone  |  -  |  false  |
+| Vlan130 |  Tenant_A_APP_Zone_1  |  Tenant_A_APP_Zone  |  -  |  false  |
+| Vlan131 |  Tenant_A_APP_Zone_2  |  Tenant_A_APP_Zone  |  -  |  false  |
+| Vlan410 |  tf_demo_app_1  |  tf_web_zone  |  -  |  false  |
+| Vlan411 |  tf_demo_app_2  |  tf_web_zone  |  -  |  false  |
+
+#### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan120 |  Tenant_A_WEB_Zone  |  -  |  10.1.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan121 |  Tenant_A_WEB_Zone  |  -  |  10.1.21.1/24  |  -  |  -  |  -  |  -  |
+| Vlan130 |  Tenant_A_APP_Zone  |  -  |  10.1.30.1/24  |  -  |  -  |  -  |  -  |
+| Vlan131 |  Tenant_A_APP_Zone  |  -  |  10.1.31.1/24  |  -  |  -  |  -  |  -  |
+| Vlan410 |  tf_web_zone  |  -  |  10.4.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan411 |  tf_web_zone  |  -  |  10.4.11.1/24  |  -  |  -  |  -  |  -  |
+
 
 
 ### VLAN Interfaces Device Configuration
@@ -669,6 +676,10 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ## IPv6 Static Routes
 
 IPv6 static routes not defined
+
+## ARP
+
+Global ARP timeout not defined.
 
 ## Router ISIS
 
@@ -821,6 +832,15 @@ router bfd
 
 ### IP IGMP Snooping Summary
 
+IGMP snooping is globally enabled.
+
+
+### IP IGMP Snooping Device Configuration
+
+```eos
+```
+
+
 ## Router Multicast
 
 Routing multicast not defined
@@ -912,6 +932,10 @@ Router L2 VPN not defined
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
 
 # Custom Templates
 

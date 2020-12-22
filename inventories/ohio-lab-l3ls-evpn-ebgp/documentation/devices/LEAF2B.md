@@ -70,6 +70,7 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
 
 # Management
 
@@ -307,9 +308,9 @@ alias shprefix show bgp evpn route-type ip-prefix ipv4 detail | awk '/for ip-pre
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -483,20 +484,12 @@ vlan 4094
 
 *Inherited from Port-Channel Interface
 
-
 #### IPv4
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet3  |  routed  | - |  10.2.1.77/31  |  default  |  9216  |  -  |  -  |  -  |
 | Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet3  |  routed  | - |  10.2.1.79/31  |  default  |  9216  |  -  |  -  |  -  |
-
-
-
-
-
-
-
 
 ### Ethernet Interfaces Device Configuration
 
@@ -540,11 +533,13 @@ interface Ethernet48
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --------------------- ! ------------------ | ------- | -------- | --- | ---------- | ------------ |
-| Port-Channel10 | HostC_bond0 | 1500 | switched | access | 30 | - | - | - | 10 | - | - | - | - |
-| Port-Channel11 | HostE_bond0 | 1500 | switched | access | 20 | - | - | - | 11 | - | - | - | - |
-| Port-Channel47 | MLAG_PEER_LEAF2A_Po47 | 1500 | switched | trunk | 2-4094 | LEAF_PEER_L3<br> MLAG | - | - | - | - | - | - | - |
+#### L2
+
+| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel10 | HostC_bond0 | switched | access | 30 | - | - | - | - | 10 | - |
+| Port-Channel11 | HostE_bond0 | switched | access | 20 | - | - | - | - | 11 | - |
+| Port-Channel47 | MLAG_PEER_LEAF2A_Po47 | switched | access | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -620,19 +615,36 @@ interface Loopback101
 
 ### VLAN Interfaces Summary
 
-| Interface | Description | VRF | IP Address | IP Address Virtual | IP Router Virtual Address (vARP) |
-| --------- | ----------- | --- | ---------- | ------------------ | -------------------------------- |
-| Vlan10 | Ten-opzone | A | - | 10.10.10.1/24 | - |
-| Vlan11 | Eleven-opzone | B | - | 11.11.11.1/24 | - |
-| Vlan20 | Twenty-web | A | - | 20.20.20.1/24 | - |
-| Vlan21 | TwentyOne-web | B | - | 21.21.21.1/24 | - |
-| Vlan30 | Thirty-app | A | - | 30.30.30.1/24 | - |
-| Vlan31 | ThirtyOne-app | B | - | 31.31.31.1/24 | - |
-| Vlan41 | FortyOne-db | B | - | 41.41.41.1/24 | - |
-| Vlan3050 | MLAG_PEER_L3_iBGP: vrf A | A | 10.255.251.37/31 | - | - |
-| Vlan3150 | MLAG_PEER_L3_iBGP: vrf B | B | 10.255.251.37/31 | - | - |
-| Vlan4093 | MLAG_PEER_L3_PEERING | default | 10.255.251.37/31 | - | - |
-| Vlan4094 | MLAG_PEER | default | 10.255.252.37/31 | - | - |
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan10 |  Ten-opzone  |  A  |  -  |  false  |
+| Vlan11 |  Eleven-opzone  |  B  |  -  |  false  |
+| Vlan20 |  Twenty-web  |  A  |  -  |  false  |
+| Vlan21 |  TwentyOne-web  |  B  |  -  |  false  |
+| Vlan30 |  Thirty-app  |  A  |  -  |  false  |
+| Vlan31 |  ThirtyOne-app  |  B  |  -  |  false  |
+| Vlan41 |  FortyOne-db  |  B  |  -  |  false  |
+| Vlan3050 |  MLAG_PEER_L3_iBGP: vrf A  |  A  |  -  |  -  |
+| Vlan3150 |  MLAG_PEER_L3_iBGP: vrf B  |  B  |  -  |  -  |
+| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  9216  |  -  |
+| Vlan4094 |  MLAG_PEER  |  default  |  9216  |  -  |
+
+#### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan10 |  A  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan11 |  B  |  -  |  11.11.11.1/24  |  -  |  -  |  -  |  -  |
+| Vlan20 |  A  |  -  |  20.20.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan21 |  B  |  -  |  21.21.21.1/24  |  -  |  -  |  -  |  -  |
+| Vlan30 |  A  |  -  |  30.30.30.1/24  |  -  |  -  |  -  |  -  |
+| Vlan31 |  B  |  -  |  31.31.31.1/24  |  -  |  -  |  -  |  -  |
+| Vlan41 |  B  |  -  |  41.41.41.1/24  |  -  |  -  |  -  |  -  |
+| Vlan3050 |  A  |  10.255.251.37/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3150 |  B  |  10.255.251.37/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4093 |  default  |  10.255.251.37/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4094 |  default  |  10.255.252.37/31  |  -  |  -  |  -  |  -  |  -  |
+
 
 
 ### VLAN Interfaces Device Configuration
@@ -686,6 +698,7 @@ interface Vlan3150
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
+   mtu 9216
    ip address 10.255.251.37/31
 !
 interface Vlan4094
@@ -806,6 +819,10 @@ ip route vrf MGMT 0.0.0.0/0 192.168.100.1
 ## IPv6 Static Routes
 
 IPv6 static routes not defined
+
+## ARP
+
+Global ARP timeout not defined.
 
 ## Router ISIS
 
@@ -982,6 +999,15 @@ router bgp 65003
 
 ### IP IGMP Snooping Summary
 
+IGMP snooping is globally enabled.
+
+
+### IP IGMP Snooping Device Configuration
+
+```eos
+```
+
+
 ## Router Multicast
 
 Routing multicast not defined
@@ -1123,6 +1149,10 @@ router l2-vpn
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
 
 # Custom Templates
 

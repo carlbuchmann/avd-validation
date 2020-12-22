@@ -15,13 +15,15 @@
 
 ## Fabric Switches and Management IP
 
-| Node | Management IP | Platform |
-| ---- | ------------- | -------- |
-| SPINE1 | 192.168.100.31/24 | 7280R |
-| SPINE2 | 192.168.100.35/24 | 7280R |
-| LEAF1A | 192.168.100.32/24 | 7280R |
-| LEAF2A | 192.168.100.33/24 | 7280R |
-| LEAF2B | 192.168.100.34/24 | 7280R |
+| Node | Management IP | Platform | Provisioned in Cloudvision |
+| ---- | ------------- | -------- | -------------------------- |
+| SPINE1 | 192.168.100.31/24 | 7280R | Provisioned |
+| SPINE2 | 192.168.100.35/24 | 7280R | Provisioned |
+| LEAF1A | 192.168.100.32/24 | 7280R | Provisioned |
+| LEAF2A | 192.168.100.33/24 | 7280R | Provisioned |
+| LEAF2B | 192.168.100.34/24 | 7280R | Provisioned |
+
+> Provision status is based on Ansible inventory declaration and do not represent real status from Cloudvision.
 
 ## Fabric Topology
 
