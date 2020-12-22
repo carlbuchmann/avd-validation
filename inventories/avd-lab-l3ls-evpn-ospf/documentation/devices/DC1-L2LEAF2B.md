@@ -158,6 +158,10 @@ ntp server vrf MGMT 0.north-america.pool.ntp.org prefer
 ntp server vrf MGMT 1.north-america.pool.ntp.org
 ```
 
+## PTP
+
+PTP is not defined.
+
 ## Management SSH
 
 Management SSH not defined
