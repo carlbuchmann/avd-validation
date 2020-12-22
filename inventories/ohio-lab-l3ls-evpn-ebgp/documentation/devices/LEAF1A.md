@@ -71,6 +71,7 @@
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
+- [MAC security](#mac-security)
 
 # Management
 
@@ -164,10 +165,6 @@ ntp local-interface vrf MGMT Management1
 ntp server vrf MGMT 192.232.20.87 prefer
 ntp server vrf MGMT 216.239.35.4
 ```
-
-## PTP
-
-PTP is not defined.
 
 ## Management SSH
 
@@ -939,6 +936,9 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+# MACsec
+
+MACsec not defined
 
 # Custom Templates
 
