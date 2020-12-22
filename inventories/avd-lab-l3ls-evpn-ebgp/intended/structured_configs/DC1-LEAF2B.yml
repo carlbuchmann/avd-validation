@@ -71,6 +71,7 @@ daemon_terminattr:
   ingestvrf: MGMT
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
 vlan_internal_order:
   allocation: ascending
   range:
@@ -343,6 +344,7 @@ vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
     ip_address: 10.255.251.3/31
+    mtu: 1500
   Vlan4094:
     description: MLAG_PEER
     ip_address: 10.255.252.3/31

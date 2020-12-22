@@ -132,20 +132,20 @@ l3leaf:
           mgmt_ip: 192.168.200.111/24
           mac_address: "50:00:00:0c:00:00"
           spine_interfaces: [ Ethernet7, Ethernet7, Ethernet7, Ethernet7 ]
-    DC1_BL2:
-      bgp_as: 65105
-      filter:
-        tenants: [ all ]
-        tags: [ wan ]
-      nodes:
-        DC1-BL2A:
-          id: 8
-          mgmt_ip: 192.168.200.115/24
-          spine_interfaces: [ Ethernet8, Ethernet8, Ethernet8, Ethernet8 ]
-        DC1-BL2B:
-          id: 9
-          mgmt_ip: 192.168.200.116/24
-          spine_interfaces: [ Ethernet9, Ethernet9, Ethernet9, Ethernet9 ]
+    # DC1_BL2:
+    #   bgp_as: 65105
+    #   filter:
+    #     tenants: [ all ]
+    #     tags: [ wan ]
+    #   nodes:
+    #     DC1-BL2A:
+    #       id: 8
+    #       mgmt_ip: 192.168.200.115/24
+    #       spine_interfaces: [ Ethernet8, Ethernet8, Ethernet8, Ethernet8 ]
+    #     DC1-BL2B:
+    #       id: 9
+    #       mgmt_ip: 192.168.200.116/24
+    #       spine_interfaces: [ Ethernet9, Ethernet9, Ethernet9, Ethernet9 ]
 
 l2leaf:
   defaults:

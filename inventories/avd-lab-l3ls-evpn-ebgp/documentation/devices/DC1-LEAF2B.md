@@ -70,6 +70,7 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
 
 # Management
 
@@ -250,9 +251,9 @@ Aliases not defined
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -639,7 +640,7 @@ interface Loopback100
 | Vlan3012 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_DB_Zone  |  Tenant_A_DB_Zone  |  -  |  -  |
 | Vlan3019 |  MLAG_PEER_L3_iBGP: vrf Tenant_B_OP_Zone  |  Tenant_B_OP_Zone  |  -  |  -  |
 | Vlan3029 |  MLAG_PEER_L3_iBGP: vrf Tenant_C_OP_Zone  |  Tenant_C_OP_Zone  |  -  |  -  |
-| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  -  |  -  |
+| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  1500  |  -  |
 | Vlan4094 |  MLAG_PEER  |  default  |  1500  |  -  |
 
 #### IPv4
@@ -929,6 +930,10 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 
 IPv6 static routes not defined
 
+## ARP
+
+Global ARP timeout not defined.
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -1190,6 +1195,15 @@ router bfd
 
 ### IP IGMP Snooping Summary
 
+IGMP snooping is globally enabled.
+
+
+### IP IGMP Snooping Device Configuration
+
+```eos
+```
+
+
 ## Router Multicast
 
 Routing multicast not defined
@@ -1331,6 +1345,10 @@ Router L2 VPN not defined
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
 
 # Custom Templates
 

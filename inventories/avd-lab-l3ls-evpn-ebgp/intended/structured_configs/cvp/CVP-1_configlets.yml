@@ -954,10 +954,7 @@ CVP_CONFIGLETS:
     \ switchport\n   ip address 172.31.255.32/31\n!\ninterface Ethernet6\n   description\
     \ P2P_LINK_TO_DC1-BL1A_Ethernet1\n   no switchport\n   ip address 172.31.255.40/31\n\
     !\ninterface Ethernet7\n   description P2P_LINK_TO_DC1-BL1B_Ethernet1\n   no switchport\n\
-    \   ip address 172.31.255.48/31\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-BL2A_Ethernet1\n\
-    \   no switchport\n   ip address 172.31.255.56/31\n!\ninterface Ethernet9\n  \
-    \ description P2P_LINK_TO_DC1-BL2B_Ethernet1\n   no switchport\n   ip address\
-    \ 172.31.255.64/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
+    \   ip address 172.31.255.48/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
     \   ip address 192.168.255.1/32\n!\ninterface Management1\n   description oob_management\n\
     \   vrf MGMT\n   ip address 192.168.200.101/24\n!\nip routing\nno ip routing vrf\
     \ MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 192.168.255.0/24\
@@ -981,20 +978,15 @@ CVP_CONFIGLETS:
     \ 172.31.255.33 remote-as 65103\n   neighbor 172.31.255.41 peer group IPv4-UNDERLAY-PEERS\n\
     \   neighbor 172.31.255.41 remote-as 65104\n   neighbor 172.31.255.49 peer group\
     \ IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.49 remote-as 65104\n   neighbor\
-    \ 172.31.255.57 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.57 remote-as\
-    \ 65105\n   neighbor 172.31.255.65 peer group IPv4-UNDERLAY-PEERS\n   neighbor\
-    \ 172.31.255.65 remote-as 65105\n   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.5 remote-as 65101\n   neighbor 192.168.255.6 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7\
-    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.7 remote-as 65102\n \
-    \  neighbor 192.168.255.8 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8\
-    \ remote-as 65103\n   neighbor 192.168.255.9 peer group EVPN-OVERLAY-PEERS\n \
-    \  neighbor 192.168.255.9 remote-as 65103\n   neighbor 192.168.255.10 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10 remote-as 65104\n   neighbor\
-    \ 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.11 remote-as\
-    \ 65104\n   neighbor 192.168.255.12 peer group EVPN-OVERLAY-PEERS\n   neighbor\
-    \ 192.168.255.12 remote-as 65105\n   neighbor 192.168.255.13 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.13 remote-as 65105\n   redistribute connected route-map\
+    \ 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.5 remote-as\
+    \ 65101\n   neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS\n   neighbor\
+    \ 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.7 remote-as 65102\n   neighbor 192.168.255.8 peer group\
+    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8 remote-as 65103\n   neighbor 192.168.255.9\
+    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.9 remote-as 65103\n \
+    \  neighbor 192.168.255.10 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10\
+    \ remote-as 65104\n   neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.11 remote-as 65104\n   redistribute connected route-map\
     \ RM-CONN-2-BGP\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
     \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n   !\n   address-family\
     \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
@@ -1022,10 +1014,7 @@ CVP_CONFIGLETS:
     \ switchport\n   ip address 172.31.255.34/31\n!\ninterface Ethernet6\n   description\
     \ P2P_LINK_TO_DC1-BL1A_Ethernet2\n   no switchport\n   ip address 172.31.255.42/31\n\
     !\ninterface Ethernet7\n   description P2P_LINK_TO_DC1-BL1B_Ethernet2\n   no switchport\n\
-    \   ip address 172.31.255.50/31\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-BL2A_Ethernet2\n\
-    \   no switchport\n   ip address 172.31.255.58/31\n!\ninterface Ethernet9\n  \
-    \ description P2P_LINK_TO_DC1-BL2B_Ethernet2\n   no switchport\n   ip address\
-    \ 172.31.255.66/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
+    \   ip address 172.31.255.50/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
     \   ip address 192.168.255.2/32\n!\ninterface Management1\n   description oob_management\n\
     \   vrf MGMT\n   ip address 192.168.200.102/24\n!\nip routing\nno ip routing vrf\
     \ MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 192.168.255.0/24\
@@ -1049,20 +1038,15 @@ CVP_CONFIGLETS:
     \ 172.31.255.35 remote-as 65103\n   neighbor 172.31.255.43 peer group IPv4-UNDERLAY-PEERS\n\
     \   neighbor 172.31.255.43 remote-as 65104\n   neighbor 172.31.255.51 peer group\
     \ IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.51 remote-as 65104\n   neighbor\
-    \ 172.31.255.59 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.59 remote-as\
-    \ 65105\n   neighbor 172.31.255.67 peer group IPv4-UNDERLAY-PEERS\n   neighbor\
-    \ 172.31.255.67 remote-as 65105\n   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.5 remote-as 65101\n   neighbor 192.168.255.6 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7\
-    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.7 remote-as 65102\n \
-    \  neighbor 192.168.255.8 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8\
-    \ remote-as 65103\n   neighbor 192.168.255.9 peer group EVPN-OVERLAY-PEERS\n \
-    \  neighbor 192.168.255.9 remote-as 65103\n   neighbor 192.168.255.10 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10 remote-as 65104\n   neighbor\
-    \ 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.11 remote-as\
-    \ 65104\n   neighbor 192.168.255.12 peer group EVPN-OVERLAY-PEERS\n   neighbor\
-    \ 192.168.255.12 remote-as 65105\n   neighbor 192.168.255.13 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.13 remote-as 65105\n   redistribute connected route-map\
+    \ 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.5 remote-as\
+    \ 65101\n   neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS\n   neighbor\
+    \ 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.7 remote-as 65102\n   neighbor 192.168.255.8 peer group\
+    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8 remote-as 65103\n   neighbor 192.168.255.9\
+    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.9 remote-as 65103\n \
+    \  neighbor 192.168.255.10 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10\
+    \ remote-as 65104\n   neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.11 remote-as 65104\n   redistribute connected route-map\
     \ RM-CONN-2-BGP\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
     \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n   !\n   address-family\
     \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
@@ -1090,10 +1074,7 @@ CVP_CONFIGLETS:
     \ switchport\n   ip address 172.31.255.36/31\n!\ninterface Ethernet6\n   description\
     \ P2P_LINK_TO_DC1-BL1A_Ethernet3\n   no switchport\n   ip address 172.31.255.44/31\n\
     !\ninterface Ethernet7\n   description P2P_LINK_TO_DC1-BL1B_Ethernet3\n   no switchport\n\
-    \   ip address 172.31.255.52/31\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-BL2A_Ethernet3\n\
-    \   no switchport\n   ip address 172.31.255.60/31\n!\ninterface Ethernet9\n  \
-    \ description P2P_LINK_TO_DC1-BL2B_Ethernet3\n   no switchport\n   ip address\
-    \ 172.31.255.68/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
+    \   ip address 172.31.255.52/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
     \   ip address 192.168.255.3/32\n!\ninterface Management1\n   description oob_management\n\
     \   vrf MGMT\n   ip address 192.168.200.103/24\n!\nip routing\nno ip routing vrf\
     \ MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 192.168.255.0/24\
@@ -1117,20 +1098,15 @@ CVP_CONFIGLETS:
     \ 172.31.255.37 remote-as 65103\n   neighbor 172.31.255.45 peer group IPv4-UNDERLAY-PEERS\n\
     \   neighbor 172.31.255.45 remote-as 65104\n   neighbor 172.31.255.53 peer group\
     \ IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.53 remote-as 65104\n   neighbor\
-    \ 172.31.255.61 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.61 remote-as\
-    \ 65105\n   neighbor 172.31.255.69 peer group IPv4-UNDERLAY-PEERS\n   neighbor\
-    \ 172.31.255.69 remote-as 65105\n   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.5 remote-as 65101\n   neighbor 192.168.255.6 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7\
-    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.7 remote-as 65102\n \
-    \  neighbor 192.168.255.8 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8\
-    \ remote-as 65103\n   neighbor 192.168.255.9 peer group EVPN-OVERLAY-PEERS\n \
-    \  neighbor 192.168.255.9 remote-as 65103\n   neighbor 192.168.255.10 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10 remote-as 65104\n   neighbor\
-    \ 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.11 remote-as\
-    \ 65104\n   neighbor 192.168.255.12 peer group EVPN-OVERLAY-PEERS\n   neighbor\
-    \ 192.168.255.12 remote-as 65105\n   neighbor 192.168.255.13 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.13 remote-as 65105\n   redistribute connected route-map\
+    \ 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.5 remote-as\
+    \ 65101\n   neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS\n   neighbor\
+    \ 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.7 remote-as 65102\n   neighbor 192.168.255.8 peer group\
+    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8 remote-as 65103\n   neighbor 192.168.255.9\
+    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.9 remote-as 65103\n \
+    \  neighbor 192.168.255.10 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10\
+    \ remote-as 65104\n   neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.11 remote-as 65104\n   redistribute connected route-map\
     \ RM-CONN-2-BGP\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
     \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n   !\n   address-family\
     \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
@@ -1158,10 +1134,7 @@ CVP_CONFIGLETS:
     \ switchport\n   ip address 172.31.255.38/31\n!\ninterface Ethernet6\n   description\
     \ P2P_LINK_TO_DC1-BL1A_Ethernet4\n   no switchport\n   ip address 172.31.255.46/31\n\
     !\ninterface Ethernet7\n   description P2P_LINK_TO_DC1-BL1B_Ethernet4\n   no switchport\n\
-    \   ip address 172.31.255.54/31\n!\ninterface Ethernet8\n   description P2P_LINK_TO_DC1-BL2A_Ethernet4\n\
-    \   no switchport\n   ip address 172.31.255.62/31\n!\ninterface Ethernet9\n  \
-    \ description P2P_LINK_TO_DC1-BL2B_Ethernet4\n   no switchport\n   ip address\
-    \ 172.31.255.70/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
+    \   ip address 172.31.255.54/31\n!\ninterface Loopback0\n   description EVPN_Overlay_Peering\n\
     \   ip address 192.168.255.4/32\n!\ninterface Management1\n   description oob_management\n\
     \   vrf MGMT\n   ip address 192.168.200.104/24\n!\nip routing\nno ip routing vrf\
     \ MGMT\n!\nip prefix-list PL-LOOPBACKS-EVPN-OVERLAY\n   seq 10 permit 192.168.255.0/24\
@@ -1185,20 +1158,15 @@ CVP_CONFIGLETS:
     \ 172.31.255.39 remote-as 65103\n   neighbor 172.31.255.47 peer group IPv4-UNDERLAY-PEERS\n\
     \   neighbor 172.31.255.47 remote-as 65104\n   neighbor 172.31.255.55 peer group\
     \ IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.55 remote-as 65104\n   neighbor\
-    \ 172.31.255.63 peer group IPv4-UNDERLAY-PEERS\n   neighbor 172.31.255.63 remote-as\
-    \ 65105\n   neighbor 172.31.255.71 peer group IPv4-UNDERLAY-PEERS\n   neighbor\
-    \ 172.31.255.71 remote-as 65105\n   neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.5 remote-as 65101\n   neighbor 192.168.255.6 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7\
-    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.7 remote-as 65102\n \
-    \  neighbor 192.168.255.8 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8\
-    \ remote-as 65103\n   neighbor 192.168.255.9 peer group EVPN-OVERLAY-PEERS\n \
-    \  neighbor 192.168.255.9 remote-as 65103\n   neighbor 192.168.255.10 peer group\
-    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10 remote-as 65104\n   neighbor\
-    \ 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.11 remote-as\
-    \ 65104\n   neighbor 192.168.255.12 peer group EVPN-OVERLAY-PEERS\n   neighbor\
-    \ 192.168.255.12 remote-as 65105\n   neighbor 192.168.255.13 peer group EVPN-OVERLAY-PEERS\n\
-    \   neighbor 192.168.255.13 remote-as 65105\n   redistribute connected route-map\
+    \ 192.168.255.5 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.5 remote-as\
+    \ 65101\n   neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS\n   neighbor\
+    \ 192.168.255.6 remote-as 65102\n   neighbor 192.168.255.7 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.7 remote-as 65102\n   neighbor 192.168.255.8 peer group\
+    \ EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.8 remote-as 65103\n   neighbor 192.168.255.9\
+    \ peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.9 remote-as 65103\n \
+    \  neighbor 192.168.255.10 peer group EVPN-OVERLAY-PEERS\n   neighbor 192.168.255.10\
+    \ remote-as 65104\n   neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS\n\
+    \   neighbor 192.168.255.11 remote-as 65104\n   redistribute connected route-map\
     \ RM-CONN-2-BGP\n   !\n   address-family evpn\n      neighbor EVPN-OVERLAY-PEERS\
     \ activate\n      no neighbor IPv4-UNDERLAY-PEERS activate\n   !\n   address-family\
     \ ipv4\n      no neighbor EVPN-OVERLAY-PEERS activate\n      neighbor IPv4-UNDERLAY-PEERS\
@@ -1543,9 +1511,6 @@ CVP_TOPOLOGY:
     devices:
     - DC1-BL1A
     - DC1-BL1B
-    parent_container: DC1_LEAFS
-  DC1_BL2:
-    devices: []
     parent_container: DC1_LEAFS
   DC1_FABRIC:
     parent_container: Tenant

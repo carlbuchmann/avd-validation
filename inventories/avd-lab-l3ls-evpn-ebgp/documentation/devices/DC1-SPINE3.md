@@ -70,6 +70,7 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
 
 # Management
 
@@ -250,9 +251,9 @@ Aliases not defined
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.200.11:9910 | telarista | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -347,8 +348,6 @@ No VLANs defined
 | Ethernet5 |  P2P_LINK_TO_DC1-SVC3B_Ethernet3  |  routed  | - |  172.31.255.36/31  |  default  |  1500  |  -  |  -  |  -  |
 | Ethernet6 |  P2P_LINK_TO_DC1-BL1A_Ethernet3  |  routed  | - |  172.31.255.44/31  |  default  |  1500  |  -  |  -  |  -  |
 | Ethernet7 |  P2P_LINK_TO_DC1-BL1B_Ethernet3  |  routed  | - |  172.31.255.52/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet8 |  P2P_LINK_TO_DC1-BL2A_Ethernet3  |  routed  | - |  172.31.255.60/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet9 |  P2P_LINK_TO_DC1-BL2B_Ethernet3  |  routed  | - |  172.31.255.68/31  |  default  |  1500  |  -  |  -  |  -  |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -388,16 +387,6 @@ interface Ethernet7
    description P2P_LINK_TO_DC1-BL1B_Ethernet3
    no switchport
    ip address 172.31.255.52/31
-!
-interface Ethernet8
-   description P2P_LINK_TO_DC1-BL2A_Ethernet3
-   no switchport
-   ip address 172.31.255.60/31
-!
-interface Ethernet9
-   description P2P_LINK_TO_DC1-BL2B_Ethernet3
-   no switchport
-   ip address 172.31.255.68/31
 ```
 
 ## Port-Channel Interfaces
@@ -488,6 +477,10 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 
 IPv6 static routes not defined
 
+## ARP
+
+Global ARP timeout not defined.
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -538,8 +531,6 @@ Router ISIS not defined
 | 172.31.255.37 | 65103 |
 | 172.31.255.45 | 65104 |
 | 172.31.255.53 | 65104 |
-| 172.31.255.61 | 65105 |
-| 172.31.255.69 | 65105 |
 | 192.168.255.5 | 65101 |
 | 192.168.255.6 | 65102 |
 | 192.168.255.7 | 65102 |
@@ -547,8 +538,6 @@ Router ISIS not defined
 | 192.168.255.9 | 65103 |
 | 192.168.255.10 | 65104 |
 | 192.168.255.11 | 65104 |
-| 192.168.255.12 | 65105 |
-| 192.168.255.13 | 65105 |
 
 ### Router BGP EVPN Address Family
 
@@ -590,10 +579,6 @@ router bgp 65001
    neighbor 172.31.255.45 remote-as 65104
    neighbor 172.31.255.53 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.53 remote-as 65104
-   neighbor 172.31.255.61 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.61 remote-as 65105
-   neighbor 172.31.255.69 peer group IPv4-UNDERLAY-PEERS
-   neighbor 172.31.255.69 remote-as 65105
    neighbor 192.168.255.5 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.5 remote-as 65101
    neighbor 192.168.255.6 peer group EVPN-OVERLAY-PEERS
@@ -608,10 +593,6 @@ router bgp 65001
    neighbor 192.168.255.10 remote-as 65104
    neighbor 192.168.255.11 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.11 remote-as 65104
-   neighbor 192.168.255.12 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.255.12 remote-as 65105
-   neighbor 192.168.255.13 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.255.13 remote-as 65105
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
@@ -755,6 +736,10 @@ Router L2 VPN not defined
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
 
 # Custom Templates
 
