@@ -165,6 +165,10 @@ ntp server vrf MGMT 192.232.20.87 prefer
 ntp server vrf MGMT 216.239.35.4
 ```
 
+## PTP
+
+PTP is not defined.
+
 ## Management SSH
 
 ```eos
