@@ -2,6 +2,9 @@ all:
   children:
     AVD_LAB:
       children:
+        SERVICES:
+          hosts:
+            SVR01:
         CVP:
           hosts:
             CVP-1:

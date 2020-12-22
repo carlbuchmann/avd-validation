@@ -1,0 +1,15 @@
+- name: Build Switch configuration
+  hosts: SVR01
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Create dhcp configuration file
+      import_role:
+          name: arista.avd.dhcp_provisioner
+      vars:
+        ztp_network_summary: 192.168.200.0/24
+        ztp_pool_start: 192.168.200.200
+        ztp_pool_end: 192.168.200.230
+        ztp_lease_time: 300
+        fabric_group: 'DC1_FABRIC'
+        ztp_mac_source: interface
