@@ -68,7 +68,9 @@ ntp_server:
 redundancy: null
 spanning_tree:
   mode: mstp
-  priority: 4096
+  mst_instances:
+    0:
+      priority: 4096
   no_spanning_tree_vlan: 4093-4094
 aaa_authorization: null
 local_users:
@@ -146,6 +148,8 @@ bfd_multihop:
 port_channel_interfaces:
   Port-Channel5:
     description: MLAG_PEER_DC1-BL1A_Po5
+    type: switched
+    shutdown: false
     vlans: 2-4094
     mode: trunk
     trunk_groups:
@@ -159,6 +163,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE1_Ethernet7
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.49/31
     isis_enable: EVPN_UNDERLAY
     isis_metric: 50
@@ -170,6 +175,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE2_Ethernet7
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.51/31
     isis_enable: EVPN_UNDERLAY
     isis_metric: 50
@@ -181,6 +187,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE3_Ethernet7
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.53/31
     isis_enable: EVPN_UNDERLAY
     isis_metric: 50
@@ -192,6 +199,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE4_Ethernet7
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.55/31
     isis_enable: EVPN_UNDERLAY
     isis_metric: 50
@@ -201,6 +209,8 @@ ethernet_interfaces:
     peer_interface: Ethernet5
     peer_type: mlag_peer
     description: MLAG_PEER_DC1-BL1A_Ethernet5
+    type: switched
+    shutdown: false
     channel_group:
       id: 5
       mode: active
@@ -209,33 +219,40 @@ ethernet_interfaces:
     peer_interface: Ethernet6
     peer_type: mlag_peer
     description: MLAG_PEER_DC1-BL1A_Ethernet6
+    type: switched
+    shutdown: false
     channel_group:
       id: 5
       mode: active
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
+    shutdown: false
     ip_address: 192.168.255.11/32
     isis_enable: EVPN_UNDERLAY
     isis_passive: true
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
     ip_address: 192.168.254.10/32
     isis_enable: EVPN_UNDERLAY
     isis_passive: true
   Loopback100:
     description: Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
+    shutdown: false
     vrf: Tenant_A_OP_Zone
     ip_address: 10.255.1.11/32
 management_interfaces:
   Management1:
     description: oob_management
+    shutdown: false
     vrf: MGMT
     ip_address: 192.168.200.111/24
     gateway: 192.168.200.1
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
+    shutdown: false
     ip_address: 10.255.251.11/31
     mtu: 1500
     isis_enable: EVPN_UNDERLAY
@@ -243,6 +260,7 @@ vlan_interfaces:
     isis_network_point_to_point: true
   Vlan4094:
     description: MLAG_PEER
+    shutdown: false
     ip_address: 10.255.252.11/31
     no_autostate: true
     mtu: 1500
@@ -257,9 +275,11 @@ vlan_interfaces:
   Vlan3009:
     tenant: Tenant_A
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone'
     vrf: Tenant_A_OP_Zone
     ip_address: 10.255.251.11/31
+    mtu: 1500
   Vlan150:
     tenant: Tenant_A
     tags:
@@ -271,9 +291,11 @@ vlan_interfaces:
   Vlan3013:
     tenant: Tenant_A
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_WAN_Zone'
     vrf: Tenant_A_WAN_Zone
     ip_address: 10.255.251.11/31
+    mtu: 1500
   Vlan250:
     tenant: Tenant_B
     tags:
@@ -285,9 +307,11 @@ vlan_interfaces:
   Vlan3020:
     tenant: Tenant_B
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_B_WAN_Zone'
     vrf: Tenant_B_WAN_Zone
     ip_address: 10.255.251.11/31
+    mtu: 1500
   Vlan350:
     tenant: Tenant_C
     tags:
@@ -299,9 +323,11 @@ vlan_interfaces:
   Vlan3030:
     tenant: Tenant_C
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_C_WAN_Zone'
     vrf: Tenant_C_WAN_Zone
     ip_address: 10.255.251.11/31
+    mtu: 1500
 vxlan_tunnel_interface:
   Vxlan1:
     description: DC1-BL1B_VTEP

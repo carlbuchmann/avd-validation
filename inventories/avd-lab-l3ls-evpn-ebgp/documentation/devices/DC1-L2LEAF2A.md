@@ -35,6 +35,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#internet-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -72,6 +73,8 @@
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
 - [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -97,6 +100,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.200.113/24
 ```
@@ -295,25 +299,55 @@ No event handler defined
 
 # MLAG
 
-MLAG not defined
+## MLAG Summary
+
+| Domain-id | Local-interface | Peer-address | Peer-link |
+| --------- | --------------- | ------------ | --------- |
+| DC1_L2LEAF2 | Vlan4094 | 10.255.252.17 | Port-Channel3 |
+
+Dual primary detection is enabled. The detection delay is 5 seconds.
+
+## MLAG Device Configuration
+
+```eos
+!
+mlag configuration
+   domain-id DC1_L2LEAF2
+   local-interface Vlan4094
+   peer-address 10.255.252.17
+   peer-address heartbeat 192.168.200.114 vrf MGMT
+   peer-link Port-Channel3
+   dual-primary detection delay 5 action errdisable all-interfaces
+   reload-delay mlag 300
+   reload-delay non-mlag 330
+```
 
 # Spanning Tree
 
 ## Spanning Tree Summary
 
-Mode: mstp
+STP mode: **mstp**
 
 ### MSTP Instance and Priority
 
-| Instance | Priority |
+| Instance(s) | Priority |
 | -------- | -------- |
 | 0 | 16384 |
+
+### MST Configuration
+
+
+
+### Global Spanning-Tree Settings
+
+Spanning Tree disabled for VLANs: **4094**
 
 ## Spanning Tree Device Configuration
 
 ```eos
 !
 spanning-tree mode mstp
+no spanning-tree vlan-id 4094
 spanning-tree mst 0 priority 16384
 ```
 
@@ -352,6 +386,7 @@ vlan internal order ascending range 1006 1199
 | 211 | Tenant_B_OP_Zone_2 | none  |
 | 310 | Tenant_C_OP_Zone_1 | none  |
 | 311 | Tenant_C_OP_Zone_2 | none  |
+| 4094 | MLAG_PEER | MLAG  |
 
 ## VLANs Device Configuration
 
@@ -398,9 +433,17 @@ vlan 310
 !
 vlan 311
    name Tenant_C_OP_Zone_2
+!
+vlan 4094
+   name MLAG_PEER
+   trunk group MLAG
 ```
 
 # Interfaces
+
+## Interface Defaults
+
+No Interface Defaults defined
 
 ## Ethernet Interfaces
 
@@ -412,6 +455,8 @@ vlan 311
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
 | Ethernet1 | DC1-SVC3A_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | *- | *- | 1 |
 | Ethernet2 | DC1-SVC3B_Ethernet7 | *trunk | *110-111,120-121,130-131,140-141,160-161,210-211,310-311 | *- | *- | 1 |
+| Ethernet3 | MLAG_PEER_DC1-L2LEAF2B_Ethernet3 | *trunk | *2-4094 | *- | *['MLAG'] | 3 |
+| Ethernet4 | MLAG_PEER_DC1-L2LEAF2B_Ethernet4 | *trunk | *2-4094 | *- | *['MLAG'] | 3 |
 
 *Inherited from Port-Channel Interface
 
@@ -421,11 +466,23 @@ vlan 311
 !
 interface Ethernet1
    description DC1-SVC3A_Ethernet7
+   no shutdown
    channel-group 1 mode active
 !
 interface Ethernet2
    description DC1-SVC3B_Ethernet7
+   no shutdown
    channel-group 1 mode active
+!
+interface Ethernet3
+   description MLAG_PEER_DC1-L2LEAF2B_Ethernet3
+   no shutdown
+   channel-group 3 mode active
+!
+interface Ethernet4
+   description MLAG_PEER_DC1-L2LEAF2B_Ethernet4
+   no shutdown
+   channel-group 3 mode active
 ```
 
 ## Port-Channel Interfaces
@@ -436,7 +493,8 @@ interface Ethernet2
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1-SVC3A_Po7 | switched | access | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | - | 1 | - |
+| Port-Channel1 | DC1-SVC3A_Po7 | switched | trunk | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | - | 1 | - |
+| Port-Channel3 | MLAG_PEER_DC1-L2LEAF2B_Po3 | switched | trunk | 2-4094 | - | ['MLAG'] | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -444,9 +502,19 @@ interface Ethernet2
 !
 interface Port-Channel1
    description DC1-SVC3A_Po7
+   no shutdown
+   switchport
    switchport trunk allowed vlan 110-111,120-121,130-131,140-141,160-161,210-211,310-311
    switchport mode trunk
    mlag 1
+!
+interface Port-Channel3
+   description MLAG_PEER_DC1-L2LEAF2B_Po3
+   no shutdown
+   switchport
+   switchport trunk allowed vlan 2-4094
+   switchport mode trunk
+   switchport trunk group MLAG
 ```
 
 ## Loopback Interfaces
@@ -455,7 +523,30 @@ No loopback interfaces defined
 
 ## VLAN Interfaces
 
-No VLAN interfaces defined
+### VLAN Interfaces Summary
+
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan4094 |  MLAG_PEER  |  default  |  1500  |  false  |
+
+#### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan4094 |  default  |  10.255.252.16/31  |  -  |  -  |  -  |  -  |  -  |
+
+
+
+### VLAN Interfaces Device Configuration
+
+```eos
+!
+interface Vlan4094
+   description MLAG_PEER
+   no shutdown
+   no autostate
+   ip address 10.255.252.16/31
+```
 
 ## VXLAN Interface
 
@@ -640,9 +731,18 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+
 # MACsec
 
 MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 

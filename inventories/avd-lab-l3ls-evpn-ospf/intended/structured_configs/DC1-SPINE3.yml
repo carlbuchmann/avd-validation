@@ -64,6 +64,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-BL1A_Ethernet3
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.44/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
@@ -74,6 +75,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-BL1B_Ethernet3
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.52/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
@@ -84,6 +86,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-LEAF1A_Ethernet3
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.4/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
@@ -94,6 +97,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-LEAF2A_Ethernet3
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.12/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
@@ -104,6 +108,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-LEAF2B_Ethernet3
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.20/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
@@ -114,6 +119,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SVC3A_Ethernet3
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.28/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
@@ -124,17 +130,20 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SVC3B_Ethernet3
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.36/31
     ospf_network_point_to_point: true
     ospf_area: 0.0.0.0
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
+    shutdown: false
     ip_address: 192.168.255.3/32
     ospf_area: 0.0.0.0
 management_interfaces:
   Management1:
     description: oob_management
+    shutdown: false
     vrf: MGMT
     ip_address: 192.168.200.103/24
     gateway: 192.168.200.1

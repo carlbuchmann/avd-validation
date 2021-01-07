@@ -77,7 +77,9 @@ ntp_server:
 redundancy: null
 spanning_tree:
   mode: mstp
-  priority: 4096
+  mst_instances:
+    0:
+      priority: 4096
   no_spanning_tree_vlan: 4093-4094
 aaa_authorization: null
 local_users:
@@ -151,6 +153,8 @@ bfd_multihop:
 port_channel_interfaces:
   Port-Channel47:
     description: MLAG_PEER_LEAF2A_Po47
+    type: switched
+    shutdown: false
     vlans: 2-4094
     mode: trunk
     trunk_groups:
@@ -158,12 +162,16 @@ port_channel_interfaces:
     - MLAG
   Port-Channel10:
     description: HostC_bond0
+    type: switched
+    shutdown: false
     vlans: 30
     mode: access
     mlag: 10
     spanning_tree_portfast: edge
   Port-Channel11:
     description: HostE_bond0
+    type: switched
+    shutdown: false
     vlans: 20
     mode: access
     mlag: 11
@@ -176,6 +184,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_SPINE1_Ethernet3
     mtu: 9216
     type: routed
+    shutdown: false
     ip_address: 10.2.1.77/31
   Ethernet2:
     peer: SPINE2
@@ -184,12 +193,15 @@ ethernet_interfaces:
     description: P2P_LINK_TO_SPINE2_Ethernet3
     mtu: 9216
     type: routed
+    shutdown: false
     ip_address: 10.2.1.79/31
   Ethernet47:
     peer: LEAF2A
     peer_interface: Ethernet47
     peer_type: mlag_peer
     description: MLAG_PEER_LEAF2A_Ethernet47
+    type: switched
+    shutdown: false
     channel_group:
       id: 47
       mode: active
@@ -198,6 +210,8 @@ ethernet_interfaces:
     peer_interface: Ethernet48
     peer_type: mlag_peer
     description: MLAG_PEER_LEAF2A_Ethernet48
+    type: switched
+    shutdown: false
     channel_group:
       id: 47
       mode: active
@@ -206,6 +220,8 @@ ethernet_interfaces:
     peer_interface: eth1
     peer_type: server
     description: HostC_eth1
+    type: switched
+    shutdown: false
     mode: access
     vlans: 30
     spanning_tree_portfast: edge
@@ -218,6 +234,8 @@ ethernet_interfaces:
     peer_interface: eth0
     peer_type: server
     description: HostD_eth0
+    type: switched
+    shutdown: false
     mode: access
     vlans: 10
     spanning_tree_portfast: edge
@@ -227,6 +245,8 @@ ethernet_interfaces:
     peer_interface: eth1
     peer_type: server
     description: HostE_eth1
+    type: switched
+    shutdown: false
     mode: access
     vlans: 20
     spanning_tree_portfast: edge
@@ -237,31 +257,38 @@ ethernet_interfaces:
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
+    shutdown: false
     ip_address: 1.1.1.22/32
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
     ip_address: 2.2.2.21/32
   Loopback100:
     description: A_VTEP_DIAGNOSTICS
+    shutdown: false
     vrf: A
     ip_address: 10.255.1.22/32
   Loopback101:
     description: B_VTEP_DIAGNOSTICS
+    shutdown: false
     vrf: B
     ip_address: 10.255.2.22/32
 management_interfaces:
   Management1:
     description: oob_management
+    shutdown: false
     vrf: MGMT
     ip_address: 192.168.100.34/24
     gateway: 192.168.100.1
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
+    shutdown: false
     ip_address: 10.255.251.37/31
     mtu: 9216
   Vlan4094:
     description: MLAG_PEER
+    shutdown: false
     ip_address: 10.255.252.37/31
     no_autostate: true
     mtu: 9216
@@ -292,9 +319,11 @@ vlan_interfaces:
   Vlan3050:
     tenant: Tenant_A
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf A'
     vrf: A
     ip_address: 10.255.251.37/31
+    mtu: 9216
   Vlan11:
     tenant: Tenant_B
     tags:
@@ -330,9 +359,11 @@ vlan_interfaces:
   Vlan3150:
     tenant: Tenant_B
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf B'
     vrf: B
     ip_address: 10.255.251.37/31
+    mtu: 9216
 vxlan_tunnel_interface:
   Vxlan1:
     description: LEAF2B_VTEP

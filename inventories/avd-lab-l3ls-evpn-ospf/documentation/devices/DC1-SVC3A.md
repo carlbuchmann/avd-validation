@@ -35,6 +35,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#internet-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -72,6 +73,8 @@
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
 - [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -97,6 +100,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.200.108/24
 ```
@@ -322,13 +326,21 @@ mlag configuration
 
 ## Spanning Tree Summary
 
-Mode: mstp
+STP mode: **mstp**
 
 ### MSTP Instance and Priority
 
-| Instance | Priority |
+| Instance(s) | Priority |
 | -------- | -------- |
 | 0 | 4096 |
+
+### MST Configuration
+
+
+
+### Global Spanning-Tree Settings
+
+Spanning Tree disabled for VLANs: **4093-4094**
 
 ## Spanning Tree Device Configuration
 
@@ -464,6 +476,10 @@ vlan 4094
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -485,10 +501,10 @@ vlan 4094
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet4  |  routed  | - |  172.31.255.25/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet4  |  routed  | - |  172.31.255.27/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet4  |  routed  | - |  172.31.255.29/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet4  |  routed  | - |  172.31.255.31/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet4  |  routed  | - |  172.31.255.25/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet4  |  routed  | - |  172.31.255.27/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet4  |  routed  | - |  172.31.255.29/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet4  |  routed  | - |  172.31.255.31/31  |  default  |  1500  |  false  |  -  |  -  |
 
 #### OSPF
 | Interface | Channel Group | Area | Cost | Mode |
@@ -504,6 +520,7 @@ vlan 4094
 !
 interface Ethernet1
    description P2P_LINK_TO_DC1-SPINE1_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.25/31
    ip ospf network point-to-point
@@ -511,6 +528,7 @@ interface Ethernet1
 !
 interface Ethernet2
    description P2P_LINK_TO_DC1-SPINE2_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.27/31
    ip ospf network point-to-point
@@ -518,6 +536,7 @@ interface Ethernet2
 !
 interface Ethernet3
    description P2P_LINK_TO_DC1-SPINE3_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.29/31
    ip ospf network point-to-point
@@ -525,6 +544,7 @@ interface Ethernet3
 !
 interface Ethernet4
    description P2P_LINK_TO_DC1-SPINE4_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.31/31
    ip ospf network point-to-point
@@ -532,26 +552,32 @@ interface Ethernet4
 !
 interface Ethernet5
    description MLAG_PEER_DC1-SVC3B_Ethernet5
+   no shutdown
    channel-group 5 mode active
 !
 interface Ethernet6
    description MLAG_PEER_DC1-SVC3B_Ethernet6
+   no shutdown
    channel-group 5 mode active
 !
 interface Ethernet7
    description DC1-L2LEAF2A_Ethernet1
+   no shutdown
    channel-group 7 mode active
 !
 interface Ethernet8
    description DC1-L2LEAF2B_Ethernet1
+   no shutdown
    channel-group 7 mode active
 !
 interface Ethernet10
    description server03_Eth1
+   no shutdown
    channel-group 10 mode active
 !
 interface Ethernet11
    description server04_Eth1
+   no shutdown
    channel-group 11 mode active
 ```
 
@@ -563,10 +589,10 @@ interface Ethernet11
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel5 | MLAG_PEER_DC1-SVC3B_Po5 | switched | access | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
-| Port-Channel7 | DC1_L2LEAF2_Po1 | switched | access | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | - | 7 | - |
-| Port-Channel10 | server03_PortChanne1 | switched | access | 110-111,210-211 | - | - | - | - | 10 | - |
-| Port-Channel11 | server04_PortChanne1 | switched | access | 110-111,210-211 | - | - | - | - | 11 | - |
+| Port-Channel5 | MLAG_PEER_DC1-SVC3B_Po5 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
+| Port-Channel7 | DC1_L2LEAF2_Po1 | switched | trunk | 110-111,120-121,130-131,140-141,160-161,210-211,310-311 | - | - | - | - | 7 | - |
+| Port-Channel10 | server03_PortChanne1 | switched | trunk | 110-111,210-211 | - | - | - | - | 10 | - |
+| Port-Channel11 | server04_PortChanne1 | switched | trunk | 110-111,210-211 | - | - | - | - | 11 | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -574,6 +600,8 @@ interface Ethernet11
 !
 interface Port-Channel5
    description MLAG_PEER_DC1-SVC3B_Po5
+   no shutdown
+   switchport
    switchport trunk allowed vlan 2-4094
    switchport mode trunk
    switchport trunk group LEAF_PEER_L3
@@ -581,18 +609,24 @@ interface Port-Channel5
 !
 interface Port-Channel7
    description DC1_L2LEAF2_Po1
+   no shutdown
+   switchport
    switchport trunk allowed vlan 110-111,120-121,130-131,140-141,160-161,210-211,310-311
    switchport mode trunk
    mlag 7
 !
 interface Port-Channel10
    description server03_PortChanne1
+   no shutdown
+   switchport
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    mlag 10
 !
 interface Port-Channel11
    description server04_PortChanne1
+   no shutdown
+   switchport
    switchport trunk allowed vlan 110-111,210-211
    switchport mode trunk
    mlag 11
@@ -625,16 +659,19 @@ interface Port-Channel11
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 192.168.255.8/32
    ip ospf area 0.0.0.0
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
+   no shutdown
    ip address 192.168.254.8/32
    ip ospf area 0.0.0.0
 !
 interface Loopback100
    description Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
+   no shutdown
    vrf Tenant_A_OP_Zone
    ip address 10.255.1.8/32
 ```
@@ -657,14 +694,14 @@ interface Loopback100
 | Vlan211 |  Tenant_B_OP_Zone_2  |  Tenant_B_OP_Zone  |  -  |  false  |
 | Vlan310 |  Tenant_C_OP_Zone_1  |  Tenant_C_OP_Zone  |  -  |  false  |
 | Vlan311 |  Tenant_C_OP_Zone_2  |  Tenant_C_OP_Zone  |  -  |  false  |
-| Vlan3009 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone  |  Tenant_A_OP_Zone  |  -  |  -  |
-| Vlan3010 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_WEB_Zone  |  Tenant_A_WEB_Zone  |  -  |  -  |
-| Vlan3011 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_APP_Zone  |  Tenant_A_APP_Zone  |  -  |  -  |
-| Vlan3012 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_DB_Zone  |  Tenant_A_DB_Zone  |  -  |  -  |
-| Vlan3019 |  MLAG_PEER_L3_iBGP: vrf Tenant_B_OP_Zone  |  Tenant_B_OP_Zone  |  -  |  -  |
-| Vlan3029 |  MLAG_PEER_L3_iBGP: vrf Tenant_C_OP_Zone  |  Tenant_C_OP_Zone  |  -  |  -  |
-| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  1500  |  -  |
-| Vlan4094 |  MLAG_PEER  |  default  |  1500  |  -  |
+| Vlan3009 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone  |  Tenant_A_OP_Zone  |  1500  |  false  |
+| Vlan3010 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_WEB_Zone  |  Tenant_A_WEB_Zone  |  1500  |  false  |
+| Vlan3011 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_APP_Zone  |  Tenant_A_APP_Zone  |  1500  |  false  |
+| Vlan3012 |  MLAG_PEER_L3_iBGP: vrf Tenant_A_DB_Zone  |  Tenant_A_DB_Zone  |  1500  |  false  |
+| Vlan3019 |  MLAG_PEER_L3_iBGP: vrf Tenant_B_OP_Zone  |  Tenant_B_OP_Zone  |  1500  |  false  |
+| Vlan3029 |  MLAG_PEER_L3_iBGP: vrf Tenant_C_OP_Zone  |  Tenant_C_OP_Zone  |  1500  |  false  |
+| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  1500  |  false  |
+| Vlan4094 |  MLAG_PEER  |  default  |  1500  |  false  |
 
 #### IPv4
 
@@ -704,102 +741,122 @@ interface Loopback100
 !
 interface Vlan110
    description Tenant_A_OP_Zone_1
+   no shutdown
    vrf Tenant_A_OP_Zone
    ip address virtual 10.1.10.1/24
 !
 interface Vlan111
    description Tenant_A_OP_Zone_2
+   no shutdown
    vrf Tenant_A_OP_Zone
    ip address virtual 10.1.11.1/24
 !
 interface Vlan120
    description Tenant_A_WEB_Zone_1
+   no shutdown
    vrf Tenant_A_WEB_Zone
    ip address virtual 10.1.20.1/24
 !
 interface Vlan121
    description Tenant_A_WEBZone_2
+   no shutdown
    vrf Tenant_A_WEB_Zone
    ip address virtual 10.1.21.1/24
 !
 interface Vlan130
    description Tenant_A_APP_Zone_1
+   no shutdown
    vrf Tenant_A_APP_Zone
    ip address virtual 10.1.30.1/24
 !
 interface Vlan131
    description Tenant_A_APP_Zone_2
+   no shutdown
    vrf Tenant_A_APP_Zone
    ip address virtual 10.1.31.1/24
 !
 interface Vlan140
    description Tenant_A_DB_BZone_1
+   no shutdown
    vrf Tenant_A_DB_Zone
    ip address virtual 10.1.40.1/24
 !
 interface Vlan141
    description Tenant_A_DB_Zone_2
+   no shutdown
    vrf Tenant_A_DB_Zone
    ip address virtual 10.1.41.1/24
 !
 interface Vlan210
    description Tenant_B_OP_Zone_1
+   no shutdown
    vrf Tenant_B_OP_Zone
    ip address virtual 10.2.10.1/24
 !
 interface Vlan211
    description Tenant_B_OP_Zone_2
+   no shutdown
    vrf Tenant_B_OP_Zone
    ip address virtual 10.2.11.1/24
 !
 interface Vlan310
    description Tenant_C_OP_Zone_1
+   no shutdown
    vrf Tenant_C_OP_Zone
    ip address virtual 10.3.10.1/24
 !
 interface Vlan311
    description Tenant_C_OP_Zone_2
+   no shutdown
    vrf Tenant_C_OP_Zone
    ip address virtual 10.3.11.1/24
 !
 interface Vlan3009
    description MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone
+   no shutdown
    vrf Tenant_A_OP_Zone
    ip address 10.255.251.6/31
 !
 interface Vlan3010
    description MLAG_PEER_L3_iBGP: vrf Tenant_A_WEB_Zone
+   no shutdown
    vrf Tenant_A_WEB_Zone
    ip address 10.255.251.6/31
 !
 interface Vlan3011
    description MLAG_PEER_L3_iBGP: vrf Tenant_A_APP_Zone
+   no shutdown
    vrf Tenant_A_APP_Zone
    ip address 10.255.251.6/31
 !
 interface Vlan3012
    description MLAG_PEER_L3_iBGP: vrf Tenant_A_DB_Zone
+   no shutdown
    vrf Tenant_A_DB_Zone
    ip address 10.255.251.6/31
 !
 interface Vlan3019
    description MLAG_PEER_L3_iBGP: vrf Tenant_B_OP_Zone
+   no shutdown
    vrf Tenant_B_OP_Zone
    ip address 10.255.251.6/31
 !
 interface Vlan3029
    description MLAG_PEER_L3_iBGP: vrf Tenant_C_OP_Zone
+   no shutdown
    vrf Tenant_C_OP_Zone
    ip address 10.255.251.6/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
+   no shutdown
    ip address 10.255.251.6/31
    ip ospf network point-to-point
    ip ospf area 0.0.0.0
 !
 interface Vlan4094
    description MLAG_PEER
+   no shutdown
    no autostate
    ip address 10.255.252.6/31
 ```
@@ -1294,9 +1351,18 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+
 # MACsec
 
 MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 

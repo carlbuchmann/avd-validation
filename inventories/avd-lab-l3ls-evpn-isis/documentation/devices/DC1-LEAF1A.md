@@ -35,6 +35,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#internet-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -72,6 +73,8 @@
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
 - [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -97,6 +100,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.200.105/24
 ```
@@ -301,13 +305,20 @@ MLAG not defined
 
 ## Spanning Tree Summary
 
-Mode: mstp
+STP mode: **mstp**
 
 ### MSTP Instance and Priority
 
-| Instance | Priority |
+| Instance(s) | Priority |
 | -------- | -------- |
 | 0 | 4096 |
+
+### MST Configuration
+
+
+
+### Global Spanning-Tree Settings
+
 
 ## Spanning Tree Device Configuration
 
@@ -370,6 +381,10 @@ vlan 411
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -389,10 +404,10 @@ vlan 411
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet1  |  routed  | - |  172.31.255.1/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet1  |  routed  | - |  172.31.255.3/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet1  |  routed  | - |  172.31.255.5/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet1  |  routed  | - |  172.31.255.7/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet1  |  routed  | - |  172.31.255.1/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet1  |  routed  | - |  172.31.255.3/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet1  |  routed  | - |  172.31.255.5/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet1  |  routed  | - |  172.31.255.7/31  |  default  |  1500  |  false  |  -  |  -  |
 
 #### ISIS
 
@@ -409,6 +424,7 @@ vlan 411
 !
 interface Ethernet1
    description P2P_LINK_TO_DC1-SPINE1_Ethernet1
+   no shutdown
    no switchport
    ip address 172.31.255.1/31
    isis enable EVPN_UNDERLAY
@@ -417,6 +433,7 @@ interface Ethernet1
 !
 interface Ethernet2
    description P2P_LINK_TO_DC1-SPINE2_Ethernet1
+   no shutdown
    no switchport
    ip address 172.31.255.3/31
    isis enable EVPN_UNDERLAY
@@ -425,6 +442,7 @@ interface Ethernet2
 !
 interface Ethernet3
    description P2P_LINK_TO_DC1-SPINE3_Ethernet1
+   no shutdown
    no switchport
    ip address 172.31.255.5/31
    isis enable EVPN_UNDERLAY
@@ -433,6 +451,7 @@ interface Ethernet3
 !
 interface Ethernet4
    description P2P_LINK_TO_DC1-SPINE4_Ethernet1
+   no shutdown
    no switchport
    ip address 172.31.255.7/31
    isis enable EVPN_UNDERLAY
@@ -441,20 +460,26 @@ interface Ethernet4
 !
 interface Ethernet5
    description server01_Eth1
+   no shutdown
+   switchport
    switchport trunk allowed vlan 110
    switchport mode trunk
 !
 interface Ethernet6
    description server02_Eth1
+   no shutdown
+   switchport
    switchport trunk allowed vlan 110
    switchport mode trunk
 !
 interface Ethernet7
    description server01_Eth4
+   no shutdown
    channel-group 7 mode active
 !
 interface Ethernet8
    description server01_Eth5
+   no shutdown
    channel-group 7 mode active
 ```
 
@@ -466,7 +491,7 @@ interface Ethernet8
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel7 | server01_PortChanne1 | switched | access | 110 | - | - | - | - | - | - |
+| Port-Channel7 | server01_PortChanne1 | switched | trunk | 110 | - | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -474,6 +499,8 @@ interface Ethernet8
 !
 interface Port-Channel7
    description server01_PortChanne1
+   no shutdown
+   switchport
    switchport trunk allowed vlan 110
    switchport mode trunk
 ```
@@ -509,12 +536,14 @@ interface Port-Channel7
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 192.168.255.5/32
    isis enable EVPN_UNDERLAY
    isis passive
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
+   no shutdown
    ip address 192.168.254.5/32
    isis enable EVPN_UNDERLAY
    isis passive
@@ -552,31 +581,37 @@ interface Loopback1
 !
 interface Vlan120
    description Tenant_A_WEB_Zone_1
+   no shutdown
    vrf Tenant_A_WEB_Zone
    ip address virtual 10.1.20.1/24
 !
 interface Vlan121
    description Tenant_A_WEBZone_2
+   no shutdown
    vrf Tenant_A_WEB_Zone
    ip address virtual 10.1.21.1/24
 !
 interface Vlan130
    description Tenant_A_APP_Zone_1
+   no shutdown
    vrf Tenant_A_APP_Zone
    ip address virtual 10.1.30.1/24
 !
 interface Vlan131
    description Tenant_A_APP_Zone_2
+   no shutdown
    vrf Tenant_A_APP_Zone
    ip address virtual 10.1.31.1/24
 !
 interface Vlan410
    description tf_demo_app_1
+   no shutdown
    vrf tf_web_zone
    ip address virtual 10.4.10.1/24
 !
 interface Vlan411
    description tf_demo_app_2
+   no shutdown
    vrf tf_web_zone
    ip address virtual 10.4.11.1/24
 ```
@@ -988,9 +1023,18 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+
 # MACsec
 
 MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 

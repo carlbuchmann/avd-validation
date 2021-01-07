@@ -35,6 +35,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#internet-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -72,6 +73,8 @@
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
 - [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -97,6 +100,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.100.33/24
 ```
@@ -379,13 +383,21 @@ mlag configuration
 
 ## Spanning Tree Summary
 
-Mode: mstp
+STP mode: **mstp**
 
 ### MSTP Instance and Priority
 
-| Instance | Priority |
+| Instance(s) | Priority |
 | -------- | -------- |
 | 0 | 4096 |
+
+### MST Configuration
+
+
+
+### Global Spanning-Tree Settings
+
+Spanning Tree disabled for VLANs: **4093-4094**
 
 ## Spanning Tree Device Configuration
 
@@ -473,6 +485,10 @@ vlan 4094
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -492,8 +508,8 @@ vlan 4094
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet2  |  routed  | - |  10.2.1.73/31  |  default  |  9216  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet2  |  routed  | - |  10.2.1.75/31  |  default  |  9216  |  -  |  -  |  -  |
+| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet2  |  routed  | - |  10.2.1.73/31  |  default  |  9216  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet2  |  routed  | - |  10.2.1.75/31  |  default  |  9216  |  false  |  -  |  -  |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -501,30 +517,36 @@ vlan 4094
 !
 interface Ethernet1
    description P2P_LINK_TO_SPINE1_Ethernet2
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.73/31
 !
 interface Ethernet2
    description P2P_LINK_TO_SPINE2_Ethernet2
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.75/31
 !
 interface Ethernet10
    description HostC_eth0
+   no shutdown
    channel-group 10 mode active
 !
 interface Ethernet11
    description HostE_eth0
+   no shutdown
    channel-group 11 mode active
 !
 interface Ethernet47
    description MLAG_PEER_LEAF2B_Ethernet47
+   no shutdown
    channel-group 47 mode active
 !
 interface Ethernet48
    description MLAG_PEER_LEAF2B_Ethernet48
+   no shutdown
    channel-group 47 mode active
 ```
 
@@ -538,7 +560,7 @@ interface Ethernet48
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
 | Port-Channel10 | HostC_bond0 | switched | access | 30 | - | - | - | - | 10 | - |
 | Port-Channel11 | HostE_bond0 | switched | access | 20 | - | - | - | - | 11 | - |
-| Port-Channel47 | MLAG_PEER_LEAF2B_Po47 | switched | access | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
+| Port-Channel47 | MLAG_PEER_LEAF2B_Po47 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -546,18 +568,24 @@ interface Ethernet48
 !
 interface Port-Channel10
    description HostC_bond0
+   no shutdown
+   switchport
    switchport access vlan 30
    mlag 10
    spanning-tree portfast
 !
 interface Port-Channel11
    description HostE_bond0
+   no shutdown
+   switchport
    switchport access vlan 20
    mlag 11
    spanning-tree portfast
 !
 interface Port-Channel47
    description MLAG_PEER_LEAF2B_Po47
+   no shutdown
+   switchport
    switchport trunk allowed vlan 2-4094
    switchport mode trunk
    switchport trunk group LEAF_PEER_L3
@@ -593,19 +621,23 @@ interface Port-Channel47
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 1.1.1.21/32
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
+   no shutdown
    ip address 2.2.2.21/32
 !
 interface Loopback100
    description A_VTEP_DIAGNOSTICS
+   no shutdown
    vrf A
    ip address 10.255.1.21/32
 !
 interface Loopback101
    description B_VTEP_DIAGNOSTICS
+   no shutdown
    vrf B
    ip address 10.255.2.21/32
 ```
@@ -623,10 +655,10 @@ interface Loopback101
 | Vlan30 |  Thirty-app  |  A  |  -  |  false  |
 | Vlan31 |  ThirtyOne-app  |  B  |  -  |  false  |
 | Vlan41 |  FortyOne-db  |  B  |  -  |  false  |
-| Vlan3050 |  MLAG_PEER_L3_iBGP: vrf A  |  A  |  -  |  -  |
-| Vlan3150 |  MLAG_PEER_L3_iBGP: vrf B  |  B  |  -  |  -  |
-| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  9216  |  -  |
-| Vlan4094 |  MLAG_PEER  |  default  |  9216  |  -  |
+| Vlan3050 |  MLAG_PEER_L3_iBGP: vrf A  |  A  |  9216  |  false  |
+| Vlan3150 |  MLAG_PEER_L3_iBGP: vrf B  |  B  |  9216  |  false  |
+| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  9216  |  false  |
+| Vlan4094 |  MLAG_PEER  |  default  |  9216  |  false  |
 
 #### IPv4
 
@@ -652,56 +684,69 @@ interface Loopback101
 !
 interface Vlan10
    description Ten-opzone
+   no shutdown
    vrf A
    ip address virtual 10.10.10.1/24
 !
 interface Vlan11
    description Eleven-opzone
+   no shutdown
    vrf B
    ip address virtual 11.11.11.1/24
 !
 interface Vlan20
    description Twenty-web
+   no shutdown
    vrf A
    ip address virtual 20.20.20.1/24
 !
 interface Vlan21
    description TwentyOne-web
+   no shutdown
    vrf B
    ip address virtual 21.21.21.1/24
 !
 interface Vlan30
    description Thirty-app
+   no shutdown
    vrf A
    ip address virtual 30.30.30.1/24
 !
 interface Vlan31
    description ThirtyOne-app
+   no shutdown
    vrf B
    ip address virtual 31.31.31.1/24
 !
 interface Vlan41
    description FortyOne-db
+   no shutdown
    vrf B
    ip address virtual 41.41.41.1/24
 !
 interface Vlan3050
    description MLAG_PEER_L3_iBGP: vrf A
+   no shutdown
+   mtu 9216
    vrf A
    ip address 10.255.251.36/31
 !
 interface Vlan3150
    description MLAG_PEER_L3_iBGP: vrf B
+   no shutdown
+   mtu 9216
    vrf B
    ip address 10.255.251.36/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
+   no shutdown
    mtu 9216
    ip address 10.255.251.36/31
 !
 interface Vlan4094
    description MLAG_PEER
+   no shutdown
    mtu 9216
    no autostate
    ip address 10.255.252.36/31
@@ -1152,9 +1197,18 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+
 # MACsec
 
 MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 

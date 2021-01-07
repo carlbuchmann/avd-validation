@@ -60,7 +60,9 @@ ntp_server:
 redundancy: null
 spanning_tree:
   mode: mstp
-  priority: 4096
+  mst_instances:
+    0:
+      priority: 4096
 aaa_authorization: null
 local_users:
   admin:
@@ -104,6 +106,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_SPINE1_Ethernet1
     mtu: 9216
     type: routed
+    shutdown: false
     ip_address: 10.2.1.17/31
   Ethernet2:
     peer: SPINE2
@@ -112,12 +115,15 @@ ethernet_interfaces:
     description: P2P_LINK_TO_SPINE2_Ethernet1
     mtu: 9216
     type: routed
+    shutdown: false
     ip_address: 10.2.1.19/31
   Ethernet10:
     peer: HostA
     peer_interface: eth0
     peer_type: server
     description: HostA_eth0
+    type: switched
+    shutdown: false
     mode: access
     vlans: 10
     spanning_tree_portfast: edge
@@ -127,6 +133,8 @@ ethernet_interfaces:
     peer_interface: eth0
     peer_type: server
     description: HostB_eth0
+    type: switched
+    shutdown: false
     mode: access
     vlans: 20
     spanning_tree_portfast: edge
@@ -136,6 +144,8 @@ ethernet_interfaces:
     peer_interface: eth0
     peer_type: server
     description: HostF_eth0
+    type: switched
+    shutdown: false
     mode: access
     vlans: 40
     spanning_tree_portfast: edge
@@ -143,17 +153,21 @@ ethernet_interfaces:
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
+    shutdown: false
     ip_address: 1.1.1.7/32
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
     ip_address: 2.2.2.7/32
   Loopback100:
     description: A_VTEP_DIAGNOSTICS
+    shutdown: false
     vrf: A
     ip_address: 10.255.1.7/32
 management_interfaces:
   Management1:
     description: oob_management
+    shutdown: false
     vrf: MGMT
     ip_address: 192.168.100.32/24
     gateway: 192.168.100.1

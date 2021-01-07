@@ -35,6 +35,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#internet-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -72,6 +73,8 @@
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
 - [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -97,6 +100,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.200.104/24
 ```
@@ -301,7 +305,11 @@ MLAG not defined
 
 ## Spanning Tree Summary
 
-Mode: none
+STP mode: **none**
+
+
+### Global Spanning-Tree Settings
+
 
 ## Spanning Tree Device Configuration
 
@@ -331,6 +339,10 @@ No VLANs defined
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -346,13 +358,13 @@ No VLANs defined
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_DC1-LEAF1A_Ethernet4  |  routed  | - |  172.31.255.6/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_DC1-LEAF2A_Ethernet4  |  routed  | - |  172.31.255.14/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet3 |  P2P_LINK_TO_DC1-LEAF2B_Ethernet4  |  routed  | - |  172.31.255.22/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet4 |  P2P_LINK_TO_DC1-SVC3A_Ethernet4  |  routed  | - |  172.31.255.30/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet5 |  P2P_LINK_TO_DC1-SVC3B_Ethernet4  |  routed  | - |  172.31.255.38/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet6 |  P2P_LINK_TO_DC1-BL1A_Ethernet4  |  routed  | - |  172.31.255.46/31  |  default  |  1500  |  -  |  -  |  -  |
-| Ethernet7 |  P2P_LINK_TO_DC1-BL1B_Ethernet4  |  routed  | - |  172.31.255.54/31  |  default  |  1500  |  -  |  -  |  -  |
+| Ethernet1 |  P2P_LINK_TO_DC1-LEAF1A_Ethernet4  |  routed  | - |  172.31.255.6/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_DC1-LEAF2A_Ethernet4  |  routed  | - |  172.31.255.14/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet3 |  P2P_LINK_TO_DC1-LEAF2B_Ethernet4  |  routed  | - |  172.31.255.22/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet4 |  P2P_LINK_TO_DC1-SVC3A_Ethernet4  |  routed  | - |  172.31.255.30/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet5 |  P2P_LINK_TO_DC1-SVC3B_Ethernet4  |  routed  | - |  172.31.255.38/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet6 |  P2P_LINK_TO_DC1-BL1A_Ethernet4  |  routed  | - |  172.31.255.46/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet7 |  P2P_LINK_TO_DC1-BL1B_Ethernet4  |  routed  | - |  172.31.255.54/31  |  default  |  1500  |  false  |  -  |  -  |
 
 #### OSPF
 | Interface | Channel Group | Area | Cost | Mode |
@@ -371,6 +383,7 @@ No VLANs defined
 !
 interface Ethernet1
    description P2P_LINK_TO_DC1-LEAF1A_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.6/31
    ip ospf network point-to-point
@@ -378,6 +391,7 @@ interface Ethernet1
 !
 interface Ethernet2
    description P2P_LINK_TO_DC1-LEAF2A_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.14/31
    ip ospf network point-to-point
@@ -385,6 +399,7 @@ interface Ethernet2
 !
 interface Ethernet3
    description P2P_LINK_TO_DC1-LEAF2B_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.22/31
    ip ospf network point-to-point
@@ -392,6 +407,7 @@ interface Ethernet3
 !
 interface Ethernet4
    description P2P_LINK_TO_DC1-SVC3A_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.30/31
    ip ospf network point-to-point
@@ -399,6 +415,7 @@ interface Ethernet4
 !
 interface Ethernet5
    description P2P_LINK_TO_DC1-SVC3B_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.38/31
    ip ospf network point-to-point
@@ -406,6 +423,7 @@ interface Ethernet5
 !
 interface Ethernet6
    description P2P_LINK_TO_DC1-BL1A_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.46/31
    ip ospf network point-to-point
@@ -413,6 +431,7 @@ interface Ethernet6
 !
 interface Ethernet7
    description P2P_LINK_TO_DC1-BL1B_Ethernet4
+   no shutdown
    no switchport
    ip address 172.31.255.54/31
    ip ospf network point-to-point
@@ -446,6 +465,7 @@ No port-channels defined
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 192.168.255.4/32
    ip ospf area 0.0.0.0
 ```
@@ -723,9 +743,18 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+
 # MACsec
 
 MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 

@@ -35,6 +35,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#internet-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -72,6 +73,8 @@
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
 - [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -97,6 +100,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.100.32/24
 ```
@@ -358,13 +362,20 @@ MLAG not defined
 
 ## Spanning Tree Summary
 
-Mode: mstp
+STP mode: **mstp**
 
 ### MSTP Instance and Priority
 
-| Instance | Priority |
+| Instance(s) | Priority |
 | -------- | -------- |
 | 0 | 4096 |
+
+### MST Configuration
+
+
+
+### Global Spanning-Tree Settings
+
 
 ## Spanning Tree Device Configuration
 
@@ -415,6 +426,10 @@ vlan 40
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -433,8 +448,8 @@ vlan 40
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet1  |  routed  | - |  10.2.1.17/31  |  default  |  9216  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet1  |  routed  | - |  10.2.1.19/31  |  default  |  9216  |  -  |  -  |  -  |
+| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet1  |  routed  | - |  10.2.1.17/31  |  default  |  9216  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet1  |  routed  | - |  10.2.1.19/31  |  default  |  9216  |  false  |  -  |  -  |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -442,28 +457,36 @@ vlan 40
 !
 interface Ethernet1
    description P2P_LINK_TO_SPINE1_Ethernet1
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.17/31
 !
 interface Ethernet2
    description P2P_LINK_TO_SPINE2_Ethernet1
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.19/31
 !
 interface Ethernet10
    description HostA_eth0
+   no shutdown
+   switchport
    switchport access vlan 10
    spanning-tree portfast
 !
 interface Ethernet11
    description HostB_eth0
+   no shutdown
+   switchport
    switchport access vlan 20
    spanning-tree portfast
 !
 interface Ethernet12
    description HostF_eth0
+   no shutdown
+   switchport
    switchport access vlan 40
    spanning-tree portfast
 ```
@@ -499,14 +522,17 @@ No port-channels defined
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 1.1.1.7/32
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
+   no shutdown
    ip address 2.2.2.7/32
 !
 interface Loopback100
    description A_VTEP_DIAGNOSTICS
+   no shutdown
    vrf A
    ip address 10.255.1.7/32
 ```
@@ -537,16 +563,19 @@ interface Loopback100
 !
 interface Vlan10
    description Ten-opzone
+   no shutdown
    vrf A
    ip address virtual 10.10.10.1/24
 !
 interface Vlan20
    description Twenty-web
+   no shutdown
    vrf A
    ip address virtual 20.20.20.1/24
 !
 interface Vlan40
    description Forty-db
+   no shutdown
    vrf A
    ip address virtual 40.40.40.1/24
 ```
@@ -940,9 +969,18 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+
 # MACsec
 
 MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 

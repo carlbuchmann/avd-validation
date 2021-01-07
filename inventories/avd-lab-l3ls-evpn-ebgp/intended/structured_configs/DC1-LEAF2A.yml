@@ -97,7 +97,9 @@ ntp_server:
 redundancy: null
 spanning_tree:
   mode: mstp
-  priority: 4096
+  mst_instances:
+    0:
+      priority: 4096
   no_spanning_tree_vlan: 4093-4094
 aaa_authorization: null
 local_users:
@@ -224,11 +226,15 @@ bfd_multihop:
 port_channel_interfaces:
   Port-Channel7:
     description: DC1_L2LEAF1_Po1
+    type: switched
+    shutdown: false
     vlans: 110-111,120-121,130-131
     mode: trunk
     mlag: 7
   Port-Channel5:
     description: MLAG_PEER_DC1-LEAF2B_Po5
+    type: switched
+    shutdown: false
     vlans: 2-4094
     mode: trunk
     trunk_groups:
@@ -236,11 +242,15 @@ port_channel_interfaces:
     - MLAG
   Port-Channel10:
     description: server01_PortChanne1
+    type: switched
+    shutdown: false
     vlans: 210-211
     mode: trunk
     mlag: 10
   Port-Channel11:
     description: server02_PortChanne1
+    type: switched
+    shutdown: false
     vlans: 210-211
     mode: trunk
     mlag: 11
@@ -252,6 +262,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE1_Ethernet2
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.9/31
   Ethernet2:
     peer: DC1-SPINE2
@@ -260,6 +271,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE2_Ethernet2
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.11/31
   Ethernet3:
     peer: DC1-SPINE3
@@ -268,6 +280,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE3_Ethernet2
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.13/31
   Ethernet4:
     peer: DC1-SPINE4
@@ -276,12 +289,15 @@ ethernet_interfaces:
     description: P2P_LINK_TO_DC1-SPINE4_Ethernet2
     mtu: 1500
     type: routed
+    shutdown: false
     ip_address: 172.31.255.15/31
   Ethernet5:
     peer: DC1-LEAF2B
     peer_interface: Ethernet5
     peer_type: mlag_peer
     description: MLAG_PEER_DC1-LEAF2B_Ethernet5
+    type: switched
+    shutdown: false
     channel_group:
       id: 5
       mode: active
@@ -290,6 +306,8 @@ ethernet_interfaces:
     peer_interface: Ethernet6
     peer_type: mlag_peer
     description: MLAG_PEER_DC1-LEAF2B_Ethernet6
+    type: switched
+    shutdown: false
     channel_group:
       id: 5
       mode: active
@@ -298,6 +316,8 @@ ethernet_interfaces:
     peer_interface: Ethernet1
     peer_type: l2leaf
     description: DC1-L2LEAF1A_Ethernet1
+    type: switched
+    shutdown: false
     channel_group:
       id: 7
       mode: active
@@ -306,6 +326,8 @@ ethernet_interfaces:
     peer_interface: Eth2
     peer_type: server
     description: server01_Eth2
+    type: switched
+    shutdown: false
     mode: trunk
     vlans: 210-211
     channel_group:
@@ -317,6 +339,8 @@ ethernet_interfaces:
     peer_interface: Eth2
     peer_type: server
     description: server02_Eth2
+    type: switched
+    shutdown: false
     mode: trunk
     vlans: 210-211
     channel_group:
@@ -326,27 +350,33 @@ ethernet_interfaces:
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
+    shutdown: false
     ip_address: 192.168.255.6/32
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
     ip_address: 192.168.254.6/32
   Loopback100:
     description: Tenant_A_OP_Zone_VTEP_DIAGNOSTICS
+    shutdown: false
     vrf: Tenant_A_OP_Zone
     ip_address: 10.255.1.6/32
 management_interfaces:
   Management1:
     description: oob_management
+    shutdown: false
     vrf: MGMT
     ip_address: 192.168.200.106/24
     gateway: 192.168.200.1
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
+    shutdown: false
     ip_address: 10.255.251.2/31
     mtu: 1500
   Vlan4094:
     description: MLAG_PEER
+    shutdown: false
     ip_address: 10.255.252.2/31
     no_autostate: true
     mtu: 1500
@@ -370,9 +400,11 @@ vlan_interfaces:
   Vlan3011:
     tenant: Tenant_A
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_APP_Zone'
     vrf: Tenant_A_APP_Zone
     ip_address: 10.255.251.2/31
+    mtu: 1500
   Vlan140:
     tenant: Tenant_A
     tags:
@@ -393,9 +425,11 @@ vlan_interfaces:
   Vlan3012:
     tenant: Tenant_A
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_DB_Zone'
     vrf: Tenant_A_DB_Zone
     ip_address: 10.255.251.2/31
+    mtu: 1500
   Vlan110:
     tenant: Tenant_A
     tags:
@@ -424,9 +458,11 @@ vlan_interfaces:
   Vlan3009:
     tenant: Tenant_A
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_OP_Zone'
     vrf: Tenant_A_OP_Zone
     ip_address: 10.255.251.2/31
+    mtu: 1500
   Vlan120:
     tenant: Tenant_A
     tags:
@@ -447,9 +483,11 @@ vlan_interfaces:
   Vlan3010:
     tenant: Tenant_A
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_A_WEB_Zone'
     vrf: Tenant_A_WEB_Zone
     ip_address: 10.255.251.2/31
+    mtu: 1500
   Vlan210:
     tenant: Tenant_B
     tags:
@@ -469,9 +507,11 @@ vlan_interfaces:
   Vlan3019:
     tenant: Tenant_B
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_B_OP_Zone'
     vrf: Tenant_B_OP_Zone
     ip_address: 10.255.251.2/31
+    mtu: 1500
   Vlan310:
     tenant: Tenant_C
     tags:
@@ -491,9 +531,11 @@ vlan_interfaces:
   Vlan3029:
     tenant: Tenant_C
     type: underlay_peering
+    shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf Tenant_C_OP_Zone'
     vrf: Tenant_C_OP_Zone
     ip_address: 10.255.251.2/31
+    mtu: 1500
 vxlan_tunnel_interface:
   Vxlan1:
     description: DC1-LEAF2A_VTEP

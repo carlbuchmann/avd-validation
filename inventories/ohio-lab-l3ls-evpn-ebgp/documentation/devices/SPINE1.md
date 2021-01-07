@@ -35,6 +35,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#internet-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -72,6 +73,8 @@
 - [IP DHCP Relay](#ip-dhcp-relay)
 - [Errdisable](#errdisable)
 - [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -97,6 +100,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.100.31/24
 ```
@@ -358,7 +362,11 @@ MLAG not defined
 
 ## Spanning Tree Summary
 
-Mode: none
+STP mode: **none**
+
+
+### Global Spanning-Tree Settings
+
 
 ## Spanning Tree Device Configuration
 
@@ -388,6 +396,10 @@ No VLANs defined
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -403,9 +415,9 @@ No VLANs defined
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_LEAF1A_Ethernet1  |  routed  | - |  10.2.1.16/31  |  default  |  9216  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_LEAF2A_Ethernet1  |  routed  | - |  10.2.1.72/31  |  default  |  9216  |  -  |  -  |  -  |
-| Ethernet3 |  P2P_LINK_TO_LEAF2B_Ethernet1  |  routed  | - |  10.2.1.76/31  |  default  |  9216  |  -  |  -  |  -  |
+| Ethernet1 |  P2P_LINK_TO_LEAF1A_Ethernet1  |  routed  | - |  10.2.1.16/31  |  default  |  9216  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_LEAF2A_Ethernet1  |  routed  | - |  10.2.1.72/31  |  default  |  9216  |  false  |  -  |  -  |
+| Ethernet3 |  P2P_LINK_TO_LEAF2B_Ethernet1  |  routed  | - |  10.2.1.76/31  |  default  |  9216  |  false  |  -  |  -  |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -413,18 +425,21 @@ No VLANs defined
 !
 interface Ethernet1
    description P2P_LINK_TO_LEAF1A_Ethernet1
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.16/31
 !
 interface Ethernet2
    description P2P_LINK_TO_LEAF2A_Ethernet1
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.72/31
 !
 interface Ethernet3
    description P2P_LINK_TO_LEAF2B_Ethernet1
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.76/31
@@ -457,6 +472,7 @@ No port-channels defined
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 1.1.1.1/32
 ```
 
@@ -759,9 +775,18 @@ IP DHCP relay not defined
 # Errdisable
 
 Errdisable is not defined.
+
 # MACsec
 
 MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 
