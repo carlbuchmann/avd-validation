@@ -364,7 +364,6 @@ MLAG not defined
 
 STP mode: **none**
 
-
 ### Global Spanning-Tree Settings
 
 
@@ -579,6 +578,7 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | ipv4 |
+| Send community | true |
 | Maximum routes | 12000 |
 
 ### BGP Neighbors
@@ -621,6 +621,7 @@ router bgp 65001
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==
+   neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 1.1.1.7 peer group EVPN-OVERLAY-PEERS
    neighbor 1.1.1.7 remote-as 65002
@@ -762,7 +763,14 @@ Virtual source NAT not defined
 
 # Platform
 
-No platform parameters defined
+### Platform
+
+### Platform Configuration
+
+```eos
+!
+platform sand lag hardware-only
+```
 
 # Router L2 VPN
 

@@ -307,7 +307,6 @@ MLAG not defined
 
 STP mode: **none**
 
-
 ### Global Spanning-Tree Settings
 
 

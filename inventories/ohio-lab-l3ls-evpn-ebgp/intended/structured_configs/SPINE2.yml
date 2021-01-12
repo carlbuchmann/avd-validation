@@ -102,6 +102,10 @@ management_interfaces:
     gateway: 192.168.100.1
 tcam_profile:
 - vxlan-routing
+platform:
+  sand:
+    lag:
+      hardware_only: true
 mac_address_table: null
 static_routes:
 - vrf: MGMT
@@ -137,6 +141,7 @@ router_bgp:
       peer_filter: LEAF-AS-RANGE
       password: AQQvKeimxJu+uGQ/yYvv9w==
       maximum_routes: 12000
+      send_community: true
     EVPN-OVERLAY-PEERS:
       type: evpn
       peer_filter: LEAF-AS-RANGE

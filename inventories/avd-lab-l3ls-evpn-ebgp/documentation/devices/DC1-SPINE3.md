@@ -307,7 +307,6 @@ MLAG not defined
 
 STP mode: **none**
 
-
 ### Global Spanning-Tree Settings
 
 
@@ -543,6 +542,7 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | ipv4 |
+| Send community | true |
 | Maximum routes | 12000 |
 
 ### BGP Neighbors
@@ -589,6 +589,7 @@ router bgp 65001
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==
+   neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 172.31.255.5 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.5 remote-as 65101

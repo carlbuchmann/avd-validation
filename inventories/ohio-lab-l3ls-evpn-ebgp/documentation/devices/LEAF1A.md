@@ -370,10 +370,6 @@ STP mode: **mstp**
 | -------- | -------- |
 | 0 | 4096 |
 
-### MST Configuration
-
-
-
 ### Global Spanning-Tree Settings
 
 
@@ -946,7 +942,14 @@ ip address virtual source-nat vrf A address 10.255.1.7
 
 # Platform
 
-No platform parameters defined
+### Platform
+
+### Platform Configuration
+
+```eos
+!
+platform sand lag hardware-only
+```
 
 # Router L2 VPN
 

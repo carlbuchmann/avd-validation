@@ -391,10 +391,6 @@ STP mode: **mstp**
 | -------- | -------- |
 | 0 | 4096 |
 
-### MST Configuration
-
-
-
 ### Global Spanning-Tree Settings
 
 Spanning Tree disabled for VLANs: **4093-4094**
@@ -1182,7 +1178,14 @@ ip address virtual source-nat vrf B address 10.255.2.22
 
 # Platform
 
-No platform parameters defined
+### Platform
+
+### Platform Configuration
+
+```eos
+!
+platform sand lag hardware-only
+```
 
 # Router L2 VPN
 
