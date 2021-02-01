@@ -728,7 +728,7 @@ Router ISIS not defined
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
-| maximum-paths 4 ecmp 4 |
+| maximum-paths 2 ecmp 2 |
 
 ### Router BGP Peer Groups
 
@@ -737,9 +737,10 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | evpn |
+| Remote_as | 65001 |
 | Source | Loopback0 |
 | Bfd | true |
-| Ebgp multihop | 15 |
+| Ebgp multihop | 3 |
 | Send community | true |
 | Maximum routes | 0 (no limit) |
 
@@ -756,8 +757,8 @@ Router ISIS not defined
 
 | Neighbor | Remote AS | VRF |
 | -------- | --------- | --- |
-| 1.1.1.1 | 65001 | default |
-| 1.1.1.2 | 65001 | default |
+| 1.1.1.1 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
+| 1.1.1.2 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
 | 10.2.1.16 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
 | 10.2.1.18 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
 
@@ -788,11 +789,12 @@ router bgp 65002
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   maximum-paths 4 ecmp 4
+   maximum-paths 2 ecmp 2
    neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 15
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -802,11 +804,7 @@ router bgp 65002
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 1.1.1.1 peer group EVPN-OVERLAY-PEERS
-   neighbor 1.1.1.1 remote-as 65001
-   neighbor 1.1.1.1 description SPINE1
    neighbor 1.1.1.2 peer group EVPN-OVERLAY-PEERS
-   neighbor 1.1.1.2 remote-as 65001
-   neighbor 1.1.1.2 description SPINE2
    neighbor 10.2.1.16 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.2.1.18 peer group IPv4-UNDERLAY-PEERS
    redistribute connected route-map RM-CONN-2-BGP
@@ -819,6 +817,7 @@ router bgp 65002
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
+      no neighbor IPv4-UNDERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate

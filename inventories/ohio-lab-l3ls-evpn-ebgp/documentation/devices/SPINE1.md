@@ -588,7 +588,7 @@ Router ISIS not defined
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
-| maximum-paths 4 ecmp 4 |
+| maximum-paths 2 ecmp 2 |
 
 ### Router BGP Peer Groups
 
@@ -600,7 +600,7 @@ Router ISIS not defined
 | Next-hop unchanged | True |
 | Source | Loopback0 |
 | Bfd | true |
-| Ebgp multihop | 15 |
+| Ebgp multihop | 3 |
 | Send community | true |
 | Maximum routes | 0 (no limit) |
 
@@ -641,12 +641,12 @@ router bgp 65001
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   maximum-paths 4 ecmp 4
+   maximum-paths 2 ecmp 2
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 15
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -656,13 +656,10 @@ router bgp 65001
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 1.1.1.7 peer group EVPN-OVERLAY-PEERS
    neighbor 1.1.1.7 remote-as 65002
-   neighbor 1.1.1.7 description LEAF1A
    neighbor 1.1.1.21 peer group EVPN-OVERLAY-PEERS
    neighbor 1.1.1.21 remote-as 65003
-   neighbor 1.1.1.21 description LEAF2A
    neighbor 1.1.1.22 peer group EVPN-OVERLAY-PEERS
    neighbor 1.1.1.22 remote-as 65003
-   neighbor 1.1.1.22 description LEAF2B
    neighbor 10.2.1.17 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.2.1.17 remote-as 65002
    neighbor 10.2.1.73 peer group IPv4-UNDERLAY-PEERS
@@ -673,6 +670,7 @@ router bgp 65001
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
+      no neighbor IPv4-UNDERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
