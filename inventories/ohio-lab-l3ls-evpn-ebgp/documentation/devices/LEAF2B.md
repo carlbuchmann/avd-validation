@@ -13,6 +13,7 @@
   - [Management API](#Management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
+  - [Enable Password](#enable-password)
   - [TACACS Servers](#tacacs-servers)
   - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
   - [RADIUS Servers](#radius-servers)
@@ -35,7 +36,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
-  - [Interface Defaults](#internet-defaults)
+  - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -47,6 +48,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [IPv6 Static Routes](#ipv6-static-routes)
+  - [Router OSPF](#router-ospf)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [Router BFD](#router-bfd)
@@ -176,6 +178,27 @@ PTP is not defined.
 
 ## Management SSH
 
+
+### SSH timeout and management
+
+| Idle Timeout | SSH Management |
+| ------------ | -------------- |
+| default |  Enabled  |
+
+### Ciphers and algorithms
+
+| Ciphers | Key-exchange methods | MAC algorithms | Hostkey server algorithms |
+|---------|----------------------|----------------|---------------------------|
+| default | default | default | default |
+
+### VRFs
+
+| VRF | Status |
+| --- | ------ |
+| MGMT |  Enabled  |
+
+### Management SSH Configuration
+
 ```eos
 !
 management ssh
@@ -232,6 +255,10 @@ username admin privilege 15 role network-admin secret sha512 $6$xTFjLEjlpX/ZvgNp
 username arista privilege 15 secret sha512 $6$RO7KPjCB0BtlFgcd$/7Lv7Pjj3/OUOIUmqk0NmB8218tnq3Qcjb20pF4Xb3VaoMEuXShWVpFGU.YTYBuQ5.e3SXOLrIEfXpFegrQDX.
 username cvpadmin privilege 15 secret sha512 $6$u5wM2GSl324m5EF0$AM98W2MI4ISBciPXm6be8Q3RTykF3dCd2W3btVvhcBBKvKHjfbkeJfesbEWMcrYlbzzZbWdBcxF6U/Pe3xBYF1
 ```
+
+## Enable Password
+
+Enable password not defined
 
 ## TACACS Servers
 
@@ -362,7 +389,7 @@ No event handler defined
 | --------- | --------------- | ------------ | --------- |
 | DC1_LEAF2 | Vlan4094 | 10.255.252.36 | Port-Channel47 |
 
-Dual primary detection is enabled. The detection delay is 5 seconds.
+Dual primary detection is disabled.
 
 ## MLAG Device Configuration
 
@@ -372,9 +399,7 @@ mlag configuration
    domain-id DC1_LEAF2
    local-interface Vlan4094
    peer-address 10.255.252.36
-   peer-address heartbeat 192.168.100.33 vrf MGMT
    peer-link Port-Channel47
-   dual-primary detection delay 5 action errdisable all-interfaces
    reload-delay mlag 780
    reload-delay non-mlag 1020
 ```
@@ -824,7 +849,7 @@ ip virtual-router mac-address aa:aa:bb:bb:cc:cc
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | true| | A | true |
+| default | true|| A | true |
 | B | true |
 | MGMT | false |
 
@@ -872,6 +897,10 @@ IPv6 static routes not defined
 
 Global ARP timeout not defined.
 
+## Router OSPF
+
+Router OSPF not defined
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -891,7 +920,7 @@ Router ISIS not defined
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
-| maximum-paths 2 ecmp 2 |
+| maximum-paths 4 ecmp 4 |
 
 ### Router BGP Peer Groups
 
@@ -900,10 +929,9 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | evpn |
-| Remote_as | 65001 |
 | Source | Loopback0 |
 | Bfd | true |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 15 |
 | Send community | true |
 | Maximum routes | 0 (no limit) |
 
@@ -928,13 +956,15 @@ Router ISIS not defined
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS |
-| -------- | ---------
-| 1.1.1.1 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 1.1.1.2 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 10.2.1.76 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 10.2.1.78 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 10.255.251.36 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER |
+| Neighbor | Remote AS | VRF |
+| -------- | --------- | --- |
+| 1.1.1.1 | 65001 | default |
+| 1.1.1.2 | 65001 | default |
+| 10.2.1.76 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 10.2.1.78 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 10.255.251.36 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default |
+| 10.255.251.36 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | A |
+| 10.255.251.36 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | B |
 
 ### Router BGP EVPN Address Family
 
@@ -965,12 +995,11 @@ router bgp 65003
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   maximum-paths 2 ecmp 2
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
-   neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 15
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -985,8 +1014,13 @@ router bgp 65003
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 1.1.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.1 remote-as 65001
+   neighbor 1.1.1.1 description SPINE1
    neighbor 1.1.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.2 remote-as 65001
+   neighbor 1.1.1.2 description SPINE2
    neighbor 10.2.1.76 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.2.1.78 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.255.251.36 peer group MLAG-IPv4-UNDERLAY-PEER
@@ -1006,8 +1040,6 @@ router bgp 65003
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
-      no neighbor IPv4-UNDERLAY-PEERS activate
-      no neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -1108,12 +1140,22 @@ IPv6 prefix-lists not defined
 | -------- | ---- | ---------------- |
 | 10 | permit | match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY |
 
+#### RM-MLAG-PEER-IN
+
+| Sequence | Type | Match and/or Set |
+| -------- | ---- | ---------------- |
+| 10 | permit | set origin incomplete |
+
 ### Route-maps Device Configuration
 
 ```eos
 !
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
 ```
 
 ## IP Extended Communities

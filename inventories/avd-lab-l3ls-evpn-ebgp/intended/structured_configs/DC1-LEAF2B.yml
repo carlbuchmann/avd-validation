@@ -1,9 +1,17 @@
 l3leaf_node_group: DC1_LEAF2
 switch_platform: vEOS-LAB
-leaf_bgp_as: 65102
+switch_bgp_as: 65102
 leaf_id: 3
 switch_mgmt_ip: 192.168.200.107/24
 leaf_evpn_services_l2_only: false
+switch_router_id: 192.168.255.7
+switch_evpn_role: client
+switch_evpn_route_servers:
+- DC1-SPINE1
+- DC1-SPINE2
+- DC1-SPINE3
+- DC1-SPINE4
+switch_evpn_route_clients: []
 leaf_filter_tenants:
 - Tenant_A
 - Tenant_B
@@ -244,15 +252,15 @@ port_channel_interfaces:
     description: server01_PortChanne1
     type: switched
     shutdown: false
-    vlans: 210-211
     mode: trunk
+    vlans: 210-211
     mlag: 10
   Port-Channel11:
     description: server02_PortChanne1
     type: switched
     shutdown: false
-    vlans: 210-211
     mode: trunk
+    vlans: 210-211
     mlag: 11
 ethernet_interfaces:
   Ethernet1:
@@ -613,10 +621,6 @@ mlag_configuration:
   domain_id: DC1_LEAF2
   local_interface: Vlan4094
   peer_address: 10.255.252.2
-  peer_address_heartbeat:
-    peer_ip: 192.168.200.106
-    vrf: MGMT
-  dual_primary_detection_delay: 5
   peer_link: Port-Channel5
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
@@ -627,6 +631,14 @@ route_maps:
         type: permit
         match:
         - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+  RM-MLAG-PEER-IN:
+    sequence_numbers:
+      10:
+        type: permit
+        set:
+        - origin incomplete
+        description: Make routes learned over MLAG Peer-link less preferred on spines
+          to ensure optimal routing
 router_bgp:
   as: 65102
   router_id: 192.168.255.7
@@ -648,12 +660,12 @@ router_bgp:
       password: vnEaG8gMeQf3d3cN6PktXQ==
       maximum_routes: 12000
       send_community: true
+      route_map_in: RM-MLAG-PEER-IN
     EVPN-OVERLAY-PEERS:
       type: evpn
-      remote_as: 65001
       update_source: Loopback0
       bfd: true
-      ebgp_multihop: 3
+      ebgp_multihop: 15
       password: q+VNViP5i4rVjW1cxFv2wA==
       send_community: true
       maximum_routes: 0
@@ -670,12 +682,20 @@ router_bgp:
       peer_group: MLAG-IPv4-UNDERLAY-PEER
     192.168.255.1:
       peer_group: EVPN-OVERLAY-PEERS
+      description: DC1-SPINE1
+      remote_as: 65001
     192.168.255.2:
       peer_group: EVPN-OVERLAY-PEERS
+      description: DC1-SPINE2
+      remote_as: 65001
     192.168.255.3:
       peer_group: EVPN-OVERLAY-PEERS
+      description: DC1-SPINE3
+      remote_as: 65001
     192.168.255.4:
       peer_group: EVPN-OVERLAY-PEERS
+      description: DC1-SPINE4
+      remote_as: 65001
   redistribute_routes:
     connected:
       route_map: RM-CONN-2-BGP
@@ -683,10 +703,6 @@ router_bgp:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: true
-      IPv4-UNDERLAY-PEERS:
-        activate: false
-      MLAG-IPv4-UNDERLAY-PEER:
-        activate: false
   address_family_ipv4:
     peer_groups:
       EVPN-OVERLAY-PEERS:
@@ -695,6 +711,7 @@ router_bgp:
         activate: true
       MLAG-IPv4-UNDERLAY-PEER:
         activate: true
+  address_family_rtc: null
   vlan_aware_bundles:
     Tenant_A_APP_Zone:
       rd: 192.168.255.7:12

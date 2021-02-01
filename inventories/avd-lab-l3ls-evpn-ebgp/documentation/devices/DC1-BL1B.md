@@ -13,6 +13,7 @@
   - [Management API](#Management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
+  - [Enable Password](#enable-password)
   - [TACACS Servers](#tacacs-servers)
   - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
   - [RADIUS Servers](#radius-servers)
@@ -35,7 +36,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
-  - [Interface Defaults](#internet-defaults)
+  - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -47,6 +48,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [IPv6 Static Routes](#ipv6-static-routes)
+  - [Router OSPF](#router-ospf)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [Router BFD](#router-bfd)
@@ -218,6 +220,10 @@ username admin privilege 15 role network-admin secret sha512 $6$Df86J4/SFMDE3/1K
 username cvpadmin privilege 15 role network-admin secret sha512 $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
 ```
 
+## Enable Password
+
+Enable password not defined
+
 ## TACACS Servers
 
 TACACS servers not defined
@@ -305,7 +311,7 @@ No event handler defined
 | --------- | --------------- | ------------ | --------- |
 | DC1_BL1 | Vlan4094 | 10.255.252.10 | Port-Channel5 |
 
-Dual primary detection is enabled. The detection delay is 5 seconds.
+Dual primary detection is disabled.
 
 ## MLAG Device Configuration
 
@@ -315,9 +321,7 @@ mlag configuration
    domain-id DC1_BL1
    local-interface Vlan4094
    peer-address 10.255.252.10
-   peer-address heartbeat 192.168.200.110 vrf MGMT
    peer-link Port-Channel5
-   dual-primary detection delay 5 action errdisable all-interfaces
    reload-delay mlag 300
    reload-delay non-mlag 330
 ```
@@ -717,7 +721,7 @@ ip virtual-router mac-address 00:dc:00:00:00:0a
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | true| | MGMT | false |
+| default | true|| MGMT | false |
 | Tenant_A_OP_Zone | true |
 | Tenant_A_WAN_Zone | true |
 | Tenant_B_WAN_Zone | true |
@@ -771,6 +775,10 @@ IPv6 static routes not defined
 
 Global ARP timeout not defined.
 
+## Router OSPF
+
+Router OSPF not defined
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -796,10 +804,9 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | evpn |
-| Remote_as | 65001 |
 | Source | Loopback0 |
 | Bfd | true |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 15 |
 | Send community | true |
 | Maximum routes | 0 (no limit) |
 
@@ -824,17 +831,21 @@ Router ISIS not defined
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS |
-| -------- | ---------
-| 10.255.251.10 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER |
-| 172.31.255.48 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 172.31.255.50 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 172.31.255.52 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 172.31.255.54 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 192.168.255.1 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 192.168.255.2 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 192.168.255.3 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 192.168.255.4 | Inherited from peer group EVPN-OVERLAY-PEERS |
+| Neighbor | Remote AS | VRF |
+| -------- | --------- | --- |
+| 10.255.251.10 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default |
+| 172.31.255.48 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 172.31.255.50 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 172.31.255.52 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 172.31.255.54 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 192.168.255.1 | 65001 | default |
+| 192.168.255.2 | 65001 | default |
+| 192.168.255.3 | 65001 | default |
+| 192.168.255.4 | 65001 | default |
+| 10.255.251.10 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_OP_Zone |
+| 10.255.251.10 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_WAN_Zone |
+| 10.255.251.10 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_B_WAN_Zone |
+| 10.255.251.10 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_C_WAN_Zone |
 
 ### Router BGP EVPN Address Family
 
@@ -868,10 +879,9 @@ router bgp 65104
    distance bgp 20 200 200
    maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
-   neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 15
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -886,15 +896,24 @@ router bgp 65104
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.255.251.10 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 172.31.255.48 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.50 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.52 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.255.54 peer group IPv4-UNDERLAY-PEERS
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.1 remote-as 65001
+   neighbor 192.168.255.1 description DC1-SPINE1
    neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.2 remote-as 65001
+   neighbor 192.168.255.2 description DC1-SPINE2
    neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.3 remote-as 65001
+   neighbor 192.168.255.3 description DC1-SPINE3
    neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.4 remote-as 65001
+   neighbor 192.168.255.4 description DC1-SPINE4
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle Tenant_A_OP_Zone
@@ -923,8 +942,6 @@ router bgp 65104
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
-      no neighbor IPv4-UNDERLAY-PEERS activate
-      no neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -1047,12 +1064,22 @@ IPv6 prefix-lists not defined
 | -------- | ---- | ---------------- |
 | 10 | permit | match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY |
 
+#### RM-MLAG-PEER-IN
+
+| Sequence | Type | Match and/or Set |
+| -------- | ---- | ---------------- |
+| 10 | permit | set origin incomplete |
+
 ### Route-maps Device Configuration
 
 ```eos
 !
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
 ```
 
 ## IP Extended Communities

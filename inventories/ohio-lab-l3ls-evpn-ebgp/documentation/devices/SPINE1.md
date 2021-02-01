@@ -13,6 +13,7 @@
   - [Management API](#Management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
+  - [Enable Password](#enable-password)
   - [TACACS Servers](#tacacs-servers)
   - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
   - [RADIUS Servers](#radius-servers)
@@ -35,7 +36,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
-  - [Interface Defaults](#internet-defaults)
+  - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -47,6 +48,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [IPv6 Static Routes](#ipv6-static-routes)
+  - [Router OSPF](#router-ospf)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [Router BFD](#router-bfd)
@@ -176,6 +178,27 @@ PTP is not defined.
 
 ## Management SSH
 
+
+### SSH timeout and management
+
+| Idle Timeout | SSH Management |
+| ------------ | -------------- |
+| default |  Enabled  |
+
+### Ciphers and algorithms
+
+| Ciphers | Key-exchange methods | MAC algorithms | Hostkey server algorithms |
+|---------|----------------------|----------------|---------------------------|
+| default | default | default | default |
+
+### VRFs
+
+| VRF | Status |
+| --- | ------ |
+| MGMT |  Enabled  |
+
+### Management SSH Configuration
+
 ```eos
 !
 management ssh
@@ -232,6 +255,10 @@ username admin privilege 15 role network-admin secret sha512 $6$xTFjLEjlpX/ZvgNp
 username arista privilege 15 secret sha512 $6$RO7KPjCB0BtlFgcd$/7Lv7Pjj3/OUOIUmqk0NmB8218tnq3Qcjb20pF4Xb3VaoMEuXShWVpFGU.YTYBuQ5.e3SXOLrIEfXpFegrQDX.
 username cvpadmin privilege 15 secret sha512 $6$u5wM2GSl324m5EF0$AM98W2MI4ISBciPXm6be8Q3RTykF3dCd2W3btVvhcBBKvKHjfbkeJfesbEWMcrYlbzzZbWdBcxF6U/Pe3xBYF1
 ```
+
+## Enable Password
+
+Enable password not defined
 
 ## TACACS Servers
 
@@ -495,7 +522,7 @@ IP virtual router MAC address not defined
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | true| | MGMT | false |
+| default | true|| MGMT | false |
 
 ### IP Routing Device Configuration
 
@@ -537,6 +564,10 @@ IPv6 static routes not defined
 
 Global ARP timeout not defined.
 
+## Router OSPF
+
+Router OSPF not defined
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -557,7 +588,7 @@ Router ISIS not defined
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
-| maximum-paths 2 ecmp 2 |
+| maximum-paths 4 ecmp 4 |
 
 ### Router BGP Peer Groups
 
@@ -569,7 +600,7 @@ Router ISIS not defined
 | Next-hop unchanged | True |
 | Source | Loopback0 |
 | Bfd | true |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 15 |
 | Send community | true |
 | Maximum routes | 0 (no limit) |
 
@@ -583,14 +614,14 @@ Router ISIS not defined
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS |
-| -------- | ---------
-| 1.1.1.7 | 65002 |
-| 1.1.1.21 | 65003 |
-| 1.1.1.22 | 65003 |
-| 10.2.1.17 | 65002 |
-| 10.2.1.73 | 65003 |
-| 10.2.1.77 | 65003 |
+| Neighbor | Remote AS | VRF |
+| -------- | --------- | --- |
+| 1.1.1.7 | 65002 | default |
+| 1.1.1.21 | 65003 | default |
+| 1.1.1.22 | 65003 | default |
+| 10.2.1.17 | 65002 | default |
+| 10.2.1.73 | 65003 | default |
+| 10.2.1.77 | 65003 | default |
 
 ### Router BGP EVPN Address Family
 
@@ -610,12 +641,12 @@ router bgp 65001
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   maximum-paths 2 ecmp 2
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 15
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -625,10 +656,13 @@ router bgp 65001
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 1.1.1.7 peer group EVPN-OVERLAY-PEERS
    neighbor 1.1.1.7 remote-as 65002
+   neighbor 1.1.1.7 description LEAF1A
    neighbor 1.1.1.21 peer group EVPN-OVERLAY-PEERS
    neighbor 1.1.1.21 remote-as 65003
+   neighbor 1.1.1.21 description LEAF2A
    neighbor 1.1.1.22 peer group EVPN-OVERLAY-PEERS
    neighbor 1.1.1.22 remote-as 65003
+   neighbor 1.1.1.22 description LEAF2B
    neighbor 10.2.1.17 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.2.1.17 remote-as 65002
    neighbor 10.2.1.73 peer group IPv4-UNDERLAY-PEERS
@@ -639,7 +673,6 @@ router bgp 65001
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
-      no neighbor IPv4-UNDERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
