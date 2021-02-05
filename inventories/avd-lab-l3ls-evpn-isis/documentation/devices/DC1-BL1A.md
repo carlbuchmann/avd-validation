@@ -879,10 +879,9 @@ router isis EVPN_UNDERLAY
 | Settings | Value |
 | -------- | ----- |
 | Address Family | evpn |
-| Remote_as | 65001 |
 | Source | Loopback0 |
 | Bfd | true |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 15 |
 | Send community | true |
 | Maximum routes | 0 (no limit) |
 
@@ -890,10 +889,10 @@ router isis EVPN_UNDERLAY
 
 | Neighbor | Remote AS | VRF |
 | -------- | --------- | --- |
-| 192.168.255.1 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
-| 192.168.255.2 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
-| 192.168.255.3 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
-| 192.168.255.4 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
+| 192.168.255.1 | 65001 | default |
+| 192.168.255.2 | 65001 | default |
+| 192.168.255.3 | 65001 | default |
+| 192.168.255.4 | 65001 | default |
 | 10.255.251.11 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_OP_Zone |
 | 10.255.251.11 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_A_WAN_Zone |
 | 10.255.251.11 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Tenant_B_WAN_Zone |
@@ -931,17 +930,24 @@ router bgp 65104
    distance bgp 20 200 200
    maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
-   neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 15
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.1 remote-as 65001
+   neighbor 192.168.255.1 description DC1-SPINE1
    neighbor 192.168.255.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.2 remote-as 65001
+   neighbor 192.168.255.2 description DC1-SPINE2
    neighbor 192.168.255.3 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.3 remote-as 65001
+   neighbor 192.168.255.3 description DC1-SPINE3
    neighbor 192.168.255.4 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.4 remote-as 65001
+   neighbor 192.168.255.4 description DC1-SPINE4
    !
    vlan-aware-bundle Tenant_A_OP_Zone
       rd 192.168.255.10:10

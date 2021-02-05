@@ -912,7 +912,7 @@ Router ISIS not defined
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
-| maximum-paths 2 ecmp 2 |
+| maximum-paths 4 ecmp 4 |
 
 ### Router BGP Peer Groups
 
@@ -921,10 +921,9 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | evpn |
-| Remote_as | 65001 |
 | Source | Loopback0 |
 | Bfd | true |
-| Ebgp multihop | 3 |
+| Ebgp multihop | 15 |
 | Send community | true |
 | Maximum routes | 0 (no limit) |
 
@@ -951,8 +950,8 @@ Router ISIS not defined
 
 | Neighbor | Remote AS | VRF |
 | -------- | --------- | --- |
-| 1.1.1.1 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
-| 1.1.1.2 | Inherited from peer group EVPN-OVERLAY-PEERS | default |
+| 1.1.1.1 | 65001 | default |
+| 1.1.1.2 | 65001 | default |
 | 10.2.1.72 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
 | 10.2.1.74 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
 | 10.255.251.37 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default |
@@ -988,12 +987,11 @@ router bgp 65003
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   maximum-paths 2 ecmp 2
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
-   neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
-   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 15
    neighbor EVPN-OVERLAY-PEERS password 7 q+VNViP5i4rVjW1cxFv2wA==
    neighbor EVPN-OVERLAY-PEERS send-community
    neighbor EVPN-OVERLAY-PEERS maximum-routes 0
@@ -1010,7 +1008,11 @@ router bgp 65003
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 1.1.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.1 remote-as 65001
+   neighbor 1.1.1.1 description SPINE1
    neighbor 1.1.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.2 remote-as 65001
+   neighbor 1.1.1.2 description SPINE2
    neighbor 10.2.1.72 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.2.1.74 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.255.251.37 peer group MLAG-IPv4-UNDERLAY-PEER
@@ -1030,8 +1032,6 @@ router bgp 65003
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
-      no neighbor IPv4-UNDERLAY-PEERS activate
-      no neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
