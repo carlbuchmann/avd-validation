@@ -1,75 +1,54 @@
-## Ansible Generated ##
-
-### SPINE2 ###
-
-### Spine Info ###
 switch_platform: 7280R
 switch_mgmt_ip: 192.168.100.35/24
-
+switch_bgp_as: 65001
+switch_router_id: 1.1.1.2
+switch_evpn_role: server
+switch_evpn_route_servers: []
+switch_evpn_route_clients:
+- LEAF1A
+- LEAF2A
+- LEAF2B
 service_routing_protocols_model: multi-agent
 ip_routing: true
-
-### Hardware Counters
-hardware_counters:
-
-### Daemon TerminAttr ###
+hardware_counters: null
+hardware: null
 daemon_terminattr:
   ingestgrpcurl:
     ips:
-      - 192.168.100.240
+    - 192.168.100.240
     port: 9910
   ingestauth_key: magickey04292020
   ingestvrf: MGMT
-  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
-  ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
-
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-### Event Monitor ###
 event_monitor:
   enabled: true
-
-### Event Handler ###
-event_handlers:
-
-### Load Interval ###
-load_interval:
-
-### Queue Monitor Lenght ###
+event_handlers: null
+load_interval: null
 queue_monitor_length:
   enabled: true
-
-### Name Servers ###
 name_server:
   source:
     vrf: MGMT
   nodes:
-    - 192.168.70.1
-
-### NTP Servers ###
+  - 192.168.70.1
 ntp_server:
   local_interface:
     vrf: MGMT
     interface: Management1
   nodes:
-    - 192.232.20.87
-    - 216.239.35.4
-
-### Redundancy ###
-redundancy:
-
-### Spanning-tree ###
+  - 192.232.20.87
+  - 216.239.35.4
+redundancy: null
 spanning_tree:
   mode: none
-
-
-### AAA authorization ###
-aaa_authorization:
-
-### local users ###
+aaa_authorization: null
 local_users:
   admin:
     privilege: 15
@@ -81,23 +60,15 @@ local_users:
   cvpadmin:
     privilege: 15
     sha512_password: $6$u5wM2GSl324m5EF0$AM98W2MI4ISBciPXm6be8Q3RTykF3dCd2W3btVvhcBBKvKHjfbkeJfesbEWMcrYlbzzZbWdBcxF6U/Pe3xBYF1
-
-### Clock Timezone ###
 clock:
   timezone: America/Detroit
-
-
-### VRFs ###
 vrfs:
   MGMT:
-    ip_routing: False
-### bfd multihop ###
+    ip_routing: false
 bfd_multihop:
   interval: 300
   min_rx: 300
   multiplier: 3
-
-### Ethernet Interfaces ###
 ethernet_interfaces:
   Ethernet1:
     peer: LEAF1A
@@ -106,6 +77,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_LEAF1A_Ethernet2
     mtu: 9216
     type: routed
+    shutdown: false
     ip_address: 10.2.1.18/31
   Ethernet2:
     peer: LEAF2A
@@ -114,6 +86,7 @@ ethernet_interfaces:
     description: P2P_LINK_TO_LEAF2A_Ethernet2
     mtu: 9216
     type: routed
+    shutdown: false
     ip_address: 10.2.1.74/31
   Ethernet3:
     peer: LEAF2B
@@ -122,113 +95,98 @@ ethernet_interfaces:
     description: P2P_LINK_TO_LEAF2B_Ethernet2
     mtu: 9216
     type: routed
+    shutdown: false
     ip_address: 10.2.1.78/31
-
-
-### Loopback Interfaces ###
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
+    shutdown: false
     ip_address: 1.1.1.2/32
-
-
-### Management Interfaces ###
 management_interfaces:
   Management1:
     description: oob_management
+    shutdown: false
     vrf: MGMT
     ip_address: 192.168.100.35/24
     gateway: 192.168.100.1
-
-### TCAM Profiles ###
 tcam_profile:
-  - vxlan-routing
-
-### MAC address table ###
-mac_address_table:
-
-### static routes ###
+- vxlan-routing
+platform:
+  sand:
+    lag:
+      hardware_only: true
+mac_address_table: null
 static_routes:
-  - vrf: MGMT
-    destination_address_prefix: 0.0.0.0/0
-    gateway: 192.168.100.1
-
-### prefix-lists ###
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.100.1
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
       10:
-        action: "permit 1.1.1.0/24 le 32"
-
-
-### route-maps ###
+        action: permit 1.1.1.0/24 le 32
 route_maps:
   RM-CONN-2-BGP:
     sequence_numbers:
       10:
         type: permit
         match:
-          - "ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"
-
-
-### peer-filters ###
-peer_filters:
-
-
-### Routing - BGP ###
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+peer_filters: null
 router_bgp:
   as: 65001
   router_id: 1.1.1.2
   bgp_defaults:
-    - update wait-for-convergence
-    - update wait-install
-    - no bgp default ipv4-unicast
-    - distance bgp 20 200 200
-    - graceful-restart restart-time 300
-    - graceful-restart
-    - maximum-paths 2 ecmp 2
+  - update wait-for-convergence
+  - update wait-install
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+  - maximum-paths 4 ecmp 4
   peer_groups:
     IPv4-UNDERLAY-PEERS:
       type: ipv4
       peer_filter: LEAF-AS-RANGE
-      password: "AQQvKeimxJu+uGQ/yYvv9w=="
+      password: AQQvKeimxJu+uGQ/yYvv9w==
       maximum_routes: 12000
+      send_community: true
     EVPN-OVERLAY-PEERS:
       type: evpn
-      peer_filter: LEAF-AS-RANGE
-      next_hop_unchanged: true
       update_source: Loopback0
       bfd: true
-      ebgp_multihop: 3
-      password: "q+VNViP5i4rVjW1cxFv2wA=="
+      ebgp_multihop: '3'
+      password: q+VNViP5i4rVjW1cxFv2wA==
       send_community: true
       maximum_routes: 0
+      next_hop_unchanged: true
   neighbors:
     10.2.1.19:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: 65002
-    1.1.1.7:
-      peer_group: EVPN-OVERLAY-PEERS
-      remote_as: 65002
     10.2.1.75:
       peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: 65003
-    1.1.1.21:
-      peer_group: EVPN-OVERLAY-PEERS
       remote_as: 65003
     10.2.1.79:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: 65003
+    1.1.1.7:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: LEAF1A
+      remote_as: 65002
+    1.1.1.21:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: LEAF2A
+      remote_as: 65003
     1.1.1.22:
       peer_group: EVPN-OVERLAY-PEERS
+      description: LEAF2B
       remote_as: 65003
   redistribute_routes:
     connected:
       route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
-      IPv4-UNDERLAY-PEERS:
-        activate: false
       EVPN-OVERLAY-PEERS:
         activate: true
   address_family_ipv4:
@@ -237,20 +195,13 @@ router_bgp:
         activate: true
       EVPN-OVERLAY-PEERS:
         activate: false
-
-### Routing - OSPF ###
-router_ospf:
-
-### Routing - ISIS ###
-router_isis:
-
-### Queue Monitor Streaming ###
+  address_family_rtc: null
+router_ospf: null
+router_isis: null
 queue_monitor_streaming:
-  enable: True
+  enable: true
   vrf: MGMT
-
-### Management API http ###
 management_api_http:
-  enable_https: True
+  enable_https: true
   enable_vrfs:
-    MGMT:
+    MGMT: null

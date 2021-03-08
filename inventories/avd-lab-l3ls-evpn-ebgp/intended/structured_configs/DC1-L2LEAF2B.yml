@@ -45,6 +45,7 @@ leaf_mlag: false
 service_routing_protocols_model: multi-agent
 ip_routing: true
 hardware_counters: null
+hardware: null
 daemon_terminattr:
   ingestgrpcurl:
     ips:
@@ -54,6 +55,7 @@ daemon_terminattr:
   ingestvrf: MGMT
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
 vlan_internal_order:
   allocation: ascending
   range:
@@ -79,7 +81,9 @@ ntp_server:
 redundancy: null
 spanning_tree:
   mode: mstp
-  priority: 16384
+  mst_instances:
+    '0':
+      priority: 16384
 aaa_authorization: null
 local_users:
   admin:
@@ -140,15 +144,18 @@ vrfs:
 port_channel_interfaces:
   Port-Channel1:
     description: DC1-SVC3B_Po7
+    type: switched
+    shutdown: false
     vlans: 110-111,120-121,130-131,140-141,160-161,210-211,310-311
     mode: trunk
-    mlag: 1
 ethernet_interfaces:
   Ethernet1:
     peer: DC1-SVC3A
     peer_interface: Ethernet8
     peer_type: l3leaf
     description: DC1-SVC3A_Ethernet8
+    type: switched
+    shutdown: false
     channel_group:
       id: 1
       mode: active
@@ -157,17 +164,21 @@ ethernet_interfaces:
     peer_interface: Ethernet8
     peer_type: l3leaf
     description: DC1-SVC3B_Ethernet8
+    type: switched
+    shutdown: false
     channel_group:
       id: 1
       mode: active
 management_interfaces:
   Management1:
     description: oob_management
+    shutdown: false
     vrf: MGMT
     ip_address: 192.168.200.114/24
     gateway: 192.168.200.1
 vlan_interfaces: null
 tcam_profile: null
+platform: null
 mac_address_table: null
 ip_igmp_snooping:
   globally_enabled: true

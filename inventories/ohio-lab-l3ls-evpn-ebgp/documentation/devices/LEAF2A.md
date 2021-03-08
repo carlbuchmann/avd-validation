@@ -13,6 +13,7 @@
   - [Management API](#Management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
+  - [Enable Password](#enable-password)
   - [TACACS Servers](#tacacs-servers)
   - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
   - [RADIUS Servers](#radius-servers)
@@ -21,6 +22,7 @@
   - [AAA Authorization](#aaa-authorization)
   - [AAA Accounting](#aaa-accounting)
 - [Management Security](#management-security)
+- [Prompt](#prompt)
 - [Aliases](#aliases)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
@@ -35,6 +37,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -46,6 +49,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [IPv6 Static Routes](#ipv6-static-routes)
+  - [Router OSPF](#router-ospf)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [Router BFD](#router-bfd)
@@ -70,6 +74,10 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
+- [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -95,6 +103,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.100.33/24
 ```
@@ -106,6 +115,7 @@ interface Management1
 ### DNS Domain Device Configuration
 
 ```eos
+!
 dns domain ohvlab.local
 !
 ```
@@ -139,6 +149,7 @@ ip name-server vrf MGMT 192.168.70.1
 ### DNS Domain Lookup Device Configuration
 
 ```eos
+!
 ip domain lookup vrf MGMT source-interface Management1
 ```
 
@@ -164,7 +175,32 @@ ntp server vrf MGMT 192.232.20.87 prefer
 ntp server vrf MGMT 216.239.35.4
 ```
 
+## PTP
+
+PTP is not defined.
+
 ## Management SSH
+
+
+### SSH timeout and management
+
+| Idle Timeout | SSH Management |
+| ------------ | -------------- |
+| default |  Enabled  |
+
+### Ciphers and algorithms
+
+| Ciphers | Key-exchange methods | MAC algorithms | Hostkey server algorithms |
+|---------|----------------------|----------------|---------------------------|
+| default | default | default | default |
+
+### VRFs
+
+| VRF | Status |
+| --- | ------ |
+| MGMT |  Enabled  |
+
+### Management SSH Configuration
 
 ```eos
 !
@@ -196,6 +232,7 @@ Management API gnmi is not defined
 ```eos
 !
 management api http-commands
+   protocol https
    no shutdown
    !
    vrf MGMT
@@ -222,6 +259,10 @@ username admin privilege 15 role network-admin secret sha512 $6$xTFjLEjlpX/ZvgNp
 username arista privilege 15 secret sha512 $6$RO7KPjCB0BtlFgcd$/7Lv7Pjj3/OUOIUmqk0NmB8218tnq3Qcjb20pF4Xb3VaoMEuXShWVpFGU.YTYBuQ5.e3SXOLrIEfXpFegrQDX.
 username cvpadmin privilege 15 secret sha512 $6$u5wM2GSl324m5EF0$AM98W2MI4ISBciPXm6be8Q3RTykF3dCd2W3btVvhcBBKvKHjfbkeJfesbEWMcrYlbzzZbWdBcxF6U/Pe3xBYF1
 ```
+
+## Enable Password
+
+Enable password not defined
 
 ## TACACS Servers
 
@@ -291,6 +332,10 @@ AAA accounting not defined
 
 Management security not defined
 
+# Prompt
+
+Prompt not defined
+
 # Aliases
 
 
@@ -307,9 +352,9 @@ alias shprefix show bgp evpn route-type ip-prefix ipv4 detail | awk '/for ip-pre
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -352,7 +397,7 @@ No event handler defined
 | --------- | --------------- | ------------ | --------- |
 | DC1_LEAF2 | Vlan4094 | 10.255.252.37 | Port-Channel47 |
 
-Dual primary detection is enabled. The detection delay is 5 seconds.
+Dual primary detection is disabled.
 
 ## MLAG Device Configuration
 
@@ -362,9 +407,7 @@ mlag configuration
    domain-id DC1_LEAF2
    local-interface Vlan4094
    peer-address 10.255.252.37
-   peer-address heartbeat 192.168.100.34 vrf MGMT
    peer-link Port-Channel47
-   dual-primary detection delay 5 action errdisable all-interfaces
    reload-delay mlag 780
    reload-delay non-mlag 1020
 ```
@@ -373,13 +416,17 @@ mlag configuration
 
 ## Spanning Tree Summary
 
-Mode: mstp
+STP mode: **mstp**
 
 ### MSTP Instance and Priority
 
-| Instance | Priority |
+| Instance(s) | Priority |
 | -------- | -------- |
 | 0 | 4096 |
+
+### Global Spanning-Tree Settings
+
+Spanning Tree disabled for VLANs: **4093-4094**
 
 ## Spanning Tree Device Configuration
 
@@ -467,6 +514,10 @@ vlan 4094
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -482,20 +533,12 @@ vlan 4094
 
 *Inherited from Port-Channel Interface
 
-
 #### IPv4
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet2  |  routed  | - |  10.2.1.73/31  |  default  |  9216  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet2  |  routed  | - |  10.2.1.75/31  |  default  |  9216  |  -  |  -  |  -  |
-
-
-
-
-
-
-
+| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet2  |  routed  | - |  10.2.1.73/31  |  default  |  9216  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet2  |  routed  | - |  10.2.1.75/31  |  default  |  9216  |  false  |  -  |  -  |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -503,30 +546,36 @@ vlan 4094
 !
 interface Ethernet1
    description P2P_LINK_TO_SPINE1_Ethernet2
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.73/31
 !
 interface Ethernet2
    description P2P_LINK_TO_SPINE2_Ethernet2
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.75/31
 !
 interface Ethernet10
    description HostC_eth0
+   no shutdown
    channel-group 10 mode active
 !
 interface Ethernet11
    description HostE_eth0
+   no shutdown
    channel-group 11 mode active
 !
 interface Ethernet47
    description MLAG_PEER_LEAF2B_Ethernet47
+   no shutdown
    channel-group 47 mode active
 !
 interface Ethernet48
    description MLAG_PEER_LEAF2B_Ethernet48
+   no shutdown
    channel-group 47 mode active
 ```
 
@@ -534,11 +583,13 @@ interface Ethernet48
 
 ### Port-Channel Interfaces Summary
 
-| Interface | Description | MTU | Type | Mode | Allowed VLANs (trunk) | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI | VRF | IP Address | IPv6 Address |
-| --------- | ----------- | --- | ---- | ---- | --------------------- | ----------- | --------------------- ! ------------------ | ------- | -------- | --- | ---------- | ------------ |
-| Port-Channel10 | HostC_bond0 | 1500 | switched | access | 30 | - | - | - | 10 | - | - | - | - |
-| Port-Channel11 | HostE_bond0 | 1500 | switched | access | 20 | - | - | - | 11 | - | - | - | - |
-| Port-Channel47 | MLAG_PEER_LEAF2B_Po47 | 1500 | switched | trunk | 2-4094 | LEAF_PEER_L3<br> MLAG | - | - | - | - | - | - | - |
+#### L2
+
+| Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+| Port-Channel10 | HostC_bond0 | switched | access | 30 | - | - | - | - | 10 | - |
+| Port-Channel11 | HostE_bond0 | switched | access | 20 | - | - | - | - | 11 | - |
+| Port-Channel47 | MLAG_PEER_LEAF2B_Po47 | switched | trunk | 2-4094 | - | ['LEAF_PEER_L3', 'MLAG'] | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -546,18 +597,24 @@ interface Ethernet48
 !
 interface Port-Channel10
    description HostC_bond0
+   no shutdown
+   switchport
    switchport access vlan 30
    mlag 10
    spanning-tree portfast
 !
 interface Port-Channel11
    description HostE_bond0
+   no shutdown
+   switchport
    switchport access vlan 20
    mlag 11
    spanning-tree portfast
 !
 interface Port-Channel47
    description MLAG_PEER_LEAF2B_Po47
+   no shutdown
+   switchport
    switchport trunk allowed vlan 2-4094
    switchport mode trunk
    switchport trunk group LEAF_PEER_L3
@@ -593,19 +650,23 @@ interface Port-Channel47
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 1.1.1.21/32
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
+   no shutdown
    ip address 2.2.2.21/32
 !
 interface Loopback100
    description A_VTEP_DIAGNOSTICS
+   no shutdown
    vrf A
    ip address 10.255.1.21/32
 !
 interface Loopback101
    description B_VTEP_DIAGNOSTICS
+   no shutdown
    vrf B
    ip address 10.255.2.21/32
 ```
@@ -614,19 +675,36 @@ interface Loopback101
 
 ### VLAN Interfaces Summary
 
-| Interface | Description | VRF | IP Address | IP Address Virtual | IP Router Virtual Address (vARP) |
-| --------- | ----------- | --- | ---------- | ------------------ | -------------------------------- |
-| Vlan10 | Ten-opzone | A | - | 10.10.10.1/24 | - |
-| Vlan11 | Eleven-opzone | B | - | 11.11.11.1/24 | - |
-| Vlan20 | Twenty-web | A | - | 20.20.20.1/24 | - |
-| Vlan21 | TwentyOne-web | B | - | 21.21.21.1/24 | - |
-| Vlan30 | Thirty-app | A | - | 30.30.30.1/24 | - |
-| Vlan31 | ThirtyOne-app | B | - | 31.31.31.1/24 | - |
-| Vlan41 | FortyOne-db | B | - | 41.41.41.1/24 | - |
-| Vlan3050 | MLAG_PEER_L3_iBGP: vrf A | A | 10.255.251.36/31 | - | - |
-| Vlan3150 | MLAG_PEER_L3_iBGP: vrf B | B | 10.255.251.36/31 | - | - |
-| Vlan4093 | MLAG_PEER_L3_PEERING | default | 10.255.251.36/31 | - | - |
-| Vlan4094 | MLAG_PEER | default | 10.255.252.36/31 | - | - |
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan10 |  Ten-opzone  |  A  |  -  |  false  |
+| Vlan11 |  Eleven-opzone  |  B  |  -  |  false  |
+| Vlan20 |  Twenty-web  |  A  |  -  |  false  |
+| Vlan21 |  TwentyOne-web  |  B  |  -  |  false  |
+| Vlan30 |  Thirty-app  |  A  |  -  |  false  |
+| Vlan31 |  ThirtyOne-app  |  B  |  -  |  false  |
+| Vlan41 |  FortyOne-db  |  B  |  -  |  false  |
+| Vlan3050 |  MLAG_PEER_L3_iBGP: vrf A  |  A  |  9216  |  false  |
+| Vlan3150 |  MLAG_PEER_L3_iBGP: vrf B  |  B  |  9216  |  false  |
+| Vlan4093 |  MLAG_PEER_L3_PEERING  |  default  |  9216  |  false  |
+| Vlan4094 |  MLAG_PEER  |  default  |  9216  |  false  |
+
+#### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan10 |  A  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan11 |  B  |  -  |  11.11.11.1/24  |  -  |  -  |  -  |  -  |
+| Vlan20 |  A  |  -  |  20.20.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan21 |  B  |  -  |  21.21.21.1/24  |  -  |  -  |  -  |  -  |
+| Vlan30 |  A  |  -  |  30.30.30.1/24  |  -  |  -  |  -  |  -  |
+| Vlan31 |  B  |  -  |  31.31.31.1/24  |  -  |  -  |  -  |  -  |
+| Vlan41 |  B  |  -  |  41.41.41.1/24  |  -  |  -  |  -  |  -  |
+| Vlan3050 |  A  |  10.255.251.36/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3150 |  B  |  10.255.251.36/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4093 |  default  |  10.255.251.36/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4094 |  default  |  10.255.252.36/31  |  -  |  -  |  -  |  -  |  -  |
+
 
 
 ### VLAN Interfaces Device Configuration
@@ -635,55 +713,69 @@ interface Loopback101
 !
 interface Vlan10
    description Ten-opzone
+   no shutdown
    vrf A
    ip address virtual 10.10.10.1/24
 !
 interface Vlan11
    description Eleven-opzone
+   no shutdown
    vrf B
    ip address virtual 11.11.11.1/24
 !
 interface Vlan20
    description Twenty-web
+   no shutdown
    vrf A
    ip address virtual 20.20.20.1/24
 !
 interface Vlan21
    description TwentyOne-web
+   no shutdown
    vrf B
    ip address virtual 21.21.21.1/24
 !
 interface Vlan30
    description Thirty-app
+   no shutdown
    vrf A
    ip address virtual 30.30.30.1/24
 !
 interface Vlan31
    description ThirtyOne-app
+   no shutdown
    vrf B
    ip address virtual 31.31.31.1/24
 !
 interface Vlan41
    description FortyOne-db
+   no shutdown
    vrf B
    ip address virtual 41.41.41.1/24
 !
 interface Vlan3050
    description MLAG_PEER_L3_iBGP: vrf A
+   no shutdown
+   mtu 9216
    vrf A
    ip address 10.255.251.36/31
 !
 interface Vlan3150
    description MLAG_PEER_L3_iBGP: vrf B
+   no shutdown
+   mtu 9216
    vrf B
    ip address 10.255.251.36/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
+   no shutdown
+   mtu 9216
    ip address 10.255.251.36/31
 !
 interface Vlan4094
    description MLAG_PEER
+   no shutdown
    mtu 9216
    no autostate
    ip address 10.255.252.36/31
@@ -757,7 +849,7 @@ ip virtual-router mac-address aa:aa:bb:bb:cc:cc
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | true| | A | true |
+| default | true|| A | true |
 | B | true |
 | MGMT | false |
 
@@ -801,6 +893,14 @@ ip route vrf MGMT 0.0.0.0/0 192.168.100.1
 
 IPv6 static routes not defined
 
+## ARP
+
+Global ARP timeout not defined.
+
+## Router OSPF
+
+Router OSPF not defined
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -820,7 +920,7 @@ Router ISIS not defined
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
-| maximum-paths 2 ecmp 2 |
+| maximum-paths 4 ecmp 4 |
 
 ### Router BGP Peer Groups
 
@@ -829,7 +929,6 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | evpn |
-| Remote_as | 65001 |
 | Source | Loopback0 |
 | Bfd | true |
 | Ebgp multihop | 3 |
@@ -857,13 +956,15 @@ Router ISIS not defined
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS |
-| -------- | ---------
-| 1.1.1.1 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 1.1.1.2 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 10.2.1.72 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 10.2.1.74 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 10.255.251.37 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER |
+| Neighbor | Remote AS | VRF |
+| -------- | --------- | --- |
+| 1.1.1.1 | 65001 | default |
+| 1.1.1.2 | 65001 | default |
+| 10.2.1.72 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 10.2.1.74 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 10.255.251.37 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default |
+| 10.255.251.37 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | A |
+| 10.255.251.37 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | B |
 
 ### Router BGP EVPN Address Family
 
@@ -894,9 +995,8 @@ router bgp 65003
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   maximum-paths 2 ecmp 2
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
-   neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
    neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
@@ -914,8 +1014,13 @@ router bgp 65003
    neighbor MLAG-IPv4-UNDERLAY-PEER password 7 vnEaG8gMeQf3d3cN6PktXQ==
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
+   neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 1.1.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.1 remote-as 65001
+   neighbor 1.1.1.1 description SPINE1
    neighbor 1.1.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.2 remote-as 65001
+   neighbor 1.1.1.2 description SPINE2
    neighbor 10.2.1.72 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.2.1.74 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.255.251.37 peer group MLAG-IPv4-UNDERLAY-PEER
@@ -935,8 +1040,6 @@ router bgp 65003
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
-      no neighbor IPv4-UNDERLAY-PEERS activate
-      no neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -975,6 +1078,15 @@ router bgp 65003
 ## IP IGMP Snooping
 
 ### IP IGMP Snooping Summary
+
+IGMP snooping is globally enabled.
+
+
+### IP IGMP Snooping Device Configuration
+
+```eos
+```
+
 
 ## Router Multicast
 
@@ -1028,12 +1140,22 @@ IPv6 prefix-lists not defined
 | -------- | ---- | ---------------- |
 | 10 | permit | match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY |
 
+#### RM-MLAG-PEER-IN
+
+| Sequence | Type | Match and/or Set |
+| -------- | ---- | ---------------- |
+| 10 | permit | set origin incomplete |
+
 ### Route-maps Device Configuration
 
 ```eos
 !
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+!
+route-map RM-MLAG-PEER-IN permit 10
+   description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+   set origin incomplete
 ```
 
 ## IP Extended Communities
@@ -1098,7 +1220,14 @@ ip address virtual source-nat vrf B address 10.255.2.21
 
 # Platform
 
-No platform parameters defined
+### Platform
+
+### Platform Configuration
+
+```eos
+!
+platform sand lag hardware-only
+```
 
 # Router L2 VPN
 
@@ -1117,6 +1246,22 @@ router l2-vpn
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
+
+# MACsec
+
+MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 

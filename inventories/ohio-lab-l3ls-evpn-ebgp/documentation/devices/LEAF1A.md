@@ -13,6 +13,7 @@
   - [Management API](#Management-api-http)
 - [Authentication](#authentication)
   - [Local Users](#local-users)
+  - [Enable Password](#enable-password)
   - [TACACS Servers](#tacacs-servers)
   - [IP TACACS Source Interfaces](#ip-tacacs-source-interfaces)
   - [RADIUS Servers](#radius-servers)
@@ -21,6 +22,7 @@
   - [AAA Authorization](#aaa-authorization)
   - [AAA Accounting](#aaa-accounting)
 - [Management Security](#management-security)
+- [Prompt](#prompt)
 - [Aliases](#aliases)
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
@@ -35,6 +37,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
@@ -46,6 +49,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [IPv6 Static Routes](#ipv6-static-routes)
+  - [Router OSPF](#router-ospf)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
   - [Router BFD](#router-bfd)
@@ -70,6 +74,10 @@
 - [Platform](#platform)
 - [Router L2 VPN](#router-l2-vpn)
 - [IP DHCP Relay](#ip-dhcp-relay)
+- [Errdisable](#errdisable)
+- [MAC security](#mac-security)
+- [QOS](#qos)
+- [QOS Profiles](#qos-profiles)
 
 # Management
 
@@ -95,6 +103,7 @@
 !
 interface Management1
    description oob_management
+   no shutdown
    vrf MGMT
    ip address 192.168.100.32/24
 ```
@@ -106,6 +115,7 @@ interface Management1
 ### DNS Domain Device Configuration
 
 ```eos
+!
 dns domain ohvlab.local
 !
 ```
@@ -139,6 +149,7 @@ ip name-server vrf MGMT 192.168.70.1
 ### DNS Domain Lookup Device Configuration
 
 ```eos
+!
 ip domain lookup vrf MGMT source-interface Management1
 ```
 
@@ -164,7 +175,32 @@ ntp server vrf MGMT 192.232.20.87 prefer
 ntp server vrf MGMT 216.239.35.4
 ```
 
+## PTP
+
+PTP is not defined.
+
 ## Management SSH
+
+
+### SSH timeout and management
+
+| Idle Timeout | SSH Management |
+| ------------ | -------------- |
+| default |  Enabled  |
+
+### Ciphers and algorithms
+
+| Ciphers | Key-exchange methods | MAC algorithms | Hostkey server algorithms |
+|---------|----------------------|----------------|---------------------------|
+| default | default | default | default |
+
+### VRFs
+
+| VRF | Status |
+| --- | ------ |
+| MGMT |  Enabled  |
+
+### Management SSH Configuration
 
 ```eos
 !
@@ -196,6 +232,7 @@ Management API gnmi is not defined
 ```eos
 !
 management api http-commands
+   protocol https
    no shutdown
    !
    vrf MGMT
@@ -222,6 +259,10 @@ username admin privilege 15 role network-admin secret sha512 $6$xTFjLEjlpX/ZvgNp
 username arista privilege 15 secret sha512 $6$RO7KPjCB0BtlFgcd$/7Lv7Pjj3/OUOIUmqk0NmB8218tnq3Qcjb20pF4Xb3VaoMEuXShWVpFGU.YTYBuQ5.e3SXOLrIEfXpFegrQDX.
 username cvpadmin privilege 15 secret sha512 $6$u5wM2GSl324m5EF0$AM98W2MI4ISBciPXm6be8Q3RTykF3dCd2W3btVvhcBBKvKHjfbkeJfesbEWMcrYlbzzZbWdBcxF6U/Pe3xBYF1
 ```
+
+## Enable Password
+
+Enable password not defined
 
 ## TACACS Servers
 
@@ -291,6 +332,10 @@ AAA accounting not defined
 
 Management security not defined
 
+# Prompt
+
+Prompt not defined
+
 # Aliases
 
 
@@ -307,9 +352,9 @@ alias shprefix show bgp evpn route-type ip-prefix ipv4 detail | awk '/for ip-pre
 
 ### TerminAttr Daemon Summary
 
-| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF |
-| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- |
-| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT |
+| CV Compression | Ingest gRPC URL | Ingest Authentication Key | Smash Excludes | Ingest Exclude | Ingest VRF |  NTP VRF | AAA Disabled |
+| -------------- | --------------- | ------------------------- | -------------- | -------------- | ---------- | -------- | ------ |
+| gzip | 192.168.100.240:9910 | magickey04292020 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | MGMT | MGMT | False |
 
 ### TerminAttr Daemon Device Configuration
 
@@ -352,13 +397,16 @@ MLAG not defined
 
 ## Spanning Tree Summary
 
-Mode: mstp
+STP mode: **mstp**
 
 ### MSTP Instance and Priority
 
-| Instance | Priority |
+| Instance(s) | Priority |
 | -------- | -------- |
 | 0 | 4096 |
+
+### Global Spanning-Tree Settings
+
 
 ## Spanning Tree Device Configuration
 
@@ -409,6 +457,10 @@ vlan 40
 
 # Interfaces
 
+## Interface Defaults
+
+No Interface Defaults defined
+
 ## Ethernet Interfaces
 
 ### Ethernet Interfaces Summary
@@ -423,20 +475,12 @@ vlan 40
 
 *Inherited from Port-Channel Interface
 
-
 #### IPv4
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet1  |  routed  | - |  10.2.1.17/31  |  default  |  9216  |  -  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet1  |  routed  | - |  10.2.1.19/31  |  default  |  9216  |  -  |  -  |  -  |
-
-
-
-
-
-
-
+| Ethernet1 |  P2P_LINK_TO_SPINE1_Ethernet1  |  routed  | - |  10.2.1.17/31  |  default  |  9216  |  false  |  -  |  -  |
+| Ethernet2 |  P2P_LINK_TO_SPINE2_Ethernet1  |  routed  | - |  10.2.1.19/31  |  default  |  9216  |  false  |  -  |  -  |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -444,29 +488,40 @@ vlan 40
 !
 interface Ethernet1
    description P2P_LINK_TO_SPINE1_Ethernet1
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.17/31
 !
 interface Ethernet2
    description P2P_LINK_TO_SPINE2_Ethernet1
+   no shutdown
    mtu 9216
    no switchport
    ip address 10.2.1.19/31
 !
 interface Ethernet10
    description HostA_eth0
+   no shutdown
+   switchport
    switchport access vlan 10
+   switchport mode access
    spanning-tree portfast
 !
 interface Ethernet11
    description HostB_eth0
+   no shutdown
+   switchport
    switchport access vlan 20
+   switchport mode access
    spanning-tree portfast
 !
 interface Ethernet12
    description HostF_eth0
+   no shutdown
+   switchport
    switchport access vlan 40
+   switchport mode access
    spanning-tree portfast
 ```
 
@@ -501,14 +556,17 @@ No port-channels defined
 !
 interface Loopback0
    description EVPN_Overlay_Peering
+   no shutdown
    ip address 1.1.1.7/32
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
+   no shutdown
    ip address 2.2.2.7/32
 !
 interface Loopback100
    description A_VTEP_DIAGNOSTICS
+   no shutdown
    vrf A
    ip address 10.255.1.7/32
 ```
@@ -517,11 +575,20 @@ interface Loopback100
 
 ### VLAN Interfaces Summary
 
-| Interface | Description | VRF | IP Address | IP Address Virtual | IP Router Virtual Address (vARP) |
-| --------- | ----------- | --- | ---------- | ------------------ | -------------------------------- |
-| Vlan10 | Ten-opzone | A | - | 10.10.10.1/24 | - |
-| Vlan20 | Twenty-web | A | - | 20.20.20.1/24 | - |
-| Vlan40 | Forty-db | A | - | 40.40.40.1/24 | - |
+| Interface | Description | VRF |  MTU | Shutdown |
+| --------- | ----------- | --- | ---- | -------- |
+| Vlan10 |  Ten-opzone  |  A  |  -  |  false  |
+| Vlan20 |  Twenty-web  |  A  |  -  |  false  |
+| Vlan40 |  Forty-db  |  A  |  -  |  false  |
+
+#### IPv4
+
+| Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
+| --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
+| Vlan10 |  A  |  -  |  10.10.10.1/24  |  -  |  -  |  -  |  -  |
+| Vlan20 |  A  |  -  |  20.20.20.1/24  |  -  |  -  |  -  |  -  |
+| Vlan40 |  A  |  -  |  40.40.40.1/24  |  -  |  -  |  -  |  -  |
+
 
 
 ### VLAN Interfaces Device Configuration
@@ -530,16 +597,19 @@ interface Loopback100
 !
 interface Vlan10
    description Ten-opzone
+   no shutdown
    vrf A
    ip address virtual 10.10.10.1/24
 !
 interface Vlan20
    description Twenty-web
+   no shutdown
    vrf A
    ip address virtual 20.20.20.1/24
 !
 interface Vlan40
    description Forty-db
+   no shutdown
    vrf A
    ip address virtual 40.40.40.1/24
 ```
@@ -601,7 +671,7 @@ ip virtual-router mac-address aa:aa:bb:bb:cc:cc
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | true| | A | true |
+| default | true|| A | true |
 | MGMT | false |
 
 ### IP Routing Device Configuration
@@ -642,6 +712,14 @@ ip route vrf MGMT 0.0.0.0/0 192.168.100.1
 
 IPv6 static routes not defined
 
+## ARP
+
+Global ARP timeout not defined.
+
+## Router OSPF
+
+Router OSPF not defined
+
 ## Router ISIS
 
 Router ISIS not defined
@@ -661,7 +739,7 @@ Router ISIS not defined
 | distance bgp 20 200 200 |
 | graceful-restart restart-time 300 |
 | graceful-restart |
-| maximum-paths 2 ecmp 2 |
+| maximum-paths 4 ecmp 4 |
 
 ### Router BGP Peer Groups
 
@@ -670,7 +748,6 @@ Router ISIS not defined
 | Settings | Value |
 | -------- | ----- |
 | Address Family | evpn |
-| Remote_as | 65001 |
 | Source | Loopback0 |
 | Bfd | true |
 | Ebgp multihop | 3 |
@@ -688,12 +765,12 @@ Router ISIS not defined
 
 ### BGP Neighbors
 
-| Neighbor | Remote AS |
-| -------- | ---------
-| 1.1.1.1 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 1.1.1.2 | Inherited from peer group EVPN-OVERLAY-PEERS |
-| 10.2.1.16 | Inherited from peer group IPv4-UNDERLAY-PEERS |
-| 10.2.1.18 | Inherited from peer group IPv4-UNDERLAY-PEERS |
+| Neighbor | Remote AS | VRF |
+| -------- | --------- | --- |
+| 1.1.1.1 | 65001 | default |
+| 1.1.1.2 | 65001 | default |
+| 10.2.1.16 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
+| 10.2.1.18 | Inherited from peer group IPv4-UNDERLAY-PEERS | default |
 
 ### Router BGP EVPN Address Family
 
@@ -722,9 +799,8 @@ router bgp 65002
    distance bgp 20 200 200
    graceful-restart restart-time 300
    graceful-restart
-   maximum-paths 2 ecmp 2
+   maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
-   neighbor EVPN-OVERLAY-PEERS remote-as 65001
    neighbor EVPN-OVERLAY-PEERS update-source Loopback0
    neighbor EVPN-OVERLAY-PEERS bfd
    neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
@@ -737,7 +813,11 @@ router bgp 65002
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 1.1.1.1 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.1 remote-as 65001
+   neighbor 1.1.1.1 description SPINE1
    neighbor 1.1.1.2 peer group EVPN-OVERLAY-PEERS
+   neighbor 1.1.1.2 remote-as 65001
+   neighbor 1.1.1.2 description SPINE2
    neighbor 10.2.1.16 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.2.1.18 peer group IPv4-UNDERLAY-PEERS
    redistribute connected route-map RM-CONN-2-BGP
@@ -750,7 +830,6 @@ router bgp 65002
    !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
-      no neighbor IPv4-UNDERLAY-PEERS activate
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
@@ -779,6 +858,15 @@ router bgp 65002
 ## IP IGMP Snooping
 
 ### IP IGMP Snooping Summary
+
+IGMP snooping is globally enabled.
+
+
+### IP IGMP Snooping Device Configuration
+
+```eos
+```
+
 
 ## Router Multicast
 
@@ -897,7 +985,14 @@ ip address virtual source-nat vrf A address 10.255.1.7
 
 # Platform
 
-No platform parameters defined
+### Platform
+
+### Platform Configuration
+
+```eos
+!
+platform sand lag hardware-only
+```
 
 # Router L2 VPN
 
@@ -916,6 +1011,22 @@ router l2-vpn
 # IP DHCP Relay
 
 IP DHCP relay not defined
+
+# Errdisable
+
+Errdisable is not defined.
+
+# MACsec
+
+MACsec not defined
+
+# QOS
+
+QOS is not defined.
+
+# QOS Profiles
+
+QOS Profiles are not defined
 
 # Custom Templates
 
