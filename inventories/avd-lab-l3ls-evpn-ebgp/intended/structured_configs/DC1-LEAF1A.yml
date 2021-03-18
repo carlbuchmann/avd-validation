@@ -120,10 +120,6 @@ vrfs:
   Tenant_A_WEB_Zone:
     tenant: Tenant_A
     ip_routing: true
-bfd_multihop:
-  interval: 1200
-  min_rx: 1200
-  multiplier: 3
 port_channel_interfaces:
   Port-Channel7:
     description: server01_PortChanne1
@@ -230,6 +226,7 @@ management_interfaces:
     vrf: MGMT
     ip_address: 192.168.200.105/24
     gateway: 192.168.200.1
+    type: oob
 vlan_interfaces:
   Vlan410:
     tenant: tech_friday_demo
@@ -333,6 +330,11 @@ route_maps:
         type: permit
         match:
         - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
 router_bgp:
   as: 65101
   router_id: 192.168.255.5
@@ -346,14 +348,14 @@ router_bgp:
       remote_as: 65001
       password: AQQvKeimxJu+uGQ/yYvv9w==
       maximum_routes: 12000
-      send_community: true
+      send_community: all
     EVPN-OVERLAY-PEERS:
       type: evpn
       update_source: Loopback0
       bfd: true
       ebgp_multihop: '3'
       password: q+VNViP5i4rVjW1cxFv2wA==
-      send_community: true
+      send_community: all
       maximum_routes: 0
   neighbors:
     172.31.255.0:

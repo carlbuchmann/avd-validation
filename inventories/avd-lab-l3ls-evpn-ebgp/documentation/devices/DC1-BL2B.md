@@ -37,6 +37,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Switchport Default](#switchport-default)
   - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
@@ -49,6 +50,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [IPv6 Static Routes](#ipv6-static-routes)
+  - [Router General](#router-general)
   - [Router OSPF](#router-ospf)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
@@ -87,15 +89,15 @@
 
 #### IPv4
 
-| Management Interface | description | VRF | IP Address | Gateway |
-| -------------------- | ----------- | --- | ---------- | ------- |
-| Management1 | oob_management | MGMT | 192.168.200.116/24 | 192.168.200.1 |
+| Management Interface | description | Type | VRF | IP Address | Gateway |
+| -------------------- | ----------- | ---- | --- | ---------- | ------- |
+| Management1 | oob_management | oob | MGMT | 192.168.200.116/24 | 192.168.200.1 |
 
 #### IPv6
 
-| Management Interface | description | VRF | IPv6 Address | IPv6 Gateway |
-| -------------------- | ----------- | --- | ------------ | ------------ |
-| Management1 | oob_management | MGMT | -  | - |
+| Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
+| -------------------- | ----------- | ---- | --- | ------------ | ------------ |
+| Management1 | oob_management | oob | MGMT | -  | - |
 
 ### Management Interfaces Device Configuration
 
@@ -184,13 +186,14 @@ Management API gnmi is not defined
 
 | HTTP | HTTPS |
 | ---------- | ---------- |
-|  default  |  true  |
+| default | true |
 
 ### Management API VRF Access
 
 | VRF Name | IPv4 ACL | IPv6 ACL |
 | -------- | -------- | -------- |
-| MGMT |  -  |  -  |
+| MGMT | - | - |
+
 
 ### Management API HTTP Configuration
 
@@ -423,6 +426,10 @@ vlan 4094
 ```
 
 # Interfaces
+
+## Switchport Default
+
+No switchport default defined
 
 ## Interface Defaults
 
@@ -751,6 +758,10 @@ IPv6 static routes not defined
 
 Global ARP timeout not defined.
 
+## Router General
+
+Router general not defined
+
 ## Router OSPF
 
 Router OSPF not defined
@@ -783,7 +794,7 @@ Router ISIS not defined
 | Source | Loopback0 |
 | Bfd | true |
 | Ebgp multihop | 3 |
-| Send community | true |
+| Send community | all |
 | Maximum routes | 0 (no limit) |
 
 #### IPv4-UNDERLAY-PEERS
@@ -792,7 +803,7 @@ Router ISIS not defined
 | -------- | ----- |
 | Address Family | ipv4 |
 | Remote_as | 65001 |
-| Send community | true |
+| Send community | all |
 | Maximum routes | 12000 |
 
 #### MLAG-IPv4-UNDERLAY-PEER
@@ -802,7 +813,7 @@ Router ISIS not defined
 | Address Family | ipv4 |
 | Remote_as | 65105 |
 | Next-hop self | True |
-| Send community | true |
+| Send community | all |
 | Maximum routes | 12000 |
 
 ### BGP Neighbors

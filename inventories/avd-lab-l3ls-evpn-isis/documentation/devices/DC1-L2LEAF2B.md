@@ -37,6 +37,7 @@
 - [Internal VLAN Allocation Policy](#internal-vlan-allocation-policy)
 - [VLANs](#vlans)
 - [Interfaces](#interfaces)
+  - [Switchport Default](#switchport-default)
   - [Interface Defaults](#interface-defaults)
   - [Ethernet Interfaces](#ethernet-interfaces)
   - [Port-Channel Interfaces](#port-channel-interfaces)
@@ -49,6 +50,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [IPv6 Static Routes](#ipv6-static-routes)
+  - [Router General](#router-general)
   - [Router OSPF](#router-ospf)
   - [Router ISIS](#router-isis)
   - [Router BGP](#router-bgp)
@@ -87,15 +89,15 @@
 
 #### IPv4
 
-| Management Interface | description | VRF | IP Address | Gateway |
-| -------------------- | ----------- | --- | ---------- | ------- |
-| Management1 | oob_management | MGMT | 192.168.200.114/24 | 192.168.200.1 |
+| Management Interface | description | Type | VRF | IP Address | Gateway |
+| -------------------- | ----------- | ---- | --- | ---------- | ------- |
+| Management1 | oob_management | oob | MGMT | 192.168.200.114/24 | 192.168.200.1 |
 
 #### IPv6
 
-| Management Interface | description | VRF | IPv6 Address | IPv6 Gateway |
-| -------------------- | ----------- | --- | ------------ | ------------ |
-| Management1 | oob_management | MGMT | -  | - |
+| Management Interface | description | Type | VRF | IPv6 Address | IPv6 Gateway |
+| -------------------- | ----------- | ---- | --- | ------------ | ------------ |
+| Management1 | oob_management | oob | MGMT | -  | - |
 
 ### Management Interfaces Device Configuration
 
@@ -184,13 +186,14 @@ Management API gnmi is not defined
 
 | HTTP | HTTPS |
 | ---------- | ---------- |
-|  default  |  true  |
+| default | true |
 
 ### Management API VRF Access
 
 | VRF Name | IPv4 ACL | IPv6 ACL |
 | -------- | -------- | -------- |
-| MGMT |  -  |  -  |
+| MGMT | - | - |
+
 
 ### Management API HTTP Configuration
 
@@ -448,6 +451,10 @@ vlan 4094
 
 # Interfaces
 
+## Switchport Default
+
+No switchport default defined
+
 ## Interface Defaults
 
 No Interface Defaults defined
@@ -614,6 +621,10 @@ IPv6 static routes not defined
 
 Global ARP timeout not defined.
 
+## Router General
+
+Router general not defined
+
 ## Router OSPF
 
 Router OSPF not defined
@@ -637,9 +648,6 @@ Router BGP not defined
 ### Router BFD Multihop Device Configuration
 
 ```eos
-!
-router bfd
-   multihop interval 1200 min-rx 1200 multiplier 3
 ```
 
 # Multicast
