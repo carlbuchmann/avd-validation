@@ -1,19 +1,21 @@
 # DC1_FABRIC
 
-## Table of Contents
+# Table of Contents
+<!-- toc -->
 
-- [DC1_FABRIC](#dc1fabric)
-  - [Fabric Switches and Management IP](#fabric-switches-and-management-ip)
-  - [Fabric Topology](#fabric-topology)
-  - [Fabric IP Allocation](#fabric-ip-allocation)
-    - [Fabric Point-To-Point Links](#fabric-point-to-point-links)
-    - [Point-To-Point Links Node Allocation](#point-to-point-links-node-allocation)
-    - [Overlay Loopback Interfaces (BGP EVPN Peering)](#overlay-loopback-interfaces-bgp-evpn-peering)
-    - [Loopback0 Interfaces Node Allocation](#loopback0-interfaces-node-allocation)
-    - [VTEP Loopback VXLAN Tunnel Source Interfaces (Leafs Only)](#vtep-loopback-vxlan-tunnel-source-interfaces-leafs-only)
-    - [VTEP Loopback Node allocation](#vtep-loopback-node-allocation)
+- [Fabric Switches and Management IP](#fabric-switches-and-management-ip)
+  - [Fabric Switches with inband Management IP](#fabric-switches-with-inband-management-ip)
+- [Fabric Topology](#fabric-topology)
+- [Fabric IP Allocation](#fabric-ip-allocation)
+  - [Fabric Point-To-Point Links](#fabric-point-to-point-links)
+  - [Point-To-Point Links Node Allocation](#point-to-point-links-node-allocation)
+  - [Overlay Loopback Interfaces (BGP EVPN Peering)](#overlay-loopback-interfaces-bgp-evpn-peering)
+  - [Loopback0 Interfaces Node Allocation](#loopback0-interfaces-node-allocation)
+  - [VTEP Loopback VXLAN Tunnel Source Interfaces (Leafs Only)](#vtep-loopback-vxlan-tunnel-source-interfaces-leafs-only)
+  - [VTEP Loopback Node allocation](#vtep-loopback-node-allocation)
 
-## Fabric Switches and Management IP
+<!-- toc -->
+# Fabric Switches and Management IP
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision |
 | --- | ---- | ---- | ------------- | -------- | -------------------------- |
@@ -25,11 +27,11 @@
 
 > Provision status is based on Ansible inventory declaration and do not represent real status from CloudVision.
 
-### Fabric Switches with inband Management IP
+## Fabric Switches with inband Management IP
 | POD | Type | Node | Management IP | Inband Interface |
 | --- | ---- | ---- | ------------- | ---------------- |
 
-## Fabric Topology
+# Fabric Topology
 
 | Type | Node | Node Interface | Peer Type | Peer Node | Peer Interface |
 | ---- | ---- | -------------- | --------- | ----------| -------------- |
@@ -42,15 +44,15 @@
 | l3leaf | LEAF2B | Ethernet1 | spine | SPINE1 | Ethernet3 |
 | l3leaf | LEAF2B | Ethernet2 | spine | SPINE2 | Ethernet3 |
 
-## Fabric IP Allocation
+# Fabric IP Allocation
 
-### Fabric Point-To-Point Links
+## Fabric Point-To-Point Links
 
 | P2P Summary | Available Addresses | Assigned addresses | Assigned Address % |
 | ----------- | ------------------- | ------------------ | ------------------ |
 | 10.2.1.0/24 | 256 | 12 | 4.69 % |
 
-### Point-To-Point Links Node Allocation
+## Point-To-Point Links Node Allocation
 
 | Node | Node Interface | Node IP Address | Peer Node | Peer Interface | Peer IP Address |
 | ---- | -------------- | --------------- | --------- | -------------- | --------------- |
@@ -61,13 +63,13 @@
 | LEAF2B | Ethernet1 | 10.2.1.77/31 | SPINE1 | Ethernet3 | 10.2.1.76/31 |
 | LEAF2B | Ethernet2 | 10.2.1.79/31 | SPINE2 | Ethernet3 | 10.2.1.78/31 |
 
-### Overlay Loopback Interfaces (BGP EVPN Peering)
+## Overlay Loopback Interfaces (BGP EVPN Peering)
 
 | Overlay Loopback Summary | Available Addresses | Assigned addresses | Assigned Address % |
 | ------------------------ | ------------------- | ------------------ | ------------------ |
 | 1.1.1.0/24 | 256 | 5 | 1.96 % |
 
-### Loopback0 Interfaces Node Allocation
+## Loopback0 Interfaces Node Allocation
 
 | POD | Node | Loopback0 |
 | --- | ---- | --------- |
@@ -77,13 +79,13 @@
 | DC1_FABRIC | SPINE1 | 1.1.1.1/32 |
 | DC1_FABRIC | SPINE2 | 1.1.1.2/32 |
 
-### VTEP Loopback VXLAN Tunnel Source Interfaces (Leafs Only)
+## VTEP Loopback VXLAN Tunnel Source Interfaces (Leafs Only)
 
 | VTEP Loopback Summary | Available Addresses | Assigned addresses | Assigned Address % |
 | --------------------- | ------------------- | ------------------ | ------------------ |
 | 2.2.2.0/24 | 256 | 3 | 1.18 % |
 
-### VTEP Loopback Node allocation
+## VTEP Loopback Node allocation
 
 | POD | Node | Loopback1 |
 | --- | ---- | --------- |

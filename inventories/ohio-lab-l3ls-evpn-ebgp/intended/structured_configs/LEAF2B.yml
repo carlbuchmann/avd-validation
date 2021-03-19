@@ -397,7 +397,7 @@ vxlan_tunnel_interface:
         B:
           vni: 151
 tcam_profile:
-- vxlan-routing
+  system: vxlan-routing
 platform:
   sand:
     lag:
