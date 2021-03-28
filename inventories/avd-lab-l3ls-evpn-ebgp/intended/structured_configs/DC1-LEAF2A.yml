@@ -1,5 +1,6 @@
 l3leaf_node_group: DC1_LEAF2
 switch_platform: vEOS-LAB
+switch_rack: null
 switch_bgp_as: 65102
 leaf_id: 2
 switch_mgmt_ip: 192.168.200.106/24
@@ -37,7 +38,6 @@ leaf_allowed_svis:
 - 141
 - 110
 - 111
-- 112
 - 120
 - 121
 - 210
@@ -51,7 +51,6 @@ leaf_allowed_vlans:
 - 141
 - 110
 - 111
-- 112
 - 120
 - 121
 - 160
@@ -104,6 +103,7 @@ ntp_server:
   - 0.north-america.pool.ntp.org
   - 1.north-america.pool.ntp.org
 redundancy: null
+snmp_server: null
 spanning_tree:
   mode: mstp
   mst_instances:
@@ -160,9 +160,6 @@ vlans:
   111:
     tenant: Tenant_A
     name: Tenant_A_OP_Zone_2
-  112:
-    tenant: Tenant_A
-    name: Tenant_A_OP_Zone_3
   3009:
     tenant: Tenant_A
     name: MLAG_iBGP_Tenant_A_OP_Zone
@@ -202,7 +199,7 @@ vlans:
   311:
     tenant: Tenant_C
     name: Tenant_C_OP_Zone_2
-  3029:
+  2:
     tenant: Tenant_C
     name: MLAG_iBGP_Tenant_C_OP_Zone
     trunk_groups:
@@ -233,7 +230,7 @@ port_channel_interfaces:
     description: DC1_L2LEAF1_Po1
     type: switched
     shutdown: false
-    vlans: 110-111,120-121,130-131
+    vlans: 110-111,120-121,130-131,160-161
     mode: trunk
     mlag: 7
   Port-Channel5:
@@ -449,18 +446,13 @@ vlan_interfaces:
     tags:
     - opzone
     description: Tenant_A_OP_Zone_2
-    shutdown: true
-    vrf: Tenant_A_OP_Zone
-    ip_address_virtual: 10.1.11.1/24
-  Vlan112:
-    tenant: Tenant_A
-    tags:
-    - DC1_LEAF2
-    description: Tenant_A_OP_Zone_3
     shutdown: false
     vrf: Tenant_A_OP_Zone
-    ip_address: 10.1.12.2/24
-    ip_virtual_router_address: 10.1.12.1
+    ip_address_virtual: 10.1.11.1/24
+    ip_helpers:
+      1.1.1.1:
+        source_interface: lo100
+        vrf: MGMT
   Vlan3009:
     tenant: Tenant_A
     type: underlay_peering
@@ -478,14 +470,19 @@ vlan_interfaces:
     shutdown: false
     vrf: Tenant_A_WEB_Zone
     ip_address_virtual: 10.1.20.1/24
+    ip_helpers:
+      1.1.1.1:
+        source_interface: lo100
+        vrf: TEST
   Vlan121:
     tenant: Tenant_A
     tags:
     - web
     description: Tenant_A_WEBZone_2
-    shutdown: false
+    shutdown: true
     vrf: Tenant_A_WEB_Zone
-    ip_address_virtual: 10.1.21.1/24
+    ip_address_virtual: 10.1.10.254/24
+    mtu: 1560
   Vlan3010:
     tenant: Tenant_A
     type: underlay_peering
@@ -534,7 +531,7 @@ vlan_interfaces:
     shutdown: false
     vrf: Tenant_C_OP_Zone
     ip_address_virtual: 10.3.11.1/24
-  Vlan3029:
+  Vlan2:
     tenant: Tenant_C
     type: underlay_peering
     shutdown: false
@@ -563,14 +560,12 @@ vxlan_tunnel_interface:
           vni: 10110
         111:
           vni: 50111
-        112:
-          vni: 10112
         120:
           vni: 10120
         121:
           vni: 10121
         160:
-          vni: 50160
+          vni: 10160
         161:
           vni: 10161
         210:
@@ -603,7 +598,9 @@ virtual_source_nat_vrfs:
     ip_address: 10.255.1.6
 ip_igmp_snooping:
   globally_enabled: true
-  vlans: null
+  vlans:
+    120:
+      enabled: false
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -672,17 +669,23 @@ router_bgp:
       password: q+VNViP5i4rVjW1cxFv2wA==
       send_community: all
       maximum_routes: 0
+  neighbor_interfaces: null
   neighbors:
     172.31.255.8:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE1_Ethernet2
     172.31.255.10:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE2_Ethernet2
     172.31.255.12:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE3_Ethernet2
     172.31.255.14:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE4_Ethernet2
     10.255.251.3:
       peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: DC1-LEAF2B
     192.168.255.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: DC1-SPINE1
@@ -739,7 +742,7 @@ router_bgp:
         - '10:10'
       redistribute_routes:
       - learned
-      vlan: 110-112
+      vlan: 110-111
     Tenant_A_WEB_Zone:
       rd: 192.168.255.6:11
       route_targets:
@@ -750,10 +753,10 @@ router_bgp:
       vlan: 120-121
     Tenant_A_VMOTION:
       tenant: Tenant_A
-      rd: 192.168.255.6:50160
+      rd: 192.168.255.6:10160
       route_targets:
         both:
-        - 50160:50160
+        - 10160:10160
       redistribute_routes:
       - learned
       vlan: 160

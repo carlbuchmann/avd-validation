@@ -28,7 +28,6 @@
   - [IP Routing](#ip-routing)
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
-  - [Router BFD](#router-bfd)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [Filters](#filters)
@@ -36,6 +35,7 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Quality Of Service](#quality-of-service)
 
 <!-- toc -->
 # Management
@@ -232,6 +232,8 @@ vlan internal order ascending range 1006 1199
 | 121 | Tenant_A_WEBZone_2 | none  |
 | 130 | Tenant_A_APP_Zone_1 | none  |
 | 131 | Tenant_A_APP_Zone_2 | none  |
+| 160 | Tenant_A_VMOTION | none  |
+| 161 | Tenant_A_NFS | none  |
 
 ## VLANs Device Configuration
 
@@ -254,6 +256,12 @@ vlan 130
 !
 vlan 131
    name Tenant_A_APP_Zone_2
+!
+vlan 160
+   name Tenant_A_VMOTION
+!
+vlan 161
+   name Tenant_A_NFS
 ```
 
 # Interfaces
@@ -266,8 +274,8 @@ vlan 131
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-LEAF2A_Ethernet7 | *trunk | *110-111,120-121,130-131 | *- | *- | 1 |
-| Ethernet2 | DC1-LEAF2B_Ethernet7 | *trunk | *110-111,120-121,130-131 | *- | *- | 1 |
+| Ethernet1 | DC1-LEAF2A_Ethernet7 | *trunk | *110-111,120-121,130-131,160-161 | *- | *- | 1 |
+| Ethernet2 | DC1-LEAF2B_Ethernet7 | *trunk | *110-111,120-121,130-131,160-161 | *- | *- | 1 |
 
 *Inherited from Port-Channel Interface
 
@@ -294,7 +302,7 @@ interface Ethernet2
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1-LEAF2A_Po7 | switched | trunk | 110-111,120-121,130-131 | - | - | - | - | - | - |
+| Port-Channel1 | DC1-LEAF2A_Po7 | switched | trunk | 110-111,120-121,130-131,160-161 | - | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
@@ -304,7 +312,7 @@ interface Port-Channel1
    description DC1-LEAF2A_Po7
    no shutdown
    switchport
-   switchport trunk allowed vlan 110-111,120-121,130-131
+   switchport trunk allowed vlan 110-111,120-121,130-131,160-161
    switchport mode trunk
 ```
 
@@ -349,19 +357,6 @@ no ip routing vrf MGMT
 ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 ```
 
-## Router BFD
-
-### Router BFD Multihop Summary
-
-| Interval | Minimum RX | Multiplier |
-| -------- | ---------- | ---------- |
-| 1200 | 1200 | 3 |
-
-### Router BFD Multihop Device Configuration
-
-```eos
-```
-
 # Multicast
 
 ## IP IGMP Snooping
@@ -371,9 +366,15 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 IGMP snooping is globally enabled.
 
 
+| VLAN | IGMP Snooping |
+| --- | --------------- |
+| 120 | disabled |
+
 ### IP IGMP Snooping Device Configuration
 
 ```eos
+!
+no ip igmp snooping vlan 120
 ```
 
 # Filters
@@ -394,3 +395,5 @@ IGMP snooping is globally enabled.
 !
 vrf instance MGMT
 ```
+
+# Quality Of Service

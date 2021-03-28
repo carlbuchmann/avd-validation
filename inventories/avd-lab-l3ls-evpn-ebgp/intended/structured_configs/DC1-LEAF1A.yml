@@ -1,5 +1,6 @@
 l3leaf_node_group: DC1_LEAF1
 switch_platform: vEOS-LAB
+switch_rack: null
 switch_bgp_as: 65101
 leaf_id: 1
 switch_mgmt_ip: 192.168.200.105/24
@@ -18,19 +19,14 @@ leaf_filter_tags:
 - web
 - app
 leaf_allowed_vrfs:
-- tf_web_zone
 - Tenant_A_APP_Zone
 - Tenant_A_WEB_Zone
 leaf_allowed_svis:
-- 410
-- 411
 - 130
 - 131
 - 120
 - 121
 leaf_allowed_vlans:
-- 410
-- 411
 - 130
 - 131
 - 120
@@ -73,6 +69,7 @@ ntp_server:
   - 0.north-america.pool.ntp.org
   - 1.north-america.pool.ntp.org
 redundancy: null
+snmp_server: null
 spanning_tree:
   mode: mstp
   mst_instances:
@@ -90,12 +87,6 @@ local_users:
     sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
 clock: null
 vlans:
-  410:
-    tenant: tech_friday_demo
-    name: tf_demo_app_1
-  411:
-    tenant: tech_friday_demo
-    name: tf_demo_app_2
   130:
     tenant: Tenant_A
     name: Tenant_A_APP_Zone_1
@@ -111,9 +102,6 @@ vlans:
 vrfs:
   MGMT:
     ip_routing: false
-  tf_web_zone:
-    tenant: tech_friday_demo
-    ip_routing: true
   Tenant_A_APP_Zone:
     tenant: Tenant_A
     ip_routing: true
@@ -228,22 +216,6 @@ management_interfaces:
     gateway: 192.168.200.1
     type: oob
 vlan_interfaces:
-  Vlan410:
-    tenant: tech_friday_demo
-    tags:
-    - app
-    description: tf_demo_app_1
-    shutdown: false
-    vrf: tf_web_zone
-    ip_address_virtual: 10.4.10.1/24
-  Vlan411:
-    tenant: tech_friday_demo
-    tags:
-    - app
-    description: tf_demo_app_2
-    shutdown: false
-    vrf: tf_web_zone
-    ip_address_virtual: 10.4.11.1/24
   Vlan130:
     tenant: Tenant_A
     tags:
@@ -270,14 +242,19 @@ vlan_interfaces:
     shutdown: false
     vrf: Tenant_A_WEB_Zone
     ip_address_virtual: 10.1.20.1/24
+    ip_helpers:
+      1.1.1.1:
+        source_interface: lo100
+        vrf: TEST
   Vlan121:
     tenant: Tenant_A
     tags:
     - web
     description: Tenant_A_WEBZone_2
-    shutdown: false
+    shutdown: true
     vrf: Tenant_A_WEB_Zone
-    ip_address_virtual: 10.1.21.1/24
+    ip_address_virtual: 10.1.10.254/24
+    mtu: 1560
 vxlan_tunnel_interface:
   Vxlan1:
     description: DC1-LEAF1A_VTEP
@@ -285,10 +262,6 @@ vxlan_tunnel_interface:
     vxlan_udp_port: 4789
     vxlan_vni_mappings:
       vlans:
-        410:
-          vni: 40410
-        411:
-          vni: 40411
         130:
           vni: 10130
         131:
@@ -298,8 +271,6 @@ vxlan_tunnel_interface:
         121:
           vni: 10121
       vrfs:
-        tf_web_zone:
-          vni: 40
         Tenant_A_APP_Zone:
           vni: 12
         Tenant_A_WEB_Zone:
@@ -311,7 +282,9 @@ ip_virtual_router_mac_address: 00:dc:00:00:00:0a
 virtual_source_nat_vrfs: null
 ip_igmp_snooping:
   globally_enabled: true
-  vlans: null
+  vlans:
+    120:
+      enabled: false
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -357,15 +330,20 @@ router_bgp:
       password: q+VNViP5i4rVjW1cxFv2wA==
       send_community: all
       maximum_routes: 0
+  neighbor_interfaces: null
   neighbors:
     172.31.255.0:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE1_Ethernet1
     172.31.255.2:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE2_Ethernet1
     172.31.255.4:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE3_Ethernet1
     172.31.255.6:
       peer_group: IPv4-UNDERLAY-PEERS
+      description: DC1-SPINE4_Ethernet1
     192.168.255.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: DC1-SPINE1
@@ -397,14 +375,6 @@ router_bgp:
         activate: true
   address_family_rtc: null
   vlan_aware_bundles:
-    tf_web_zone:
-      rd: 192.168.255.5:40
-      route_targets:
-        both:
-        - '40:40'
-      redistribute_routes:
-      - learned
-      vlan: 410-411
     Tenant_A_APP_Zone:
       rd: 192.168.255.5:12
       route_targets:
@@ -423,18 +393,6 @@ router_bgp:
       vlan: 120-121
   vlans: null
   vrfs:
-    tf_web_zone:
-      router_id: 192.168.255.5
-      rd: 192.168.255.5:40
-      route_targets:
-        import:
-          evpn:
-          - '40:40'
-        export:
-          evpn:
-          - '40:40'
-      redistribute_routes:
-      - connected
     Tenant_A_APP_Zone:
       router_id: 192.168.255.5
       rd: 192.168.255.5:12

@@ -1,5 +1,6 @@
 l2leaf_node_group: DC1_L2LEAF2
 switch_platform: vEOS-LAB
+switch_rack: null
 leaf_id: 10
 switch_mgmt_ip: 192.168.200.114/24
 switch_inband_management_ip: null
@@ -81,6 +82,7 @@ ntp_server:
   - 0.north-america.pool.ntp.org
   - 1.north-america.pool.ntp.org
 redundancy: null
+snmp_server: null
 spanning_tree:
   mode: mstp
   mst_instances:
@@ -185,7 +187,9 @@ platform: null
 mac_address_table: null
 ip_igmp_snooping:
   globally_enabled: true
-  vlans: null
+  vlans:
+    120:
+      enabled: false
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0

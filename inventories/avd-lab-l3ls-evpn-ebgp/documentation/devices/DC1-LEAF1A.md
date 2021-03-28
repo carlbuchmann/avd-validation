@@ -33,6 +33,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [Router BGP](#router-bgp)
+- [BFD](#bfd)
   - [Router BFD](#router-bfd)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
@@ -43,6 +44,7 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Quality Of Service](#quality-of-service)
 
 <!-- toc -->
 # Management
@@ -237,8 +239,6 @@ vlan internal order ascending range 1006 1199
 | 121 | Tenant_A_WEBZone_2 | none  |
 | 130 | Tenant_A_APP_Zone_1 | none  |
 | 131 | Tenant_A_APP_Zone_2 | none  |
-| 410 | tf_demo_app_1 | none  |
-| 411 | tf_demo_app_2 | none  |
 
 ## VLANs Device Configuration
 
@@ -255,12 +255,6 @@ vlan 130
 !
 vlan 131
    name Tenant_A_APP_Zone_2
-!
-vlan 410
-   name tf_demo_app_1
-!
-vlan 411
-   name tf_demo_app_2
 ```
 
 # Interfaces
@@ -284,10 +278,10 @@ vlan 411
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet1  |  routed  | - |  172.31.255.1/31  |  default  |  1500  |  false  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet1  |  routed  | - |  172.31.255.3/31  |  default  |  1500  |  false  |  -  |  -  |
-| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet1  |  routed  | - |  172.31.255.5/31  |  default  |  1500  |  false  |  -  |  -  |
-| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet1  |  routed  | - |  172.31.255.7/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet1 | P2P_LINK_TO_DC1-SPINE1_Ethernet1 | routed | - | 172.31.255.1/31 | default | 1500 | false | - | - |
+| Ethernet2 | P2P_LINK_TO_DC1-SPINE2_Ethernet1 | routed | - | 172.31.255.3/31 | default | 1500 | false | - | - |
+| Ethernet3 | P2P_LINK_TO_DC1-SPINE3_Ethernet1 | routed | - | 172.31.255.5/31 | default | 1500 | false | - | - |
+| Ethernet4 | P2P_LINK_TO_DC1-SPINE4_Ethernet1 | routed | - | 172.31.255.7/31 | default | 1500 | false | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -409,23 +403,18 @@ interface Loopback1
 | Interface | Description | VRF |  MTU | Shutdown |
 | --------- | ----------- | --- | ---- | -------- |
 | Vlan120 |  Tenant_A_WEB_Zone_1  |  Tenant_A_WEB_Zone  |  -  |  false  |
-| Vlan121 |  Tenant_A_WEBZone_2  |  Tenant_A_WEB_Zone  |  -  |  false  |
+| Vlan121 |  Tenant_A_WEBZone_2  |  Tenant_A_WEB_Zone  |  1560  |  true  |
 | Vlan130 |  Tenant_A_APP_Zone_1  |  Tenant_A_APP_Zone  |  -  |  false  |
 | Vlan131 |  Tenant_A_APP_Zone_2  |  Tenant_A_APP_Zone  |  -  |  false  |
-| Vlan410 |  tf_demo_app_1  |  tf_web_zone  |  -  |  false  |
-| Vlan411 |  tf_demo_app_2  |  tf_web_zone  |  -  |  false  |
 
 #### IPv4
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | VRRP | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan120 |  Tenant_A_WEB_Zone  |  -  |  10.1.20.1/24  |  -  |  -  |  -  |  -  |
-| Vlan121 |  Tenant_A_WEB_Zone  |  -  |  10.1.21.1/24  |  -  |  -  |  -  |  -  |
+| Vlan121 |  Tenant_A_WEB_Zone  |  -  |  10.1.10.254/24  |  -  |  -  |  -  |  -  |
 | Vlan130 |  Tenant_A_APP_Zone  |  -  |  10.1.30.1/24  |  -  |  -  |  -  |  -  |
 | Vlan131 |  Tenant_A_APP_Zone  |  -  |  10.1.31.1/24  |  -  |  -  |  -  |  -  |
-| Vlan410 |  tf_web_zone  |  -  |  10.4.10.1/24  |  -  |  -  |  -  |  -  |
-| Vlan411 |  tf_web_zone  |  -  |  10.4.11.1/24  |  -  |  -  |  -  |  -  |
-
 
 
 ### VLAN Interfaces Device Configuration
@@ -437,12 +426,14 @@ interface Vlan120
    no shutdown
    vrf Tenant_A_WEB_Zone
    ip address virtual 10.1.20.1/24
+   ip helper-address 1.1.1.1 vrf TEST source-interface lo100
 !
 interface Vlan121
    description Tenant_A_WEBZone_2
-   no shutdown
+   shutdown
+   mtu 1560
    vrf Tenant_A_WEB_Zone
-   ip address virtual 10.1.21.1/24
+   ip address virtual 10.1.10.254/24
 !
 interface Vlan130
    description Tenant_A_APP_Zone_1
@@ -455,18 +446,6 @@ interface Vlan131
    no shutdown
    vrf Tenant_A_APP_Zone
    ip address virtual 10.1.31.1/24
-!
-interface Vlan410
-   description tf_demo_app_1
-   no shutdown
-   vrf tf_web_zone
-   ip address virtual 10.4.10.1/24
-!
-interface Vlan411
-   description tf_demo_app_2
-   no shutdown
-   vrf tf_web_zone
-   ip address virtual 10.4.11.1/24
 ```
 
 ## VXLAN Interface
@@ -485,8 +464,6 @@ interface Vlan411
 | 121 | 10121 |
 | 130 | 10130 |
 | 131 | 10131 |
-| 410 | 40410 |
-| 411 | 40411 |
 
 #### VRF to VNI Mappings
 
@@ -494,7 +471,6 @@ interface Vlan411
 | ---- | --- |
 | Tenant_A_APP_Zone | 12 |
 | Tenant_A_WEB_Zone | 11 |
-| tf_web_zone | 40 |
 
 ### VXLAN Interface Device Configuration
 
@@ -507,11 +483,8 @@ interface Vxlan1
    vxlan vlan 121 vni 10121
    vxlan vlan 130 vni 10130
    vxlan vlan 131 vni 10131
-   vxlan vlan 410 vni 40410
-   vxlan vlan 411 vni 40411
    vxlan vrf Tenant_A_APP_Zone vni 12
    vxlan vrf Tenant_A_WEB_Zone vni 11
-   vxlan vrf tf_web_zone vni 40
 ```
 
 # Routing
@@ -538,7 +511,6 @@ ip virtual-router mac-address 00:dc:00:00:00:0a
 | default | true|| MGMT | false |
 | Tenant_A_APP_Zone | true |
 | Tenant_A_WEB_Zone | true |
-| tf_web_zone | true |
 
 ### IP Routing Device Configuration
 
@@ -548,7 +520,6 @@ ip routing
 no ip routing vrf MGMT
 ip routing vrf Tenant_A_APP_Zone
 ip routing vrf Tenant_A_WEB_Zone
-ip routing vrf tf_web_zone
 ```
 ## IPv6 Routing
 
@@ -559,7 +530,6 @@ ip routing vrf tf_web_zone
 | default | false || MGMT | false |
 | Tenant_A_APP_Zone | false |
 | Tenant_A_WEB_Zone | false |
-| tf_web_zone | false |
 
 
 ## Static Routes
@@ -634,9 +604,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| Tenant_A_APP_Zone | 192.168.255.5:12 |  12:12  |  |  | learned | 130-131 |
-| Tenant_A_WEB_Zone | 192.168.255.5:11 |  11:11  |  |  | learned | 120-121 |
-| tf_web_zone | 192.168.255.5:40 |  40:40  |  |  | learned | 410-411 |
+| Tenant_A_APP_Zone | 192.168.255.5:12 | 12:12 | - | - | learned | 130-131 |
+| Tenant_A_WEB_Zone | 192.168.255.5:11 | 11:11 | - | - | learned | 120-121 |
 
 #### Router BGP EVPN VRFs
 
@@ -644,7 +613,6 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 | --- | ------------------- | ------------ |
 | Tenant_A_APP_Zone | 192.168.255.5:12 | connected |
 | Tenant_A_WEB_Zone | 192.168.255.5:11 | connected |
-| tf_web_zone | 192.168.255.5:40 | connected |
 
 ### Router BGP Device Configuration
 
@@ -668,9 +636,13 @@ router bgp 65101
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
    neighbor 172.31.255.0 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.0 description DC1-SPINE1_Ethernet1
    neighbor 172.31.255.2 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.2 description DC1-SPINE2_Ethernet1
    neighbor 172.31.255.4 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.4 description DC1-SPINE3_Ethernet1
    neighbor 172.31.255.6 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.6 description DC1-SPINE4_Ethernet1
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
    neighbor 192.168.255.1 description DC1-SPINE1
@@ -697,12 +669,6 @@ router bgp 65101
       redistribute learned
       vlan 120-121
    !
-   vlan-aware-bundle tf_web_zone
-      rd 192.168.255.5:40
-      route-target both 40:40
-      redistribute learned
-      vlan 410-411
-   !
    address-family evpn
       neighbor EVPN-OVERLAY-PEERS activate
    !
@@ -723,14 +689,9 @@ router bgp 65101
       route-target export evpn 11:11
       router-id 192.168.255.5
       redistribute connected
-   !
-   vrf tf_web_zone
-      rd 192.168.255.5:40
-      route-target import evpn 40:40
-      route-target export evpn 40:40
-      router-id 192.168.255.5
-      redistribute connected
 ```
+
+# BFD
 
 ## Router BFD
 
@@ -757,9 +718,15 @@ router bfd
 IGMP snooping is globally enabled.
 
 
+| VLAN | IGMP Snooping |
+| --- | --------------- |
+| 120 | disabled |
+
 ### IP IGMP Snooping Device Configuration
 
 ```eos
+!
+no ip igmp snooping vlan 120
 ```
 
 # Filters
@@ -813,7 +780,6 @@ route-map RM-CONN-2-BGP permit 10
 | MGMT | disabled |
 | Tenant_A_APP_Zone | enabled |
 | Tenant_A_WEB_Zone | enabled |
-| tf_web_zone | enabled |
 
 ## VRF Instances Device Configuration
 
@@ -824,6 +790,6 @@ vrf instance MGMT
 vrf instance Tenant_A_APP_Zone
 !
 vrf instance Tenant_A_WEB_Zone
-!
-vrf instance tf_web_zone
 ```
+
+# Quality Of Service

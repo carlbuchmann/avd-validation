@@ -36,6 +36,7 @@
   - [IPv6 Routing](#ipv6-routing)
   - [Static Routes](#static-routes)
   - [Router BGP](#router-bgp)
+- [BFD](#bfd)
   - [Router BFD](#router-bfd)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
@@ -46,6 +47,7 @@
 - [VRF Instances](#vrf-instances)
   - [VRF Instances Summary](#vrf-instances-summary)
   - [VRF Instances Device Configuration](#vrf-instances-device-configuration)
+- [Quality Of Service](#quality-of-service)
 
 <!-- toc -->
 # Management
@@ -323,10 +325,10 @@ vlan 4094
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
-| Ethernet1 |  P2P_LINK_TO_DC1-SPINE1_Ethernet9  |  routed  | - |  172.31.255.65/31  |  default  |  1500  |  false  |  -  |  -  |
-| Ethernet2 |  P2P_LINK_TO_DC1-SPINE2_Ethernet9  |  routed  | - |  172.31.255.67/31  |  default  |  1500  |  false  |  -  |  -  |
-| Ethernet3 |  P2P_LINK_TO_DC1-SPINE3_Ethernet9  |  routed  | - |  172.31.255.69/31  |  default  |  1500  |  false  |  -  |  -  |
-| Ethernet4 |  P2P_LINK_TO_DC1-SPINE4_Ethernet9  |  routed  | - |  172.31.255.71/31  |  default  |  1500  |  false  |  -  |  -  |
+| Ethernet1 | P2P_LINK_TO_DC1-SPINE1_Ethernet9 | routed | - | 172.31.255.65/31 | default | 1500 | false | - | - |
+| Ethernet2 | P2P_LINK_TO_DC1-SPINE2_Ethernet9 | routed | - | 172.31.255.67/31 | default | 1500 | false | - | - |
+| Ethernet3 | P2P_LINK_TO_DC1-SPINE3_Ethernet9 | routed | - | 172.31.255.69/31 | default | 1500 | false | - | - |
+| Ethernet4 | P2P_LINK_TO_DC1-SPINE4_Ethernet9 | routed | - | 172.31.255.71/31 | default | 1500 | false | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -456,7 +458,6 @@ interface Loopback1
 | Vlan3030 |  Tenant_C_WAN_Zone  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.15/31  |  -  |  -  |  -  |  -  |  -  |
-
 
 
 ### VLAN Interfaces Device Configuration
@@ -690,9 +691,9 @@ ip route vrf MGMT 0.0.0.0/0 192.168.200.1
 
 | VLAN Aware Bundle | Route-Distinguisher | Both Route-Target | Import Route Target | Export Route-Target | Redistribute | VLANs |
 | ----------------- | ------------------- | ----------------- | ------------------- | ------------------- | ------------ | ----- |
-| Tenant_A_WAN_Zone | 192.168.255.13:14 |  14:14  |  |  | learned | 150 |
-| Tenant_B_WAN_Zone | 192.168.255.13:21 |  21:21  |  |  | learned | 250 |
-| Tenant_C_WAN_Zone | 192.168.255.13:31 |  31:31  |  |  | learned | 350 |
+| Tenant_A_WAN_Zone | 192.168.255.13:14 | 14:14 | - | - | learned | 150 |
+| Tenant_B_WAN_Zone | 192.168.255.13:21 | 21:21 | - | - | learned | 250 |
+| Tenant_C_WAN_Zone | 192.168.255.13:31 | 31:31 | - | - | learned | 350 |
 
 #### Router BGP EVPN VRFs
 
@@ -731,10 +732,15 @@ router bgp 65105
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
    neighbor 10.255.251.14 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.255.251.14 description DC1-BL2A
    neighbor 172.31.255.64 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.64 description DC1-SPINE1_Ethernet9
    neighbor 172.31.255.66 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.66 description DC1-SPINE2_Ethernet9
    neighbor 172.31.255.68 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.68 description DC1-SPINE3_Ethernet9
    neighbor 172.31.255.70 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.255.70 description DC1-SPINE4_Ethernet9
    neighbor 192.168.255.1 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.255.1 remote-as 65001
    neighbor 192.168.255.1 description DC1-SPINE1
@@ -799,6 +805,8 @@ router bgp 65105
       neighbor 10.255.251.14 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
 ```
+
+# BFD
 
 ## Router BFD
 
@@ -905,3 +913,5 @@ vrf instance Tenant_B_WAN_Zone
 !
 vrf instance Tenant_C_WAN_Zone
 ```
+
+# Quality Of Service
