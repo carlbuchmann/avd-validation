@@ -1,94 +1,96 @@
+## Ansible Generated ##
+
+### DC1-L2LEAF2A ###
+
+### Leaf Info ###
 l2leaf_node_group: DC1_L2LEAF2
 switch_platform: vEOS-LAB
-switch_rack: null
+switch_rack: 
 leaf_id: 9
 switch_mgmt_ip: 192.168.200.113/24
-switch_inband_management_ip: null
-switch_inband_management_interface: null
-leaf_filter_tenants:
-- all
-leaf_filter_tags:
-- all
-leaf_allowed_vrfs:
-- Tenant_A_APP_Zone
-- Tenant_A_DB_Zone
-- Tenant_A_OP_Zone
-- Tenant_A_WEB_Zone
-- Tenant_B_OP_Zone
-- Tenant_C_OP_Zone
-leaf_allowed_svis:
-- 130
-- 131
-- 140
-- 141
-- 110
-- 111
-- 120
-- 121
-- 210
-- 211
-- 310
-- 311
-leaf_allowed_vlans:
-- 130
-- 131
-- 140
-- 141
-- 110
-- 111
-- 120
-- 121
-- 160
-- 161
-- 210
-- 211
-- 310
-- 311
-leaf_mlag: false
+switch_inband_management_ip: 
+switch_inband_management_interface: 
+leaf_filter_tenants: ['all']
+leaf_filter_tags: ['all']
+leaf_allowed_vrfs: ['Tenant_A_APP_Zone', 'Tenant_A_DB_Zone', 'Tenant_A_OP_Zone', 'Tenant_A_WEB_Zone', 'Tenant_B_OP_Zone', 'Tenant_C_OP_Zone']
+leaf_allowed_svis: [130, 131, 140, 141, 110, 111, 120, 121, 210, 211, 310, 311]
+leaf_allowed_vlans: [130, 131, 140, 141, 110, 111, 120, 121, 160, 161, 210, 211, 310, 311]
+leaf_mlag: False
+
+### IPv4, IPv6 and arBGP config
 service_routing_protocols_model: multi-agent
 ip_routing: true
-hardware_counters: null
-hardware: null
+
+### Hardware Counter
+hardware_counters:
+
+### Hardware
+hardware:
+
+### Daemon TerminAttr
 daemon_terminattr:
   ingestgrpcurl:
     ips:
-    - 192.168.200.11
+      - 192.168.200.11
     port: 9910
   ingestauth_key: telarista
   ingestvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
+  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
+  ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
+  disable_aaa: False
+
 vlan_internal_order:
   allocation: ascending
   range:
     beginning: 1006
     ending: 1199
-event_monitor: null
-event_handlers: null
-load_interval: null
-queue_monitor_length: null
+
+### Event Monitor ###
+event_monitor:
+
+### Event Handler ###
+event_handlers:
+
+### Load Interval ###
+load_interval:
+
+### Queue Monitor Lenght ###
+queue_monitor_length:
+
+### Name Servers ###
 name_server:
   source:
     vrf: MGMT
   nodes:
-  - 192.168.200.5
-  - 8.8.8.8
+    - 192.168.200.5
+    - 8.8.8.8
+
+### NTP Servers ###
 ntp_server:
   local_interface:
     vrf: MGMT
     interface: Management1
   nodes:
-  - 0.north-america.pool.ntp.org
-  - 1.north-america.pool.ntp.org
-redundancy: null
-snmp_server: null
+    - 0.north-america.pool.ntp.org
+    - 1.north-america.pool.ntp.org
+
+### Redundancy ###
+redundancy:
+
+snmp_server:
+
+### Spanning-tree ###
 spanning_tree:
   mode: mstp
   mst_instances:
-    '0':
+    "0":
       priority: 16384
-aaa_authorization: null
+
+
+### AAA authorization ###
+aaa_authorization:
+
+### local users ###
 local_users:
   admin:
     privilege: 15
@@ -98,8 +100,15 @@ local_users:
     privilege: 15
     role: network-admin
     sha512_password: $6$rZKcbIZ7iWGAWTUM$TCgDn1KcavS0s.OV8lacMTUkxTByfzcGlFlYUWroxYuU7M/9bIodhRO7nXGzMweUxvbk8mJmQl8Bh44cRktUj.
-clock: null
+
+### Clock Timezone ###
+clock:
+
+### VLANs ###
 vlans:
+
+
+## Tenant_A ##
   130:
     tenant: Tenant_A
     name: Tenant_A_APP_Zone_1
@@ -130,21 +139,26 @@ vlans:
   161:
     tenant: Tenant_A
     name: Tenant_A_NFS
+## Tenant_B ##
   210:
     tenant: Tenant_B
     name: Tenant_B_OP_Zone_1
   211:
     tenant: Tenant_B
     name: Tenant_B_OP_Zone_2
+## Tenant_C ##
   310:
     tenant: Tenant_C
     name: Tenant_C_OP_Zone_1
   311:
     tenant: Tenant_C
     name: Tenant_C_OP_Zone_2
+
+### VRFs ###
 vrfs:
   MGMT:
-    ip_routing: false
+    ip_routing: False
+### Port-Channel Interfaces ###
 port_channel_interfaces:
   Port-Channel1:
     description: DC1-SVC3A_Po7
@@ -152,7 +166,10 @@ port_channel_interfaces:
     shutdown: false
     vlans: 110-111,120-121,130-131,140-141,160-161,210-211,310-311
     mode: trunk
+
+### Ethernet Interfaces ###
 ethernet_interfaces:
+## L3 LEAF link ##
   Ethernet1:
     peer: DC1-SVC3A
     peer_interface: Ethernet7
@@ -163,6 +180,7 @@ ethernet_interfaces:
     channel_group:
       id: 1
       mode: active
+## L3 LEAF link ##
   Ethernet2:
     peer: DC1-SVC3B
     peer_interface: Ethernet7
@@ -173,6 +191,8 @@ ethernet_interfaces:
     channel_group:
       id: 1
       mode: active
+
+### Management Interfaces ###
 management_interfaces:
   Management1:
     description: oob_management
@@ -181,21 +201,40 @@ management_interfaces:
     ip_address: 192.168.200.113/24
     gateway: 192.168.200.1
     type: oob
-vlan_interfaces: null
-tcam_profile: null
-platform: null
-mac_address_table: null
+
+### VLAN Interfaces ###
+vlan_interfaces:
+
+### TCAM Profiles ###
+tcam_profile:
+
+### Platform ###
+platform:
+
+### MAC address table ###
+mac_address_table:
+
 ip_igmp_snooping:
-  globally_enabled: true
+  globally_enabled: True
   vlans:
+## Tenant_A ##
     120:
-      enabled: false
+      enabled: False
+## Tenant_B ##
+## Tenant_C ##
+
+### static routes ###
 static_routes:
-- vrf: MGMT
-  destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.200.1
-queue_monitor_streaming: null
+  - vrf: MGMT
+    destination_address_prefix: 0.0.0.0/0
+    gateway: 192.168.200.1
+
+
+### Queue Monitor Streaming ###
+queue_monitor_streaming:
+
+### Management API http ###
 management_api_http:
-  enable_https: true
+  enable_https: True
   enable_vrfs:
-    MGMT: null
+    MGMT:
